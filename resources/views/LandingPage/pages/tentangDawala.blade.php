@@ -1,8 +1,8 @@
-@extends('./layouts.landingPage')
+@extends('LandingPage.layouts.landingPage')
 
 @section('content')
         <!-- About Start -->
-        <div class="container-fluid bg-light about pb-5">
+        <div class="container-fluid bg-light about pb-5 pt-5">
             <div class="container pb-5">
                 <div class="row g-5">
                     <div class="col-xl-6 wow fadeInLeft" data-wow-delay="0.2s">

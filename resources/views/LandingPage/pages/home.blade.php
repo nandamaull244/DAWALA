@@ -1,4 +1,4 @@
-@extends('./layouts.landingPage')
+@extends('LandingPage.layouts.landingPage')
 
 
 
@@ -162,7 +162,7 @@
                         sistem kependudukan, sehingga memudahkan akses ke berbagai layanan publik. Dengan layanan
                         profesional dan ramah, kami siap membantu seluruh proses dari awal hingga selesai.
                     </p>
-                    <a class="btn btn-success rounded-pill py-2 px-4" href="#">Pelajari</a>
+                    <a class="btn btn-success rounded-pill py-2 px-4" href="{{ url('/detail-persyaratan') }}">Pelajari</a>
                 </div>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-6 wow fadeInUp" data-wow-delay="0.4s">
@@ -176,7 +176,7 @@
                         memastikan setiap tahap pengurusan KK berjalan lancar, membantu Anda memenuhi kebutuhan
                         administrasi kependudukan tanpa hambatan.
                     </p>
-                    <a class="btn btn-success rounded-pill py-2 px-4" href="#">Pelajari</a>
+                    <a class="btn btn-success rounded-pill py-2 px-4" href="{{ url('/detail-persyaratan') }}">Pelajari</a>
                 </div>
             </div>
         </div>

@@ -57,7 +57,7 @@
         });
     
         // Tambahkan kelas active pada link "Profil" jika berada di salah satu halaman dropdown
-        const dropdownPaths = ['/tentangDawala', '/visiMisi', '/timDawala'];
+        const dropdownPaths = ['/tentang-dawala', '/visi-misi', '/tim-dawala'];
         const profileDropdown = document.querySelector('.navbar-nav .dropdown > .nav-link');
     
         if (dropdownPaths.includes(currentPath)) {

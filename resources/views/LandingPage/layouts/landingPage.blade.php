@@ -35,7 +35,7 @@
 
 <body>
     <!-- Navbar -->
-    @include('partialsLandingPage.navbar')
+    @include('LandingPage.partials.navbar')
 
     <!-- Main Content -->
      
@@ -44,7 +44,7 @@
    
 
     <!-- Footer -->
-    @include('partialsLandingPage.footer')
+    @include('LandingPage.partials.footer')
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary btn-lg-square rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>

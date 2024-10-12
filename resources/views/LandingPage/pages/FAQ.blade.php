@@ -1,4 +1,4 @@
-@extends('./layouts.landingPage')
+@extends('LandingPage.layouts.landingPage')
 
 @section('content')
 <div class="container-fluid faq-section bg-light py-5">

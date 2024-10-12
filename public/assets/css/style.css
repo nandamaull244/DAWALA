@@ -474,6 +474,7 @@
     color: var(--bs-white);
 }
 .layanan .layanan-item:hover h4,
+.layanan .layanan-item:hover li,
 .layanan .layanan-item:hover p {
     color: var(--bs-white);
 }

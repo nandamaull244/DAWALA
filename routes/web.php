@@ -14,20 +14,24 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('LandingPage.home');
+    return view('LandingPage.pages.home');
 });
 Route::get('/layanan', function () {
-    return view('LandingPage.layanan');
+    return view('LandingPage.pages.layanan');
 });
 Route::get('/dokumentasi', function () {
-    return view('LandingPage.dokumentasi');
+    return view('LandingPage.pages.dokumentasi');
 });
 Route::get('/FAQ', function () {
-    return view('LandingPage.FAQ');
+    return view('LandingPage.pages.FAQ');
 });
-Route::get('/tentangDawala', function () {
-    return view('LandingPage.tentangDawala');
+Route::get('/tentang-dawala', function () {
+    return view('LandingPage.pages.tentangDawala');
 });
-Route::get('/timDawala', function () {
-    return view('LandingPage.timDawala');
+Route::get('/tim-dawala', function () {
+    return view('LandingPage.pages.timDawala');
+});
+
+Route::get('/detail-persyaratan', function () {
+    return view('LandingPage.pages.detailPersyaratan');
 });

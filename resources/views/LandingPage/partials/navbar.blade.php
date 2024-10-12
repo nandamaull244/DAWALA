@@ -17,9 +17,9 @@
                                     <span class="dropdown-toggle">Profil</span>
                                 </a>
                                 <div class="dropdown-menu">
-                                    <a href="{{ url('/tentangDawala') }}" class="dropdown-item">Tentang Dawala</a>
-                                    <a href="{{ url('/visiMisi') }}" class="dropdown-item">Visi Misi</a>
-                                    <a href="{{ url('/timDawala') }}" class="dropdown-item">Tim Dawala</a>
+                                    <a href="{{ url('/tentang-dawala') }}" class="dropdown-item">Tentang Dawala</a>
+                                    <a href="{{ url('/visi-misi') }}" class="dropdown-item">Visi Misi</a>
+                                    <a href="{{ url('/tim-dawala') }}" class="dropdown-item">Tim Dawala</a>
                                 
                                 </div>
                             </div>

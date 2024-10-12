@@ -1,8 +1,8 @@
-@extends('./layouts.landingPage')
+@extends('LandingPage.layouts.landingPage')
 
 @section('content')
   <!-- Team Start -->
-  <div class="container-fluid team pb-5">
+  <div class="container-fluid team pb-5 pt-5">
     <div class="container pb-5">
         <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
             <h4 class="text-primary">Tim DAWALA</h4>
