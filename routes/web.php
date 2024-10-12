@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,7 +13,12 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::group(['prefix' => 'admin'], function(){
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+});
 
+// landing page routes
 Route::get('/', function () {
     return view('LandingPage.pages.home');
 });
@@ -35,3 +41,4 @@ Route::get('/tim-dawala', function () {
 Route::get('/detail-persyaratan', function () {
     return view('LandingPage.pages.detailPersyaratan');
 });
+//end of landing page routes
