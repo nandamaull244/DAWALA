@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->enum('action', ['LOGIN', 'LOGOUT', 'VERIFICATION', 'CREATE', 'UPDATE', 'DELETE']);
             $table->string('title');
             $table->string('body');
