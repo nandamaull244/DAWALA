@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +14,21 @@ use App\Http\Controllers\Admin\DashboardController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+//dashboard
 Route::group(['prefix' => 'admin'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
 });
+
+//auth routes
+Route::get('/login', [AuthController::class, 'login'])->name('login.index');
+Route::post('/login/process', [AuthController::class, 'process'])->name('login.process');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password.index');
+Route::post('/forgot-password/process', [AuthController::class, 'forgotProcess'])->name('forgot-password.process');
+Route::get('/register', [AuthController::class, 'register'])->name('register.index');
+Route::post('/register/process', [AuthController::class, 'registerProcess'])->name('register.process');
+
 
 // landing page routes
 Route::get('/', function () {
