@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('rt')->nullable();
             $table->string('rw')->nullable();
             $table->text('address')->nullable();
-            $table->enum('role', ['admin', 'operator' ,'user']); 
+            $table->enum('role', ['admin', 'operator', 'collector', 'user']); 
             $table->string('registration_type');
             $table->enum('registration_status', ['Process', 'Rejected', 'Completed']); 
             $table->timestamps();
