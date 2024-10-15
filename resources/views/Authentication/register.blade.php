@@ -16,125 +16,264 @@
             background-image: url('{{ asset('assets') }}/img/1.png');
             background-size: cover;
             background-position: center;
-        
+
         }
+
         #auth-left {
             background-color: white;
             border-radius: 10px;
             padding: 2rem;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
+
         .form-control {
             border-radius: 20px;
         }
+
         .btn-primary {
             border-radius: 20px;
             background-color: #4e73df;
             border-color: #4e73df;
         }
+
     </style>
 </head>
 
 <body>
     <div id="auth">
-        <div class="row h-100 justify-content-center align-items-center my-5 mb-5"> <!-- Added margin top and bottom -->
+        <div class="row h-100 justify-content-center align-items-center my-5 mb-5">
+            <!-- Added margin top and bottom -->
             <div class="col-lg-8 col-6">
                 <div id="auth-left">
                     <h4 class="auth-title text-center">Registrasi Akun</h4>
                     <p class="auth-subtitle mb-5 text-center">Buat akun untuk urusan pelayanan</p>
 
-                    <form action="index.html">
+                    <form action="{{ route('register.process') }}" method="POST">
+                        @csrf
                         <div class="form-group mb-4">
                             <label for="sub-category-select">Pilih kategori akun:</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="category" id="perorangan" value="perorangan" onclick="toggleSubCategory(false)">
+                                <input class="form-check-input" type="radio" name="role" id="perorangan" value="user"
+                                    onclick="setRole('user')" required>
                                 <label class="form-check-label" for="perorangan">Perorangan/umum diri sendiri</label>
+                                @error('role')
+                                    <span>{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="category" id="kolektor" value="kolektor" onclick="toggleSubCategory(true)">
+                                <input class="form-check-input" type="radio" name="role" id="kolektor" value="kolektor"
+                                    onclick="setRole('operator')" required>
                                 <label class="form-check-label" for="kolektor">Kolektor</label>
+                                @error('role')
+                                    <span>{{ $message }}</span>
+                                @enderror
                             </div>
+
                         </div>
                         <div id="sub-category" class="form-group mb-4" style="display: none;">
-                            <label for="sub-category-select">Pilih Pengelompokan:</label>
+                            <label for="sub-category-select">Pilih Tipe Registrasi:</label>
                             <div class="position-relative">
-                                <select class="form-control form-control-xl" id="sub-category-select">
-                                    <option value="rt">RT</option>
-                                    <option value="rw">RW</option>
-                                    <option value="yayasan">Yayasan</option>
-                                    <option value="instansi">Instansi</option>
+                                <select class="form-control form-control-xl" id="sub-category-select"
+                                    name="registration_type">
+                                    <option value="rt"
+                                        {{ old('registration_type') == 'rt' ? 'selected' : '' }}>
+                                        RT</option>
+                                    <option value="rw"
+                                        {{ old('registration_type') == 'rw' ? 'selected' : '' }}>
+                                        RW</option>
+                                    <option value="yayasan"
+                                        {{ old('registration_type') == 'yayasan' ? 'selected' : '' }}>
+                                        Yayasan</option>
+                                    <option value="instansi"
+                                        {{ old('registration_type') == 'instansi' ? 'selected' : '' }}>
+                                        Instansi</option>
                                 </select>
-                                <div class="form-control-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
-                                    <i class="bi bi-chevron-down" style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
+                                @error('registration_type')
+                                    <span>{{ $message }}</span>
+                                @enderror
+                                <div class="form-control-icon"
+                                    style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                                    <i class="bi bi-chevron-down"
+                                        style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="text" class="form-control form-control-xl" placeholder="Nama Lengkap">
+                            <input type="text" class="form-control form-control-xl" placeholder="Nama Lengkap"
+                                name="full_name" value="{{ old('full_name') }}" required>
                             <div class="form-control-icon">
                                 <i class="bi bi-person"></i>
                             </div>
                         </div>
+                        @error('full_name')
+                            <span>{{ $message }}</span>
+                        @enderror
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="text" class="form-control form-control-xl" placeholder="NIK">
+                            <input type="text" class="form-control form-control-xl" placeholder="NIK" name="nik"
+                                value="{{ old('nik') }}" required>
                             <div class="form-control-icon">
                                 <i class="bi bi-card-text"></i>
                             </div>
                         </div>
+                        @error('nik')
+                            <span>{{ $message }}</span>
+                        @enderror
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="text" class="form-control form-control-xl" placeholder="No Kartu Keluaga">
+                            <input type="text" class="form-control form-control-xl" placeholder="No Kartu Keluaga"
+                                name="no_kk" value="{{ old('no_kk') }}" required>
                             <div class="form-control-icon">
                                 <i class="bi bi-card-text"></i>
                             </div>
                         </div>
+                        @error('no_kk')
+                            <span>{{ $message }}</span>
+                        @enderror
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="email" class="form-control form-control-xl" placeholder="Email">
+                            <input type="date" class="form-control form-control-xl" placeholder="Tanggal Lahir"
+                                name="birth_date" value="{{ old('birth_date') }}" required>
+                            <div class="form-control-icon">
+                                <i class="bi bi-calendar"></i>
+                            </div>
+                        </div>
+                        @error('birth_date')
+                            <span>{{ $message }}</span>
+                        @enderror
+
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <input type="email" class="form-control form-control-xl" placeholder="Email" name="email"
+                                value="{{ old('email') }}" required>
                             <div class="form-control-icon">
                                 <i class="bi bi-envelope"></i>
                             </div>
                         </div>
+                        @error('email')
+                            <span>{{ $message }}</span>
+                        @enderror
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="tel" class="form-control form-control-xl" placeholder="No. Handphone (Whatsapp)">
+                            <input type="tel" class="form-control form-control-xl"
+                                placeholder="No. Handphone (Whatsapp)" name="phone_number"
+                                value="{{ old('phone_number') }}" required>
                             <div class="form-control-icon">
                                 <i class="bi bi-phone"></i>
                             </div>
                         </div>
+                        @error('phone_number')
+                            <span>{{ $message }}</span>
+                        @enderror
+                        <div class="form-group mb-4">
+                            <label for="gender-select">Pilih Jenis Kelamin:</label>
+                            <div class="position-relative">
+                                <select class="form-control form-control-xl" id="gender-select" name="gender" required>
+                                    <option value="Laki-Laki"
+                                        {{ old('gender') == 'Laki-Laki' ? 'selected' : '' }}>
+                                        Laki-Laki</option>
+                                    <option value="Perempuan"
+                                        {{ old('gender') == 'Perempuan' ? 'selected' : '' }}>
+                                        Perempuan</option>
+                                </select>
+                                <div class="form-control-icon"
+                                    style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                                    <i class="bi bi-chevron-down"
+                                        style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        @error('gender')
+                            <span>{{ $message }}</span>
+                        @enderror
+
+                        <input type="hidden" name="registration_status" id="registration_status" value="completed"
+                            onchange="setRole(this.value)">
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-xl" placeholder="Password">
+                            <input type="password" class="form-control form-control-xl" placeholder="Password"
+                                name="password" required>
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
                         </div>
+                        @error('password')
+                            <span>{{ $message }}</span>
+                        @enderror
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-xl" placeholder="Ulangi Password">
+                            <input type="password" class="form-control form-control-xl" placeholder="Ulangi Password"
+                                name="password_confirmation" required>
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
                         </div>
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                Saya menyetujui syarat dan ketentuan
-                            </label>
-                        </div>
+
+
+                        
                         <button class="btn btn-primary"
                             style="width: 100%; padding: 10px; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); font-size: 1.25rem;"
                             onmouseover="this.style.backgroundColor='#003366'"
-                            onmouseout="this.style.backgroundColor='#0164eb'">Masuk</button>
+                            onmouseout="this.style.backgroundColor='#0164eb'">Daftar</button>
                     </form>
+
                     <div class="text-center mt-5 text-lg fs-4">
-                        <p>Sudah punya akun? <a href="{{ url('/login') }}" class="font-bold"  style="color: #0164eb; transition: color 0.3s;" onmouseover="this.style.color='#003366'"
-                            onmouseout="this.style.color='#0164eb'">Masuk</a></p>
+                        <p>Sudah punya akun? <a href="{{ url('/login') }}" class="font-bold"
+                                style="color: #0164eb; transition: color 0.3s;" onmouseover="this.style.color='#003366'"
+                                onmouseout="this.style.color='#0164eb'">Masuk</a></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <script>
-        function toggleSubCategory(show) {
-            document.getElementById('sub-category').style.display = show ? 'block' : 'none';
+        function setRole(role) {
+            document.getElementById('registration_status').value = role === 'user' ? 'completed' : 'process';
+            document.getElementById('sub-category').style.display = role === 'operator' ? 'block' : 'none';
+            const userInput = document.getElementById('perorangan');
+            const operatorInput = document.getElementById('kolektor');
+            if (role === 'user') {
+                operatorInput.required = false;
+                userInput.required = true;
+            } else {
+                userInput.required = false;
+                operatorInput.required = true;
+            }
         }
+
+
+        document.querySelector('form').addEventListener('submit', function (event) {
+            const passwordInput = document.querySelector('input[name="password"]');
+            const passwordConfirmationInput = document.querySelector('input[name="password_confirmation"]');
+            const allInputs = document.querySelectorAll('input[required]');
+            let isValid = true;
+
+            allInputs.forEach(input => {
+                if (!input.value) {
+                    input.classList.add('is-invalid');
+                    input.setCustomValidity('wajib diisi');
+                    isValid = false;
+                } else {
+                    input.classList.remove('is-invalid');
+                    input.setCustomValidity('');
+                }
+            });
+
+            const password = passwordInput.value;
+            const passwordConfirmation = passwordConfirmationInput.value;
+            if (password !== passwordConfirmation) {
+                event.preventDefault();
+                passwordInput.classList.add('is-invalid');
+                passwordConfirmationInput.classList.add('is-invalid');
+                passwordConfirmationInput.setCustomValidity('konfirmasi password tidak cocok!');
+                passwordConfirmationInput.reportValidity();
+                isValid = false;
+            } else {
+                passwordInput.classList.remove('is-invalid');
+                passwordConfirmationInput.classList.remove('is-invalid');
+                passwordConfirmationInput.setCustomValidity('');
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+
     </script>
+
 </body>
 
 
