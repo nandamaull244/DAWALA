@@ -14,6 +14,14 @@
 </head>
 
 <body>
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert" id="success-alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        
+    @endif
+    
     <div id="auth">
 
         <div class="row h-100">
@@ -26,31 +34,33 @@
 
 
 
-                    <form action="index.html">
+                    <form action="{{ route('login.process') }}" method="POST">
+                        @csrf
                         <div class="form-group position-relative has-icon-left mb-3">
-                            <input type="text" class="form-control form-control-lg" placeholder="Masukan no NIK">
+                            <input type="text" class="form-control form-control-lg" name="nik" placeholder="Masukan no NIK">
                             <div class="form-control-icon">
                                 <i class="bi bi-person"></i>
                             </div>
                         </div>
                         <div class="form-group position-relative has-icon-left mb-3">
-                            <input type="password" class="form-control form-control-lg" placeholder="Password">
+                            <input type="password" class="form-control form-control-lg" name="password" placeholder="Password">
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
                         </div>
 
-                        <button class="btn btn-primary"
+                        <button class="btn btn-primary" type="submit"
                             style="width: 100%; padding: 10px; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); font-size: 1.25rem;"
                             onmouseover="this.style.backgroundColor='#003366'"
                             onmouseout="this.style.backgroundColor='#0164eb'">Masuk</button>
                     </form>
                     <div class="text-center mt-5 text-lg fs-4">
                         <p class="text-gray-600" style="color: #0164eb; transition: color 0.3s;"
-                            onmouseover="this.style.color='#003366'" onmouseout="this.style.color='#0164eb'">Tidak punya akun? <a href="{{ url('/register') }}" class="font-bold"
+                            onmouseover="this.style.color='#003366'" onmouseout="this.style.color='#0164eb'">Tidak punya
+                            akun? <a href="{{ url('/register') }}" class="font-bold"
                                 style="color: #0164eb; transition: color 0.3s;" onmouseover="this.style.color='#003366'"
                                 onmouseout="this.style.color='#0164eb'">Daftar
-                                </a>.</p>
+                            </a>.</p>
                         <p><a class="font-bold" href="auth-forgot-password.html"
                                 style="color: #0164eb; transition: color 0.3s;" onmouseover="this.style.color='#003366'"
                                 onmouseout="this.style.color='#0164eb'">Lupa password?</a></p>
@@ -66,6 +76,19 @@
         </div>
 
     </div>
+    <script>
+        setTimeout(function () {
+            var alert = document.getElementById('success-alert');
+            if (alert) {
+                alert.classList.remove('show');
+                alert.classList.add('fade');
+                setTimeout(function () {
+                    alert.remove();
+                }, 150); // Delay for fade out effect
+            }
+        }, 2000); // 2 seconds
+
+    </script>
 </body>
 
 </html>

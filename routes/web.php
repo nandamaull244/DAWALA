@@ -22,7 +22,7 @@ Route::group(['prefix' => 'admin'], function(){
 
 //auth routes
 Route::get('/login', [AuthController::class, 'login'])->name('login.index');
-Route::post('/login/process', [AuthController::class, 'process'])->name('login.process');
+Route::post('/login/process', [AuthController::class, 'loginProcess'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password.index');
 Route::post('/forgot-password/process', [AuthController::class, 'forgotProcess'])->name('forgot-password.process');
