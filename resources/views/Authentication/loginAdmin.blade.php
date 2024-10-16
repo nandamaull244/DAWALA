@@ -27,7 +27,7 @@
         <div class="row h-100">
             <div class="col-lg-7 d-none d-lg-block">
                 <div id="auth-right">
-                    <img src="/backend/assets/images/cover-login.png" alt="Your Image" class="img-fluid">
+                    <img src="/backend/assets/images/login-admin.png" alt="Your Image" class="img-fluid">
 
                 </div>
             </div>
@@ -46,8 +46,8 @@
                     <form action="{{ route('loginAdmin.process') }}" method="POST">
                         @csrf
                         <div class="form-group position-relative has-icon-left mb-3 ">
-                            <input type="text" class="form-control form-control-lg rounded" name="nik"
-                                placeholder="Masukan no NIK">
+                            <input type="text" class="form-control form-control-lg rounded" name="username"
+                                placeholder="Masukan Username">
                             <div class="form-control-icon">
                                 <i class="bi bi-person"></i>
                             </div>
@@ -70,12 +70,7 @@
                             onmouseout="this.style.backgroundColor='#0164eb'">Masuk</button>
                     </form>
                     <div class="text-center mt-5 text-lg fs-4">
-                        <p class="text-gray-600" style="color: #0164eb; transition: color 0.3s;"
-                            onmouseover="this.style.color='#003366'" onmouseout="this.style.color='#0164eb'">Tidak punya
-                            akun? <a href="{{ url('/register') }}" class="font-bold"
-                                style="color: #0164eb; transition: color 0.3s;" onmouseover="this.style.color='#003366'"
-                                onmouseout="this.style.color='#0164eb'">Daftar
-                            </a>.</p>
+                        
                         <p><a href="{{ url('/forgot-password') }}" class="font-bold"
                                 style="color: #0164eb; transition: color 0.3s;" onmouseover="this.style.color='#003366'"
                                 onmouseout="this.style.color='#0164eb'">Lupa password?</a></p>

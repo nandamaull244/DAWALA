@@ -51,21 +51,21 @@ class AuthController extends Controller
     {
             try {
                 $user = $request-> validate([
-                    'nik' => ['required'],
+                    'username' => ['required'],
                     'password' => ['required'],
                 ]);
                 if(Auth::attempt($user)) {
                     $request->session()->regenerate();
                     return redirect()->intended('/admin/dashboard')->with('success','Anda berhasil Login');
                 } else{
-                    return redirect()->back()->with('error','NIK atau Password tidak sesuai');
+                    return redirect()->back()->with('error','Username atau Password tidak sesuai');
                 }
                 throw ValidationException::withMessages([
-                    'nik' => 'Data yang Anda masukan tidak ditemukan',
+                    'username' => 'Data yang Anda masukan tidak ditemukan',
                 ]);
         
             }   catch(\Exception | PDOException | QueryException){
-                return redirect()->back()->with('error','NIK atau password tidak sesuai');
+                return redirect()->back()->with('error','Username atau password tidak sesuai');
             }
     }
 

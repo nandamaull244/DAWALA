@@ -24,6 +24,7 @@ class User extends Authenticatable
         'birth_date',
         'gender', // Enum: ['Laki-Laki', 'Perempuan']
         'no_kk',
+        'username',
         'email',
         'phone_number',
         'district_id',
