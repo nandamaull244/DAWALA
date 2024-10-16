@@ -31,6 +31,7 @@ Route::get('/login-admin', [AuthController::class, 'loginAdmin'])->name('loginAd
 Route::post('/login-admin/process', [AuthController::class, 'loginAdminProcess'])->name('loginAdmin.process');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout-admin', [AuthController::class, 'logoutAdmin'])->name('logoutAdmin');
 Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password.index');
 Route::post('/forgot-password/process', [AuthController::class, 'forgotProcess'])->name('forgot-password.process');
 Route::get('/register', [AuthController::class, 'register'])->name('register.index');
@@ -65,3 +66,4 @@ Route::get('/detail-persyaratan', function () {
     return view('LandingPage.pages.detailPersyaratan');
 });
 //end of landing page routes
+

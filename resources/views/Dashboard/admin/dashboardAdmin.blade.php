@@ -5,8 +5,21 @@
 @endpush
 
 @section('content')
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert" id="success-alert">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+@endif
     <div class="page-heading">
         <h3>Profile Statistics</h3>
+    </div>
+    <div class="text-end mb-3">
+        <form action="{{ route('logoutAdmin') }}" method="POST" style="display: inline;">
+            @csrf
+            <button type="submit" class="btn btn-danger">Logout Admin</button>
+        </form>
     </div>
     <div class="page-content">
         <section class="row">

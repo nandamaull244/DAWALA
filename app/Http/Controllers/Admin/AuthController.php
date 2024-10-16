@@ -58,14 +58,14 @@ class AuthController extends Controller
                     $request->session()->regenerate();
                     return redirect()->intended('/admin/dashboard')->with('success','Anda berhasil Login');
                 } else{
-                    return redirect()->back()->with('error','Username atau Password tidak sesuai');
+                    return redirect()->back()->with('error','NIK atau Password tidak sesuai');
                 }
                 throw ValidationException::withMessages([
-                    'username' => 'Data yang Anda masukan tidak ditemukan',
+                    'nik' => 'Data yang Anda masukan tidak ditemukan',
                 ]);
         
             }   catch(\Exception | PDOException | QueryException){
-                return redirect()->back()->with('error','Username atau password tidak sesuai');
+                return redirect()->back()->with('error','NIK atau password tidak sesuai');
             }
     }
 
@@ -74,6 +74,14 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/login')->with('success','Anda berhasil logout');
+    }
+
+    public function logoutAdmin(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('loginAdmin.index')->with('success', 'Anda berhasil logout dari admin.');
     }
 
     public function register(Request $request)
