@@ -29,7 +29,7 @@ class AuthController extends Controller
                 ]);
                 if(Auth::attempt($user)) {
                     $request->session()->regenerate();
-                    return redirect()->intended('/register')->with('success','Anda berhasil Login');
+                    return redirect()->route('dashboardUser.dashboardUser')->with('success','Anda berhasil Login');
                 } else{
                     return redirect()->back()->with('error','NIK atau Password tidak sesuai');
                 }
@@ -132,7 +132,7 @@ class AuthController extends Controller
             return redirect()->route('login.index')->with('success', 'Pendaftaran berhasil! Silakan login.');
         } catch (\Exception $e) {
             // Jika gagal
-            return redirect()->route('register')->with('error', 'Pendaftaran gagal! Silakan coba lagi.')->withInput();
+            return redirect()->route('register.index')->with('error', 'Pendaftaran gagal! Silakan coba lagi.')->withInput();
         }
     }
     

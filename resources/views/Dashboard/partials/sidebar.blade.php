@@ -15,12 +15,25 @@
                 <li class="sidebar-title">Menu</li>
 
                 <li class="sidebar-item active ">
-                    <a href="index.html" class='sidebar-link'>
+                    <a href="{{ route('dashboardUser.dashboardUser') }}" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
-
+                <li class="sidebar-item  ">
+                    <a href="{{ route('form-ktp.index') }}" class='sidebar-link'>
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                        <span>KTP</span>
+                    </a>
+                </li>
+                <li class="sidebar-item  ">
+                    <div class="text-end mb-3">
+                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Logout User</button>
+                        </form>
+                    </div>
+                </li>
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-stack"></i>
