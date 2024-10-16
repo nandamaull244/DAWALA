@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Dawala Dashboard</title>
+    <title>Register - DAWALA-PEDULI</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/backend/assets/css/bootstrap.css">
     <link rel="stylesheet" href="/backend/assets/vendors/bootstrap-icons/bootstrap-icons.css">
@@ -60,9 +60,10 @@
                             <div class="form-group">
                                 <label for="sub-category-select">Pilih kategori akun:</label>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="role" id="perorangan" value="user"
-                                        onclick="setRole('user')" required>
-                                    <label class="form-check-label" for="perorangan">Perorangan/umum diri sendiri</label>
+                                    <input class="form-check-input" type="radio" name="role" id="perorangan"
+                                        value="user" onclick="setRole('user')" required>
+                                    <label class="form-check-label" for="perorangan">Perorangan/umum diri
+                                        sendiri</label>
                                     @error('role')
                                         <span>{{ $message }}</span>
                                     @enderror
@@ -75,7 +76,7 @@
                                         <span>{{ $message }}</span>
                                     @enderror
                                 </div>
-    
+
                             </div>
                         </div>
                         <div id="sub-category" class="form-group mb-4" style="display: none;">
@@ -216,18 +217,26 @@
                         <div class="mb-4">
                             <div class="form-group position-relative has-icon-left ">
                                 <input type="password" class="form-control form-control-xl" placeholder="Password"
-                                    name="password" required>
+                                    name="password" id="password" required>
 
                                 <div class="form-control-icon">
                                     <i class="bi bi-shield-lock"></i>
                                 </div>
 
                             </div>
+                            <small class="form-text text-muted mb-2">Centang kotak di bawah untuk melihat password sebelum
+                                disubmit.</small>
+                            <div class="form-check mb-4">
+                                <input type="checkbox" class="form-check-input" onclick="togglePassword()"
+                                    id="showPassword">
+                                <label class="form-check-label" for="showPassword">Lihat Password</label>
+                            </div>
                             <label for="password">Minimal 8 karakter</label>
                             @error('password')
                                 <span>{{ $message }}</span>
                             @enderror
                         </div>
+
 
 
 
@@ -309,18 +318,27 @@
             }
         });
 
-    
-            setTimeout(function () {
-                var alert = document.getElementById('error-alert');
-                if (alert) {
-                    alert.classList.remove('show');
-                    alert.classList.add('fade');
-                    setTimeout(function () {
-                        alert.remove();
-                    }, 150); // Delay for fade out effect
-                }
-            }, 2000); // 2 seconds
 
+        setTimeout(function () {
+            var alert = document.getElementById('error-alert');
+            if (alert) {
+                alert.classList.remove('show');
+                alert.classList.add('fade');
+                setTimeout(function () {
+                    alert.remove();
+                }, 150); // Delay for fade out effect
+            }
+        }, 2000); // 2 seconds
+
+
+        function togglePassword() {
+            var passwordInput = document.getElementById("password");
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+            } else {
+                passwordInput.type = "password";
+            }
+        }
 
     </script>
 

@@ -31,14 +31,41 @@ class AuthController extends Controller
                     $request->session()->regenerate();
                     return redirect()->intended('/register')->with('success','Anda berhasil Login');
                 } else{
-                    return redirect()->back()->with('error','Username atau Password tidak sesuai');
+                    return redirect()->back()->with('error','NIK atau Password tidak sesuai');
                 }
                 throw ValidationException::withMessages([
-                    'username' => 'Data yang Anda masukan tidak ditemukan',
+                    'nik' => 'Data yang Anda masukan tidak ditemukan',
                 ]);
         
             }   catch(\Exception | PDOException | QueryException){
-                return redirect()->back()->with('error','Username atau password tidak sesuai');
+                return redirect()->back()->with('error','NIK atau password tidak sesuai');
+            }
+    }
+    public function loginAdmin(Request $request)
+    {
+        // Tambahkan ini untuk menangkap pesan sukses dari registrasi
+        $successMessage = session('success');
+        return view("Authentication.loginAdmin", compact('successMessage'));
+    }
+    public function loginAdminProcess(Request $request)
+    {
+            try {
+                $user = $request-> validate([
+                    'nik' => ['required'],
+                    'password' => ['required'],
+                ]);
+                if(Auth::attempt($user)) {
+                    $request->session()->regenerate();
+                    return redirect()->intended('/admin/dashboard')->with('success','Anda berhasil Login');
+                } else{
+                    return redirect()->back()->with('error','NIK atau Password tidak sesuai');
+                }
+                throw ValidationException::withMessages([
+                    'nik' => 'Data yang Anda masukan tidak ditemukan',
+                ]);
+        
+            }   catch(\Exception | PDOException | QueryException){
+                return redirect()->back()->with('error','NIK atau password tidak sesuai');
             }
     }
 
@@ -101,5 +128,42 @@ class AuthController extends Controller
         }
     }
     
-}
+    public function forgotPassword()
+    {
+        return view('Authentication.forgot_password');
+    }
 
+    public function checkEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user) {
+            return response()->json(['exists' => true]);
+        } else {
+            return response()->json(['exists' => false]);
+        }
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user) {
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            return redirect()->route('login.index')->with('success', 'Password berhasil direset. Silakan login dengan password baru Anda.');
+        } else {
+            return redirect()->back()->with('error', 'Email tidak ditemukan.');
+        }
+    }
+}

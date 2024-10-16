@@ -25,16 +25,25 @@
     <div id="auth">
 
         <div class="row h-100">
+            <div class="col-lg-7 d-none d-lg-block">
+                <div id="auth-right">
+                    <img src="/backend/assets/images/cover-login.png" alt="Your Image" class="img-fluid">
+
+                </div>
+            </div>
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
                     <div class="auth-logo mb-3 text-center">
                         <a href=""><img src="{{ asset('assets') }}/img/logo.png" alt="Logo"
                                 style="width: 150px; height: auto;"></a>
                     </div>
+                    <div class="auth-logo mb-3 text-center">
+                        <h4>Login Admin</h4>
+                    </div>
 
 
 
-                    <form action="{{ route('login.process') }}" method="POST">
+                    <form action="{{ route('loginAdmin.process') }}" method="POST">
                         @csrf
                         <div class="form-group position-relative has-icon-left mb-3 ">
                             <input type="text" class="form-control form-control-lg rounded" name="nik"
@@ -73,12 +82,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-7 d-none d-lg-block">
-                <div id="auth-right">
-                    <img src="/backend/assets/images/cover-login.png" alt="Your Image" class="img-fluid">
-
-                </div>
-            </div>
+            
         </div>
 
     </div>
