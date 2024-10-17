@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('birth_date');
             $table->enum('gender', ['Laki-Laki', 'Perempuan']);
             $table->string('no_kk');
+            $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('phone_number');
             $table->integer('district_id')->nullable();
@@ -29,7 +30,7 @@ return new class extends Migration
             $table->string('rt')->nullable();
             $table->string('rw')->nullable();
             $table->text('address')->nullable();
-            $table->enum('role', ['admin', 'operator' ,'user']); 
+            $table->enum('role', ['admin', 'operator', 'collector', 'user']); 
             $table->string('registration_type');
             $table->enum('registration_status', ['Process', 'Rejected', 'Completed']); 
             $table->timestamps();

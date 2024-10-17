@@ -18,9 +18,23 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
+        'nik',
         'password',
+        'full_name',
+        'birth_date',
+        'gender', // Enum: ['Laki-Laki', 'Perempuan']
+        'no_kk',
+        'username',
+        'email',
+        'phone_number',
+        'district_id',
+        'village_id',
+        'rt',
+        'rw',
+        'address',
+        'role', // Enum: ['admin', 'operator', 'user', 'kolektor']
+        'registration_type',
+        'registration_status', // Enum: ['Process', 'Rejected', 'Completed']
     ];
 
     /**

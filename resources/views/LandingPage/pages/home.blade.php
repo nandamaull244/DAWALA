@@ -18,7 +18,7 @@
                                 Kabupaten Cianjur pada tahun 2021.
                             </p>
                             <div class="d-flex justify-content-center justify-content-md-start flex-shrink-0 mb-4">
-                                <a class="btn btn-success rounded-pill py-3 px-4 px-md-5 me-2" href="#">Daftar
+                                <a class="btn btn-success rounded-pill py-3 px-4 px-md-5 me-2" href="{{ url('/register') }}">Daftar
                                     DAWALA</a>
                                 <a class="btn btn-light rounded-pill py-3 px-4 px-md-5 ms-2" href="#"><i
                                         class="fas fa-play-circle me-2"></i> Tutorial Video</a>
