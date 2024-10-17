@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('collector_users', function (Blueprint $table) {
+        Schema::create('service_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('collector_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->string('name');
+            $table->foreignId('service_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->enum('image_type', ['Kartu Keluarga', 'Bukti Keterbatasan']);
+            $table->string('image_path');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('collector_users');
+        Schema::dropIfExists('service_images');
     }
 };
