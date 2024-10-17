@@ -65,5 +65,9 @@ Route::get('/tim-dawala', function () {
 Route::get('/detail-persyaratan', function () {
     return view('LandingPage.pages.detailPersyaratan');
 });
+
+Route::get('/layanan-cepat', function () {
+    return view('LandingPage.pages.layananCepat');
+});
 //end of landing page routes
 
