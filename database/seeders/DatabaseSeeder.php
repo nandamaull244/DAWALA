@@ -28,12 +28,13 @@ class DatabaseSeeder extends Seeder
 
         DB::table('users')->insert([
             'nik' => $this->generateNIK(),
-            'password' => Hash::make('admin123'),
-            'full_name' => 'admin',
+            'username' => 'admindawala',
+            'password' => Hash::make('dawala2024'),
+            'full_name' => 'DAWALA',
             'birth_date' => $faker->date('Y-m-d'),
             'gender' => $faker->randomElement(['Laki-Laki', 'Perempuan']),
             'no_kk' => $faker->numerify('################'),
-            'email' => 'admin@example.com',
+            'email' => 'admindawala@gmail.com',
             'phone_number' => $faker->phoneNumber,
             'district_id' => $faker->randomDigitNotNull,
             'village_id' => $faker->randomDigitNotNull,
