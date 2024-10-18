@@ -22,51 +22,54 @@ class AuthController extends Controller
     }
     public function loginProcess(Request $request)
     {
-            try {
-                $user = $request-> validate([
-                    'nik' => ['required'],
-                    'password' => ['required'],
-                ]);
-                if(Auth::attempt($user)) {
-                    $request->session()->regenerate();
-                    return redirect()->intended('/register')->with('success','Anda berhasil Login');
-                } else{
-                    return redirect()->back()->with('error','NIK atau Password tidak sesuai');
-                }
-                throw ValidationException::withMessages([
-                    'nik' => 'Data yang Anda masukan tidak ditemukan',
-                ]);
-        
-            }   catch(\Exception | PDOException | QueryException){
-                return redirect()->back()->with('error','NIK atau password tidak sesuai');
+        try {
+            $user = $request-> validate([
+                'nik' => ['required'],
+                'password' => ['required'],
+            ]);
+            if(Auth::attempt($user)) {
+                $request->session()->regenerate();
+                return redirect()->intended('/register')->with('success','Anda berhasil Login');
+            } else{
+                return redirect()->back()->with('error','NIK atau Password tidak sesuai');
             }
+            throw ValidationException::withMessages([
+                'nik' => 'Data yang Anda masukan tidak ditemukan',
+            ]);
+    
+        }   catch(\Exception | PDOException | QueryException){
+            return redirect()->back()->with('error','NIK atau password tidak sesuai');
+        }
     }
     public function loginAdmin(Request $request)
     {
-        // Tambahkan ini untuk menangkap pesan sukses dari registrasi
         $successMessage = session('success');
         return view("Authentication.loginAdmin", compact('successMessage'));
     }
     public function loginAdminProcess(Request $request)
     {
-            try {
-                $user = $request-> validate([
-                    'username' => ['required'],
-                    'password' => ['required'],
-                ]);
-                if(Auth::attempt($user)) {
-                    $request->session()->regenerate();
-                    return redirect()->intended('/admin/dashboard')->with('success','Anda berhasil Login');
-                } else{
-                    return redirect()->back()->with('error','NIK atau Password tidak sesuai');
+        try {
+            $credentials = $request->validate([
+                'username' => ['required'],
+                'password' => ['required'],
+            ]);
+            
+            if (Auth::attempt($credentials)) {
+                $user = Auth::user();
+                if ($user->role !== 'admin') {
+                    Auth::logout();
+                    return redirect()->back()->with('error', 'Anda tidak memiliki akses sebagai admin.');
                 }
-                throw ValidationException::withMessages([
-                    'nik' => 'Data yang Anda masukan tidak ditemukan',
-                ]);
-        
-            }   catch(\Exception | PDOException | QueryException){
-                return redirect()->back()->with('error','NIK atau password tidak sesuai');
+
+                $request->session()->regenerate();
+                return redirect()->intended('/admin/dashboard')->with('success', 'Anda berhasil Login sebagai Admin');
             }
+            return 'a';
+            return redirect()->back()->with('error', 'Username atau Password tidak sesuai');
+
+        } catch (\Exception | PDOException | QueryException $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat login: ' . $e->getMessage());
+        }
     }
 
     public function logout(Request $request){
