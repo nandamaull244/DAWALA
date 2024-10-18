@@ -10,7 +10,7 @@
                         <span class="fa fa-bars"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarCollapse">
-                        <div class="navbar-nav mx-0 mx-lg-auto">
+                        <div class="navbar-nav mx-0 mx-lg-auto ">
                             <a href="{{ url('/') }}" class="nav-item nav-link active">Beranda</a>
                             <div class="nav-item dropdown">
                                 <a href="{{ url('/profile') }}" class="nav-item nav-link " data-bs-toggle="dropdown">
@@ -20,10 +20,17 @@
                                     <a href="{{ url('/tentang-dawala') }}" class="dropdown-item">Tentang Dawala</a>
                                     <a href="{{ url('/visi-misi') }}" class="dropdown-item">Visi Misi</a>
                                     <a href="{{ url('/tim-dawala') }}" class="dropdown-item">Tim Dawala</a>
-                                
                                 </div>
                             </div>
-                            <a href="{{ url('/layanan') }}" class="nav-item nav-link ">Layanan</a>
+                            <div class="nav-item dropdown layanan">
+                                <a href="{{ url('/layanan') }}" class="nav-item nav-link " data-bs-toggle="dropdown">
+                                    <span class="dropdown-toggle">Layanan</span>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a href="{{ url('/layanan') }}" class="dropdown-item">Semua Layanan</a>
+                                    <a href="{{ url('/layanan-cepat') }}" class="dropdown-item">Layanan Cepat</a>
+                                </div>
+                            </div>
                             <a href="{{ url('/dokumentasi') }}" class="nav-item nav-link ">Dokumentasi</a>
                             <a href="{{ url('/FAQ') }}" class="nav-item nav-link ">FAQ</a>
                             

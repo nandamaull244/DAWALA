@@ -66,6 +66,10 @@ Route::get('/detail-persyaratan', function () {
     return view('LandingPage.pages.detailPersyaratan');
 });
 
+Route::get('/visi-misi', function () {
+    return view('LandingPage.pages.visiMisi');
+});
+
 Route::get('/layanan-cepat', function () {
     return view('LandingPage.pages.layananCepat');
 });

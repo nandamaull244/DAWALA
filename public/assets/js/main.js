@@ -67,6 +67,18 @@
                 profileDropdown.classList.add('active');
             }
         }
+        // Tambahkan kelas active pada link "layanan" jika berada di salah satu halaman dropdown
+        const pathLayanan = ['/layanan', '/layanan-cepat'];
+        const layananDropdown = document.querySelector('.navbar-nav .layanan > .nav-link');
+    
+        if (pathLayanan.includes(currentPath)) {
+            console.log('Dropdown Path Matched:', currentPath); // Debugging jika ada path yang match di dropdown
+            removeActiveClass();
+            if (layananDropdown) {
+                layananDropdown.classList.add('active');
+            }
+        }
+        
     });
     
     
