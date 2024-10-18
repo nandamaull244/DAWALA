@@ -63,11 +63,11 @@
                     <div class="text-center mt-5 text-lg fs-4">
                         <p class="text-gray-600" style="color: #0164eb; transition: color 0.3s;"
                             onmouseover="this.style.color='#003366'" onmouseout="this.style.color='#0164eb'">Tidak punya
-                            akun? <a href="{{ url('/register') }}" class="font-bold"
+                            akun? <a href="{{ url('/auth/register') }}" class="font-bold"
                                 style="color: #0164eb; transition: color 0.3s;" onmouseover="this.style.color='#003366'"
                                 onmouseout="this.style.color='#0164eb'">Daftar
                             </a>.</p>
-                        <p><a href="{{ url('/forgot-password') }}" class="font-bold"
+                        <p><a href="{{ url('/auth/forgot-password') }}" class="font-bold"
                                 style="color: #0164eb; transition: color 0.3s;" onmouseover="this.style.color='#003366'"
                                 onmouseout="this.style.color='#0164eb'">Lupa password?</a></p>
                     </div>

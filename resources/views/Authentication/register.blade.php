@@ -296,7 +296,7 @@
                     </form>
 
                     <div class="text-center mt-5 text-lg fs-4">
-                        <p>Sudah punya akun? <a href="{{ url('/login') }}" class="font-bold"
+                        <p>Sudah punya akun? <a href="{{ url('/auth/login') }}" class="font-bold"
                                 style="color: #0164eb; transition: color 0.3s;" onmouseover="this.style.color='#003366'"
                                 onmouseout="this.style.color='#0164eb'">Masuk</a></p>
                     </div>
