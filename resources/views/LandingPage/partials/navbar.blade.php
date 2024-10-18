@@ -28,8 +28,8 @@
                             <a href="{{ url('/FAQ') }}" class="nav-item nav-link ">FAQ</a>
                             
                             <div class="nav-btn px-2">
-                                <a href="{{ url('/login') }}" class="btn btn-primary rounded-pill py-2 px-4 ms-3 flex-shrink-0"> Masuk Dawala</a>
-                                <a href="{{ url('/register') }}" class="btn btn-success rounded-pill py-2 px-4 ms-3 flex-shrink-0"> Daftar Dawala</a>
+                                <a href="{{ url('/auth/login') }}" class="btn btn-primary rounded-pill py-2 px-4 ms-3 flex-shrink-0"> Masuk Dawala</a>
+                                <a href="{{ url('/auth/register') }}" class="btn btn-success rounded-pill py-2 px-4 ms-3 flex-shrink-0"> Daftar Dawala</a>
                             </div>
                         </div>
                     </div>

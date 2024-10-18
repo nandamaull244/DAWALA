@@ -34,7 +34,6 @@ class DatabaseSeeder extends Seeder
             'birth_date' => $faker->date('Y-m-d'),
             'gender' => $faker->randomElement(['Laki-Laki', 'Perempuan']),
             'no_kk' => $faker->numerify('################'),
-            'username' => 'admin',
             'email' => 'admin@example.com',
             'phone_number' => $faker->phoneNumber,
             'district_id' => $faker->randomDigitNotNull,

@@ -19,6 +19,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'nik',
+        'username',
         'password',
         'full_name',
         'birth_date',
@@ -32,7 +33,7 @@ class User extends Authenticatable
         'rt',
         'rw',
         'address',
-        'role', // Enum: ['admin', 'operator', 'user', 'kolektor']
+        'role', // Enum: ['admin', 'operator', 'user', 'instantiation']
         'registration_type',
         'registration_status', // Enum: ['Process', 'Rejected', 'Completed']
     ];
