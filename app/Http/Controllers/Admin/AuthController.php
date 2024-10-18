@@ -135,7 +135,7 @@ class AuthController extends Controller
             return redirect()->route('login.index')->with('success', 'Pendaftaran berhasil! Silakan login.');
         } catch (\Exception $e) {
             // Jika gagal
-            return redirect()->route('register')->with('error', 'Pendaftaran gagal! Silakan coba lagi.')->withInput();
+            return redirect()->route('register.index')->with('error', 'Pendaftaran gagal! Silakan coba lagi.')->withInput();
         }
     }
     
