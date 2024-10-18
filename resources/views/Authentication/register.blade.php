@@ -62,16 +62,16 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="role" id="perorangan"
                                         value="user" onclick="setRole('user')" required>
-                                    <label class="form-check-label" for="perorangan">Perorangan/umum diri
+                                    <label class="form-check-label" for="perorangan">Perorangan/Untuk Diri Sendiri
                                         sendiri</label>
                                     @error('role')
                                         <span>{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="role" id="collector"
-                                        value="collector" onclick="setRole('collector')" required>
-                                    <label class="form-check-label" for="collector">collector</label>
+                                    <input class="form-check-input" type="radio" name="role" id="instantiation"
+                                        value="instantiation" onclick="setRole('instantiation')" required>
+                                    <label class="form-check-label" for="instantiation">Instansi/Lembaga</label>
                                     @error('role')
                                         <span>{{ $message }}</span>
                                     @enderror
@@ -84,6 +84,7 @@
                             <div class="position-relative">
                                 <select class="form-control form-control-xl" id="sub-category-select"
                                     name="registration_type">
+                                    <option value="">Pilih Tipe Registrasi</option>
                                     <option value="Collector, RT"
                                         {{ old('registration_type') == 'Collector, RT' ? 'selected' : '' }}>
                                         RT</option>
@@ -98,6 +99,44 @@
                                         Instansi</option>
                                 </select>
                                 @error('registration_type')
+                                    <span>{{ $message }}</span>
+                                @enderror
+                                <div class="form-control-icon"
+                                    style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                                    <i class="bi bi-chevron-down"
+                                        style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="district-select-group" class="form-group mb-4" style="display: none;">
+                            <label for="district-select">Pilih Kecamatan:</label>
+                            <div class="position-relative">
+                                <select class="form-control form-control-xl" id="district-select" name="district_id">
+                                    <option value="">Pilih Kecamatan</option>
+                                    @foreach($districts as $district)
+                                        <option value="{{ $district->id }}" {{ old('district_id') == $district->id ? 'selected' : '' }}>
+                                            {{ $district->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('district_id')
+                                    <span>{{ $message }}</span>
+                                @enderror
+                                <div class="form-control-icon"
+                                    style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                                    <i class="bi bi-chevron-down"
+                                        style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="village-select-group" class="form-group mb-4" style="display: none;">
+                            <label for="village-select">Pilih Desa:</label>
+                            <div class="position-relative">
+                                <select class="form-control form-control-xl" id="village-select"
+                                    name="village_id">
+                                    <option value="">Pilih Desa</option>
+                                </select>
+                                @error('village_id')
                                     <span>{{ $message }}</span>
                                 @enderror
                                 <div class="form-control-icon"
@@ -268,9 +307,22 @@
     <script>
         function setRole(role) {
             document.getElementById('registration_status').value = role === 'user' ? 'completed' : 'process';
-            document.getElementById('sub-category').style.display = role === 'collector' ? 'block' : 'none';
+            const subCategory = document.getElementById('sub-category');
+            const districtSelect = document.getElementById('district-select').closest('.form-group');
+            const villageSelect = document.getElementById('village-select').closest('.form-group');
+            
+            if (role === 'instantiation') {
+                subCategory.style.display = 'block';
+                districtSelect.style.display = 'block';
+                villageSelect.style.display = 'block';
+            } else {
+                subCategory.style.display = 'none';
+                districtSelect.style.display = 'none';
+                villageSelect.style.display = 'none';
+            }
+            
             const userInput = document.getElementById('perorangan');
-            const operatorInput = document.getElementById('collector');
+            const operatorInput = document.getElementById('instantiation');
             if (role === 'user') {
                 operatorInput.required = false;
                 userInput.required = true;
@@ -339,6 +391,26 @@
                 passwordInput.type = "password";
             }
         }
+
+        document.getElementById('district-select').addEventListener('change', function() {
+            const districtId = this.value;
+            const villageSelect = document.getElementById('village-select');
+            villageSelect.innerHTML = '<option value="">Pilih Desa</option>';
+
+            if (districtId) {
+                fetch(`/api/villages/${districtId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(village => {
+                            const option = document.createElement('option');
+                            option.value = village.id;
+                            option.textContent = village.name;
+                            villageSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
 
     </script>
 

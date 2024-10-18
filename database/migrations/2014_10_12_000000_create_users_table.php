@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('birth_date');
             $table->enum('gender', ['Laki-Laki', 'Perempuan']);
             $table->string('no_kk');
-            $table->string('username')->unique()->nullable();
+           
             $table->string('email')->unique();
             $table->string('phone_number');
             $table->integer('district_id')->nullable();

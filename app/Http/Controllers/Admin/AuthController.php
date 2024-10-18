@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Models\User;
-
+use App\Models\District;
+use App\Models\Village;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Dotenv\Exception\ValidationException;
@@ -29,7 +30,7 @@ class AuthController extends Controller
             ]);
             if(Auth::attempt($user)) {
                 $request->session()->regenerate();
-                return redirect()->intended('/register')->with('success','Anda berhasil Login');
+                return redirect()->intended('/dashboard')->with('success','Anda berhasil Login');
             } else{
                 return redirect()->back()->with('error','NIK atau Password tidak sesuai');
             }
@@ -89,7 +90,9 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        return view("Authentication.register");
+        $districts = District::all();
+        $villages = Village::all();
+        return view("Authentication.register", compact('districts', 'villages'));
     }
 
     //proses register
@@ -104,7 +107,7 @@ class AuthController extends Controller
             'no_kk' => 'required|string|digits:16',
             'email' => 'required|email|unique:users,email',
             'phone_number' => 'required|string|digits_between:11,12',
-            'role' => 'required|in:admin,operator,user,collector',
+            'role' => 'required|in:admin,operator,user,instantiation',
             'password' => 'required|min:8|confirmed',
             'password_confirmation' => 'required|same:password',
             'registration_type' => 'required|string',
@@ -124,18 +127,20 @@ class AuthController extends Controller
                 'gender' => $request->gender,
                 'no_kk' => $request->no_kk,
                 'email' => $request->email,
+                'district_id' => $request->district_id,
+                'village_id' => $request->village_id,
                 'phone_number' => $request->phone_number,
                 'password' => Hash::make($request->password), // Hashing password sebelum disimpan
                 'role' => $request->role, // Set role based on user selection
                 'registration_status' => $request->role === 'user' ? 'Completed' : 'Process', // Set status based on user selection
-                'registration_type' => $request->role === 'collector' ? $request->registration_type : 'User, Perorangan', // Set registration type based on user selection
+                'registration_type' => $request->role === 'instantiation' ? $request->registration_type : 'User, Perorangan', // Set registration type based on user selection
             ]);
 
             // Jika berhasil
             return redirect()->route('login.index')->with('success', 'Pendaftaran berhasil! Silakan login.');
         } catch (\Exception $e) {
             // Jika gagal
-            return redirect()->route('register.index')->with('error', 'Pendaftaran gagal! Silakan coba lagi.')->withInput();
+            return redirect()->route('register')->with('error', 'Pendaftaran gagal! Silakan coba lagi.')->withInput();
         }
     }
     
@@ -177,4 +182,17 @@ class AuthController extends Controller
             return redirect()->back()->with('error', 'Email tidak ditemukan.');
         }
     }
+
+    public function showRegistrationForm()
+    {
+        $districts = District::all();
+        return view('Authentication.register', compact('districts'));
+    }
+
+    public function getVillagesByDistrict($districtId)
+    {
+        $villages = Village::where('district_id', $districtId)->get();
+        return response()->json($villages);
+    }
+
 }
