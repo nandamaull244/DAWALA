@@ -13,9 +13,9 @@ class ImportSqlAndMigrate extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate:fresh-import {--seed : Seed the database with records}
-                                                    {--village : Import village data}
-                                                    {--district : Import district data}';
+    protected $signature = 'migrate:dawala {--seed : Seed the database with records}
+                                           {--village : Import village data}
+                                           {--district : Import district data}';
 
     /**
      * The console command description.
@@ -43,7 +43,7 @@ class ImportSqlAndMigrate extends Command
 
         // Import village.sql if option is provided
         $this->info('Importing villages.sql...PEPEK');
-        $villagePath = public_path('backend/villages.sql');
+        $villagePath = public_path('backend/villages-cianjur.sql');
         if (file_exists($villagePath)) {
             DB::unprepared(file_get_contents($villagePath));
         } else {
@@ -52,7 +52,7 @@ class ImportSqlAndMigrate extends Command
 
         // Import district.sql if option is provided
         $this->info('Importing districts.sql... PEPEK2');
-        $districtPath = public_path('backend/districts.sql');
+        $districtPath = public_path('backend/districts-cianjur.sql');
         if (file_exists($districtPath)) {
             DB::unprepared(file_get_contents($districtPath));
         } else {
