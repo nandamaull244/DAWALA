@@ -16,9 +16,10 @@ return new class extends Migration
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->string('log_name');
-            $table->string('causer');
+            $table->foreignId('responder_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade')->nullable();
             $table->string('action');
+            $table->string('log_name');
+            $table->text('log_description');
             $table->timestamp('created_at')->useCurrent();
         });
     }

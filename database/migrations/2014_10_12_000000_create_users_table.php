@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('nik')->unique();
+            $table->string('username')->nullable()->unique();
             $table->string('password');
             $table->string('full_name');
             $table->string('birth_date');
@@ -29,7 +30,7 @@ return new class extends Migration
             $table->string('rt')->nullable();
             $table->string('rw')->nullable();
             $table->text('address')->nullable();
-            $table->enum('role', ['admin', 'operator', 'collector', 'user']); 
+            $table->enum('role', ['admin', 'operator', 'instantiation', 'user']); 
             $table->string('registration_type');
             $table->enum('registration_status', ['Process', 'Rejected', 'Completed']); 
             $table->timestamps();
