@@ -22,24 +22,33 @@ class AuthController extends Controller
     }
     public function loginProcess(Request $request)
     {
-            try {
-                $user = $request-> validate([
-                    'nik' => ['required'],
-                    'password' => ['required'],
-                ]);
-                if(Auth::attempt($user)) {
-                    $request->session()->regenerate();
-                    return redirect()->route('dashboardUser.dashboardUser')->with('success','Anda berhasil Login');
-                } else{
-                    return redirect()->back()->with('error','NIK atau Password tidak sesuai');
+        try {
+            $credentials = $request->validate([
+                'nik' => ['required'],
+                'password' => ['required'],
+            ]);
+
+            if (Auth::attempt($credentials)) {
+                $request->session()->regenerate();
+                $user = Auth::user();
+
+                switch ($user->role) {
+                    case 'admin':
+                        return redirect()->route('admin.dashboard')->with('success', 'Anda berhasil Login sebagai Admin');
+                    case 'operator':
+                        return redirect()->route('operator.dashboard')->with('success', 'Anda berhasil Login sebagai Operator');
+                    case 'instantiation':
+                        return redirect()->route('instantiation.dashboard')->with('success', 'Anda berhasil Login sebagai Instantiation');
+                    case 'user':
+                    default:
+                        return redirect()->route('user.dashboard')->with('success', 'Anda berhasil Login');
                 }
-                throw ValidationException::withMessages([
-                    'nik' => 'Data yang Anda masukan tidak ditemukan',
-                ]);
-        
-            }   catch(\Exception | PDOException | QueryException){
-                return redirect()->back()->with('error','NIK atau password tidak sesuai');
+            } else {
+                return redirect()->back()->with('error', 'NIK atau Password tidak sesuai');
             }
+        } catch (\Exception | PDOException | QueryException $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat login: ' . $e->getMessage());
+        }
     }
     public function loginAdmin(Request $request)
     {

@@ -28,6 +28,7 @@ Route::group(['prefix' => 'operator', 'middleware' => ['auth:operator']], functi
 //  INSTANTIATION ROUTES GROUP -->
 Route::group(['prefix' => 'instantiation', 'middleware' => ['auth:instantiation']], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('instantiation.dashboard');
+    Route::get('/form-ktp', [FormKtpController::class, 'index'])->name('form-ktp.index');
 });
 
 //  USER ROUTES GROUP -->

@@ -11,9 +11,9 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 
-@endif
+@endif                          
     <div class="page-heading">
-        <h3>Halaman User</h3>
+        <h3>Halaman Instansiasi</h3>
     </div>
    
     <div class="page-content">

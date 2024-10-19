@@ -9,7 +9,7 @@ class FormKtpController extends Controller
 {
     public function index()
     {
-        return view('Dashboard.user.formKtp');
+        return view('Ktp.index');
     }
     
 }

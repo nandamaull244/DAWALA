@@ -19,9 +19,9 @@ class DashboardController extends Controller
         }
     }
 
-    public function dashboardUser() {
-        return view("Dashboard.user.dashboardUser");
-    }
+    // public function dashboardUser() {
+    //     return view("Dashboard.user.dashboardUser");
+    // }
 
 
 }   
