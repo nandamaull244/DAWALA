@@ -412,6 +412,37 @@
             }
         });
 
+        // Add this new event listener
+        document.getElementById('village-select').addEventListener('change', function() {
+            const villageId = this.value;
+            const hiddenVillageInput = document.getElementById('hidden-village-id');
+            if (!hiddenVillageInput) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.id = 'hidden-village-id';
+                input.name = 'village_id';
+                input.value = villageId;
+                document.querySelector('form').appendChild(input);
+            } else {
+                hiddenVillageInput.value = villageId;
+            }
+        });
+
+        // Ensure the village_id is included when the form is submitted
+        document.querySelector('form').addEventListener('submit', function(event) {
+            const villageSelect = document.getElementById('village-select');
+            const hiddenVillageInput = document.getElementById('hidden-village-id');
+            
+            if (villageSelect.value && !hiddenVillageInput) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'village_id';
+                input.value = villageSelect.value;
+                this.appendChild(input);
+                
+            }
+        });
+
     </script>
 
 </body>

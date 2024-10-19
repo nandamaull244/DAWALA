@@ -111,8 +111,10 @@ class AuthController extends Controller
             'password' => 'required|min:8|confirmed',
             'password_confirmation' => 'required|same:password',
             'registration_type' => 'required|string',
-
+            'village_id' => 'required_if:role,instantiation|exists:villages,id',
+        
         ]);
+
         //jika validasi gagal
         if($validator->fails()){
             return redirect()->back()->withErrors($validator)->withInput();
@@ -127,20 +129,22 @@ class AuthController extends Controller
                 'gender' => $request->gender,
                 'no_kk' => $request->no_kk,
                 'email' => $request->email,
-                'district_id' => $request->district_id,
-                'village_id' => $request->village_id,
+                'district_id' => $request->role === 'instantiation' ? $request->district_id : null,
+                'village_id' => $request->role === 'instantiation' ? $request->village_id : null,
                 'phone_number' => $request->phone_number,
-                'password' => Hash::make($request->password), // Hashing password sebelum disimpan
-                'role' => $request->role, // Set role based on user selection
-                'registration_status' => $request->role === 'user' ? 'Completed' : 'Process', // Set status based on user selection
-                'registration_type' => $request->role === 'instantiation' ? $request->registration_type : 'User, Perorangan', // Set registration type based on user selection
+                'password' => Hash::make($request->password),
+                'role' => $request->role,
+                'registration_status' => $request->role === 'user' ? 'Completed' : 'Process',
+                'registration_type' => $request->role === 'instantiation' ? $request->registration_type : 'User, Perorangan',
             ]);
 
             // Jika berhasil
+        
             return redirect()->route('login.index')->with('success', 'Pendaftaran berhasil! Silakan login.');
         } catch (\Exception $e) {
             // Jika gagal
-            return redirect()->route('register')->with('error', 'Pendaftaran gagal! Silakan coba lagi.')->withInput();
+            dd($e);
+            return redirect()->route('register.index')->with('error', 'Pendaftaran gagal! Silakan coba lagi.')->withInput();
         }
     }
     

@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone_number');
             $table->integer('district_id')->nullable();
-            $table->integer('village_id')->nullable();
+            $table->bigInteger('village_id')->nullable();
             $table->string('rt')->nullable();
             $table->string('rw')->nullable();
             $table->text('address')->nullable();
