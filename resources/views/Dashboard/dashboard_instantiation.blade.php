@@ -1,4 +1,4 @@
-@extends('Dashboard.layout.main')
+@extends('Dashboard.layouts.main')
 
 @push('css')
 @endpush

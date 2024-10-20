@@ -56,7 +56,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login')->with('success','Anda berhasil logout');
+        return redirect()->route('login.index')->with('success','Anda berhasil logout');
     }
 
     public function loginAdmin(Request $request)

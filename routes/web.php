@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\Backend\KKController;
+use App\Http\Controllers\Backend\KTPController;
 use App\Http\Controllers\Backend\AuthController;
 use App\Http\Controllers\Backend\DashboardController;
-use App\Http\Controllers\Backend\KTPController;
-use App\Http\Controllers\Backend\KKController;
 use App\Http\Controllers\Backend\ArchiveDataController;
 /*
 |--------------------------------------------------------------------------
@@ -77,31 +78,12 @@ Route::group(['prefix' => 'auth'], function () {
 
 // MAIN PAGE ROUTES GROUP -->
 Route::group([], function () {
-    Route::get('/', function () {
-        return view('LandingPage.pages.home');
-    });
-    
-    Route::get('/layanan', function () {
-        return view('LandingPage.pages.layanan');
-    });
-    
-    Route::get('/dokumentasi', function () {
-        return view('LandingPage.pages.dokumentasi');
-    });
-    
-    Route::get('/FAQ', function () {
-        return view('LandingPage.pages.FAQ');
-    });
-    
-    Route::get('/tentang-dawala', function () {
-        return view('LandingPage.pages.tentangDawala');
-    });
-    
-    Route::get('/tim-dawala', function () {
-        return view('LandingPage.pages.timDawala');
-    });
-    
-    Route::get('/detail-persyaratan', function () {
-        return view('LandingPage.pages.detailPersyaratan');
-    });
+    Route::get('/', [PageController::class, 'home'])->name('page.home');
+    Route::get('/layanan', [PageController::class, 'service'])->name('page.service');
+    Route::get('/dokumentasi', [PageController::class, 'documentation'])->name('page.documentation');
+    Route::get('/FAQ', [PageController::class, 'FAQ'])->name('page.FAQ');
+    Route::get('/tentang-dawala', [PageController::class, 'about'])->name('page.about');
+    Route::get('/tim-dawala', [PageController::class, 'dawalaTeam'])->name('page.tim-dawala');
+    Route::get('/visi-misi', [PageController::class, 'visiMisi'])->name('page.visimisi');
+    Route::get('/detail-persyaratan', [PageController::class, 'detailPersyaratan'])->name('page.detail-persyaratan');
 });

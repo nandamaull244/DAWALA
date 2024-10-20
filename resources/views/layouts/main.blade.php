@@ -2,14 +2,14 @@
 <html lang="en">
 
     <head>
-        @include('partials.header')
+        @include('layouts.partials.header')
     </head>
 
     <body>
         <div id="app">
             <div id="main">
 
-                @include('partials.sidebar')
+                @include('layouts.partials.sidebar')
 
                 <header class="mb-3">
                     <a href="#" class="burger-btn d-block d-xl-none">
@@ -52,7 +52,7 @@
                     @yield('content')
                 </div>
 
-                @include('partials.footer')
+                @include('layouts.partials.footer')
 
             </div>
     </body>

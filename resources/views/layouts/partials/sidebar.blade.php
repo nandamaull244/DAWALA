@@ -16,19 +16,19 @@
                 <li class="sidebar-title">Menu</li>
 
                 @if (Auth::user()->role == 'admin')
-                    @include('partials.sidebar.sidebar-admin')
+                    @include('layouts.partials.sidebar.sidebar-admin')
                 @endif
 
                 @if (Auth::user()->role == 'instantiation')
-                    @include('partials.sidebar.sidebar-instantiation')
+                    @include('layouts.partials.sidebar.sidebar-instantiation')
                 @endif
 
                 @if (Auth::user()->role == 'operator')
-                    @include('partials.sidebar.sidebar-operator')
+                    @include('layouts.partials.sidebar.sidebar-operator')
                 @endif
 
                 @if (Auth::user()->role == 'user')
-                    @include('partials.sidebar.sidebar-user')
+                    @include('layouts.partials.sidebar.sidebar-user')
                 @endif
 
                 <li class="sidebar-item  ">
