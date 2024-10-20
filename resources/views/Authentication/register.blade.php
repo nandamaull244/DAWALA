@@ -14,6 +14,7 @@
         <link rel="icon" href="{{ asset('assets') }}/img/logo.png" type="image/x-icon">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
         <style>
             body {
                 background-image: url('{{ asset('assets') }}/img/1.png');
@@ -225,7 +226,6 @@
                             <div class="mb-4">
                                 <label for="gender-select" class="mb-2">Pilih Jenis Kelamin:</label>
                                 <div class="form-group ">
-
                                     <div class="position-relative">
                                         <select class="form-control form-control-xl" id="gender-select"
                                             name="gender" required>
@@ -247,8 +247,6 @@
                                     <span>{{ $message }}</span>
                                 @enderror
                             </div>
-
-
 
                             <input type="hidden" name="registration_status" id="registration_status"
                                 value="completed" onchange="setRole(this.value)">
@@ -300,6 +298,7 @@
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
         <script>
             $(".flatpickr").flatpickr({
                 dateFormat: "Y-m-d",
@@ -353,6 +352,49 @@
                 @if (session('info'))
                     toastr.info("{{ session('info') }}", "Informasi");
                 @endif
+
+
+                $('#district-select').on('change', function() {
+                    const districtId = $(this).val();
+                    const $villageSelect = $('#village-select');
+                    $villageSelect.html('<option value="">Pilih Desa</option>');
+
+                    if (districtId) {
+                        $.ajax({
+                            url: "{{ route('get-villages', '') }}/" + districtId,
+                            method: 'GET',
+                            dataType: 'json',
+                            success: function(data) {
+                                $.each(data, function(index, village) {
+                                    $villageSelect.append($('<option>', {
+                                        value: village.id,
+                                        text: village.name
+                                    }));
+                                });
+                                $('#village-select-group').show();
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error:', error);
+                            }
+                        });
+                    } else {
+                        $('#village-select-group').hide();
+                    }
+                });
+
+                $('form').on('submit', function(event) {
+                    const villageId = $('#village-select').val();
+                    let $hiddenVillageInput = $('#hidden-village-id');
+
+                    if (villageId && $hiddenVillageInput.length === 0) {
+                        $hiddenVillageInput = $('<input>', {
+                            type: 'hidden',
+                            name: 'village_id',
+                            value: villageId
+                        });
+                        $(this).append($hiddenVillageInput);
+                    }
+                });
             });
 
             function setRole(role) {
@@ -428,55 +470,6 @@
                     passwordInput.type = "password";
                 }
             }
-
-            document.getElementById('district-select').addEventListener('change', function() {
-                const districtId = this.value;
-                const villageSelect = document.getElementById('village-select');
-                villageSelect.innerHTML = '<option value="">Pilih Desa</option>';
-
-                if (districtId) {
-                    fetch(`/api/villages/${districtId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            data.forEach(village => {
-                                const option = document.createElement('option');
-                                option.value = village.id;
-                                option.textContent = village.name;
-                                villageSelect.appendChild(option);
-                            });
-                        })
-                        .catch(error => console.error('Error:', error));
-                }
-            });
-
-            document.getElementById('village-select').addEventListener('change', function() {
-                const villageId = this.value;
-                const hiddenVillageInput = document.getElementById('hidden-village-id');
-                if (!hiddenVillageInput) {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.id = 'hidden-village-id';
-                    input.name = 'village_id';
-                    input.value = villageId;
-                    document.querySelector('form').appendChild(input);
-                } else {
-                    hiddenVillageInput.value = villageId;
-                }
-            });
-
-            document.querySelector('form').addEventListener('submit', function(event) {
-                const villageSelect = document.getElementById('village-select');
-                const hiddenVillageInput = document.getElementById('hidden-village-id');
-
-                if (villageSelect.value && !hiddenVillageInput) {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'village_id';
-                    input.value = villageSelect.value;
-                    this.appendChild(input);
-
-                }
-            });
         </script>
     </body>
 

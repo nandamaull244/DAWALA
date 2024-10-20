@@ -26,10 +26,3 @@ function dashboardRedirect($role) {
         return route('user.dashboard');
     }
 }
-
-function getVillagesByDistrict($districtId)
-{
-    $villages = Village::where('district_id', $districtId)->get();
-    return response()->json($villages);
-}
-

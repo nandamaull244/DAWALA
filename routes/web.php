@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\Backend\KKController;
 use App\Http\Controllers\Backend\KTPController;
 use App\Http\Controllers\Backend\AuthController;
@@ -49,6 +50,10 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:user', 'as' => 'user.'],
     Route::resource('/form-kk', KKController::class);
     Route::resource('/arsip-kependudukan', ArchiveDataController::class);
 });
+
+// LOCATION ROUTES GROUP -->
+Route::get('/get-villages-by-district/{districtId}', [LocationController::class, 'getVillagesByDistrict'])->name('get-villages');
+
 
 // AUTHENTICATION ROUTES GROUP -->
 Route::group(['prefix' => 'auth'], function () {

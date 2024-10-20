@@ -72,7 +72,6 @@
                 <div class="col-lg-7 d-none d-lg-block">
                     <div id="auth-right">
                         <img src="/backend/assets/images/cover-login.png" alt="Your Image" class="img-fluid">
-
                     </div>
                 </div>
             </div>
