@@ -1,11 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\FormKtpController;
-use App\Http\Controllers\Admin\FormKkController;
-use App\Http\Controllers\Admin\TableController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\LocationController;
+use App\Http\Controllers\Backend\KKController;
+use App\Http\Controllers\Backend\KTPController;
+use App\Http\Controllers\Backend\AuthController;
+use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Backend\ArchiveDataController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,36 +21,39 @@ use App\Http\Controllers\Admin\TableController;
 
 //  ADMIN ROUTES GROUP -->
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.'], function(){
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-    Route::resource('/form-ktp', FormKtpController::class);
-    Route::resource('/form-kk', FormKkController::class);
-    Route::resource('/table-data', TableController::class);  
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('/form-ktp', KTPController::class);
+    Route::resource('/form-kk', KKController::class);
+    Route::resource('/arsip-kependudukan', ArchiveDataController::class);  
 });
 
 //  ADMIN ROUTES GROUP -->
 Route::group(['prefix' => 'operator', 'middleware' => 'auth:operator', 'as' => 'operator.'], function(){
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('operator.dashboard');
-    Route::resource('/user', UserController::class);
-    Route::resource('/form-ktp', FormKtpController::class);
-    Route::resource('/form-kk', FormKkController::class);
-    Route::resource('/table-data', TableController::class);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('/form-ktp', KTPController::class);
+    Route::resource('/form-kk', KKController::class);
+    Route::resource('/arsip-kependudukan', ArchiveDataController::class);
 });
 
 //  INSTANTIATION ROUTES GROUP -->
 Route::group(['prefix' => 'instantiation', 'middleware' => 'auth:instantiation', 'as' => 'instantiation.'], function(){
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('instantiation.dashboard');
-    Route::resource('/form-ktp', FormKtpController::class);
-    Route::resource('/form-kk', FormKkController::class);
-    Route::resource('/table-data', TableController::class);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('/form-ktp', KTPController::class);
+    Route::resource('/form-kk', KKController::class);
+    Route::resource('/arsip-kependudukan', ArchiveDataController::class);
 });
 
 //  USER ROUTES GROUP -->
 Route::group(['prefix' => 'user', 'middleware' => 'auth:user', 'as' => 'user.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
-    Route::resource('/form-ktp', FormKtpController::class);
-    Route::resource('/form-kk', FormKkController::class);
-    Route::resource('/table-data', TableController::class);
+    Route::resource('/form-ktp', KTPController::class);
+    Route::resource('/form-kk', KKController::class);
+    Route::resource('/arsip-kependudukan', ArchiveDataController::class);
 });
+
+// LOCATION ROUTES GROUP -->
+Route::get('/get-villages-by-district/{districtId}', [LocationController::class, 'getVillagesByDistrict'])->name('get-villages');
+
 
 // AUTHENTICATION ROUTES GROUP -->
 Route::group(['prefix' => 'auth'], function () {
@@ -78,31 +83,12 @@ Route::group(['prefix' => 'auth'], function () {
 
 // MAIN PAGE ROUTES GROUP -->
 Route::group([], function () {
-    Route::get('/', function () {
-        return view('LandingPage.pages.home');
-    });
-    
-    Route::get('/layanan', function () {
-        return view('LandingPage.pages.layanan');
-    });
-    
-    Route::get('/dokumentasi', function () {
-        return view('LandingPage.pages.dokumentasi');
-    });
-    
-    Route::get('/FAQ', function () {
-        return view('LandingPage.pages.FAQ');
-    });
-    
-    Route::get('/tentang-dawala', function () {
-        return view('LandingPage.pages.tentangDawala');
-    });
-    
-    Route::get('/tim-dawala', function () {
-        return view('LandingPage.pages.timDawala');
-    });
-    
-    Route::get('/detail-persyaratan', function () {
-        return view('LandingPage.pages.detailPersyaratan');
-    });
+    Route::get('/', [PageController::class, 'home'])->name('page.home');
+    Route::get('/layanan', [PageController::class, 'service'])->name('page.service');
+    Route::get('/dokumentasi', [PageController::class, 'documentation'])->name('page.documentation');
+    Route::get('/FAQ', [PageController::class, 'FAQ'])->name('page.FAQ');
+    Route::get('/tentang-dawala', [PageController::class, 'about'])->name('page.about');
+    Route::get('/tim-dawala', [PageController::class, 'dawalaTeam'])->name('page.tim-dawala');
+    Route::get('/visi-misi', [PageController::class, 'visiMisi'])->name('page.visimisi');
+    Route::get('/detail-persyaratan', [PageController::class, 'detailPersyaratan'])->name('page.detail-persyaratan');
 });
