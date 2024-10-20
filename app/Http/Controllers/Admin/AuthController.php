@@ -107,23 +107,38 @@ class AuthController extends Controller
 
     public function registerProcess(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $rules = [
             'nik' => 'required|string|digits:16',
             'full_name' => 'required|string|max:255',
             'birth_date' => 'required|string',
             'gender' => 'required|in:Laki-Laki,Perempuan',
             'no_kk' => 'required|string|digits:16',
             'email' => 'required|email|unique:users,email',
-            'phone_number' => 'required|string|digits_between:11,12',
+            'phone_number' => 'required|string|digits_between:10,14',
             'role' => 'required|in:admin,operator,user,instantiation',
             'password' => 'required|min:8|confirmed',
             'password_confirmation' => 'required|same:password',
-            'registration_type' => 'required|string',
-            'village_id' => 'required_if:role,instantiation|exists:villages,id',
-        ]);
+        ];
 
+        if ($request->input('role') === 'instantiation') {
+            $rules['registration_type'] = 'required|string';
+            $rules['village_id'] = 'required|exists:villages,id';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+        
         if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput();
+            $errors = $validator->errors();
+            $errorMessages = [];
+            foreach ($errors->all() as $message) {
+                $errorMessages[] = $message;
+            }
+            $errorMessage = implode('<br>', $errorMessages);
+            
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', message('error', $errorMessage));
         }
 
         try {
