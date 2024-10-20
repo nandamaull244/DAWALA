@@ -6,10 +6,10 @@
 </li>
 
 <li class="sidebar-item  has-sub">
-    <a href="#" class='sidebar-link'>
+    <span href="#" class='sidebar-link disabled'>
         <i class="bi bi-grid-1x2-fill"></i>
         <span>Kependudukan</span>
-    </a>
+    </span>
     <ul class="submenu ">
         <li class="submenu-item ">
             <a href="{{ route('admin.arsip-kependudukan.index') }}" class='sidebar-link'>
