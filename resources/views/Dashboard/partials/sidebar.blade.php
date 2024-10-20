@@ -32,6 +32,12 @@
                         <span>KK</span>
                     </a>
                 </li>
+                <li class="sidebar-item  ">
+                    <a href="{{ url('admin/table-data') }}" class='sidebar-link'>
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                        <span>Data table</span>
+                    </a>
+                </li>
                 
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>

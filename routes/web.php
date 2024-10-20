@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FormKtpController;
 use App\Http\Controllers\Admin\FormKkController;
+use App\Http\Controllers\Admin\TableController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,6 +22,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::resource('/form-ktp', FormKtpController::class);
     Route::resource('/form-kk', FormKkController::class);
+    Route::resource('/table-data', TableController::class);  
 });
 
 //  ADMIN ROUTES GROUP -->
@@ -29,6 +31,7 @@ Route::group(['prefix' => 'operator', 'middleware' => 'auth:operator', 'as' => '
     Route::resource('/user', UserController::class);
     Route::resource('/form-ktp', FormKtpController::class);
     Route::resource('/form-kk', FormKkController::class);
+    Route::resource('/table-data', TableController::class);
 });
 
 //  INSTANTIATION ROUTES GROUP -->
@@ -36,6 +39,7 @@ Route::group(['prefix' => 'instantiation', 'middleware' => 'auth:instantiation',
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('instantiation.dashboard');
     Route::resource('/form-ktp', FormKtpController::class);
     Route::resource('/form-kk', FormKkController::class);
+    Route::resource('/table-data', TableController::class);
 });
 
 //  USER ROUTES GROUP -->
@@ -43,6 +47,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:user', 'as' => 'user.'],
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
     Route::resource('/form-ktp', FormKtpController::class);
     Route::resource('/form-kk', FormKkController::class);
+    Route::resource('/table-data', TableController::class);
 });
 
 // AUTHENTICATION ROUTES GROUP -->
