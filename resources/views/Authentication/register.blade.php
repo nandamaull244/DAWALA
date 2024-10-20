@@ -82,20 +82,19 @@
                         <div id="sub-category" class="form-group mb-4" style="display: none;">
                             <label for="sub-category-select">Pilih Tipe Registrasi:</label>
                             <div class="position-relative">
-                                <select class="form-control form-control-xl" id="sub-category-select"
-                                    name="registration_type">
+                                <select class="form-control form-control-xl" id="sub-category-select" name="registration_type">
                                     <option value="">Pilih Tipe Registrasi</option>
-                                    <option value="Collector, RT"
-                                        {{ old('registration_type') == 'Collector, RT' ? 'selected' : '' }}>
+                                    <option value="Intansi, RT"
+                                        {{ old('registration_type') == 'Intansi, RT' ? 'selected' : '' }}>
                                         RT</option>
-                                    <option value="Collector, RW"
-                                        {{ old('registration_type') == 'Collector, RW' ? 'selected' : '' }}>
+                                    <option value="Intansi, RW"
+                                        {{ old('registration_type') == 'Intansi, RW' ? 'selected' : '' }}>
                                         RW</option>
-                                    <option value="Collector, Yayasan"
-                                        {{ old('registration_type') == 'Collector, Yayasan' ? 'selected' : '' }}>
+                                    <option value="Intansi, Yayasan"
+                                        {{ old('registration_type') == 'Intansi, Yayasan' ? 'selected' : '' }}>
                                         Yayasan</option>
-                                    <option value="Collector, Instansi"
-                                        {{ old('registration_type') == 'Collector, Instansi' ? 'selected' : '' }}>
+                                    <option value="Intansi, Instansi"
+                                        {{ old('registration_type') == 'Intansi, Instansi' ? 'selected' : '' }}>
                                         Instansi</option>
                                 </select>
                                 @error('registration_type')

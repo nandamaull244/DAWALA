@@ -17,10 +17,9 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        // Tambahkan ini untuk menangkap pesan sukses dari registrasi
-        $successMessage = session('success');
-        return view("Authentication.login", compact('successMessage'));
+        return view("Authentication.login")->with(message('login'));
     }
+
     public function loginProcess(Request $request)
     {
         try {
@@ -51,11 +50,20 @@ class AuthController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan saat login: ' . $e->getMessage());
         }
     }
+
+    public function logout(Request $request){
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/login')->with('success','Anda berhasil logout');
+    }
+
     public function loginAdmin(Request $request)
     {
         $successMessage = session('success');
         return view("Authentication.loginAdmin", compact('successMessage'));
     }
+
     public function loginAdminProcess(Request $request)
     {
         try {
@@ -74,20 +82,12 @@ class AuthController extends Controller
                 $request->session()->regenerate();
                 return redirect()->intended('/admin/dashboard')->with('success', 'Anda berhasil Login sebagai Admin');
             }
-            
            
             return redirect()->back()->with('error', 'Username atau Password tidak sesuai');
 
         } catch (\Exception | PDOException | QueryException $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat login: ' . $e->getMessage());
         }
-    }
-
-    public function logout(Request $request){
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/login')->with('success','Anda berhasil logout');
     }
 
     public function logoutAdmin(Request $request)
@@ -100,15 +100,13 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $districts = District::all();
-        $villages = Village::all();
+        $districts = District::orderBy('name', 'asc')->get();
+        $villages = Village::orderBy('name', 'asc')->get();
         return view("Authentication.register", compact('districts', 'villages'));
     }
 
-    //proses register
     public function registerProcess(Request $request)
     {
-        //validasi data
         $validator = Validator::make($request->all(),[
             'nik' => 'required|string|digits:16',
             'full_name' => 'required|string|max:255',
@@ -122,16 +120,13 @@ class AuthController extends Controller
             'password_confirmation' => 'required|same:password',
             'registration_type' => 'required|string',
             'village_id' => 'required_if:role,instantiation|exists:villages,id',
-        
         ]);
 
-        //jika validasi gagal
         if($validator->fails()){
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
         try {
-            // membuat user baru
             $user = User::create([
                 'nik' => $request->nik,
                 'full_name' => $request->full_name,
@@ -148,16 +143,12 @@ class AuthController extends Controller
                 'registration_type' => $request->role === 'instantiation' ? $request->registration_type : 'User, Perorangan',
             ]);
 
-            // Jika berhasil
-        
             return redirect()->route('login.index')->with('success', 'Pendaftaran berhasil! Silakan login.');
         } catch (\Exception $e) {
-            // Jika gagal
-            dd($e);
             return redirect()->route('register.index')->with('error', 'Pendaftaran gagal! Silakan coba lagi.')->withInput();
         }
     }
-    
+
     public function forgotPassword()
     {
         return view('Authentication.forgot_password');
@@ -196,17 +187,4 @@ class AuthController extends Controller
             return redirect()->back()->with('error', 'Email tidak ditemukan.');
         }
     }
-
-    public function showRegistrationForm()
-    {
-        $districts = District::all();
-        return view('Authentication.register', compact('districts'));
-    }
-
-    public function getVillagesByDistrict($districtId)
-    {
-        $villages = Village::where('district_id', $districtId)->get();
-        return response()->json($villages);
-    }
-
 }
