@@ -16,34 +16,6 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary w-100" onclick="saveRejection()">Submit</button>
             </div>
-            <script>
-                function toggleLayanan(button) {
-                    const buttons = document.querySelectorAll('.layanan-btn');
-                    buttons.forEach(btn => btn.classList.remove('btn-primary'));
-                    button.classList.add('btn-primary');
-                }
-
-                function selectPelayanan(button) {
-                    const buttons = document.querySelectorAll('.pelayanan-btn');
-                    buttons.forEach(btn => btn.classList.remove('btn-primary'));
-                    button.classList.add('btn-primary');
-                }
-            </script>
-            <script>
-                function saveRejection() {
-                    const alasanTolak = document.getElementById('alasan_tolak').value;
-                    if (alasanTolak.trim() === '') {
-                        alert('Mohon masukkan alasan penolakan.');
-                        return;
-                    }
-
-                    // Here you can add logic to save the rejection reason
-                    console.log('Alasan penolakan:', alasanTolak);
-
-                    // Close the modal after saving
-                    $('#rejectModal').modal('hide');
-                }
-            </script>
         </div>
     </div>
 </div>

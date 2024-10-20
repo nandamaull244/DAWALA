@@ -19,10 +19,6 @@
 
 <script>
     function deleteData() {
-        // Add logic to delete the data
-        console.log('Deleting data...');
-        // You can use AJAX to send a delete request to the server
-        // After deleting, close the modal:
         $('#deleteModal').modal('hide');
     }
 </script>
