@@ -69,11 +69,12 @@ class AuthController extends Controller
                     Auth::logout();
                     return redirect()->back()->with('error', 'Anda tidak memiliki akses sebagai admin.');
                 }
-
+                
                 $request->session()->regenerate();
                 return redirect()->intended('/admin/dashboard')->with('success', 'Anda berhasil Login sebagai Admin');
             }
-            return 'a';
+            
+           
             return redirect()->back()->with('error', 'Username atau Password tidak sesuai');
 
         } catch (\Exception | PDOException | QueryException $e) {

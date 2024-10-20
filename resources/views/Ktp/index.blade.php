@@ -184,16 +184,40 @@
                                 <div class="form-group mt-3">
                                     <label class="form-label">Download Formulir</label>
                                     <div class="d-flex">
-                                        <a href="{{ asset('path/to/F1.02.pdf') }}" class="btn btn-primary me-2" download>
+                                        <a href="{{ asset('path/to/F1.01.pdf') }}"
+                                            class="btn btn-primary me-2" download>
+                                            <i class="bi bi-file-earmark-pdf"></i> F1.01
+                                        </a>
+                                        <a href="{{ asset('path/to/F1.02.pdf') }}"
+                                            class="btn btn-primary me-2" download>
                                             <i class="bi bi-file-earmark-pdf"></i> F1.02
                                         </a>
-                                        <a href="{{ asset('path/to/F1.04.pdf') }}" class="btn btn-primary" download>
+                                        <a href="{{ asset('path/to/F1.03.pdf') }}"
+                                            class="btn btn-primary me-2" download>
+                                            <i class="bi bi-file-earmark-pdf"></i> F1.03
+                                        </a>
+                                        <a href="{{ asset('path/to/F1.04.pdf') }}"
+                                            class="btn btn-primary me-2" download>
                                             <i class="bi bi-file-earmark-pdf"></i> F1.04
                                         </a>
                                     </div>
-                                    <small class="text-danger mt-2 d-block">*Formulir F1.04 khusus untuk penduduk yang tidak memiliki data atau dokumen sama sekali</small>
+                                    <ul class="mt-2">
+                                        <li><small>F1.01 : Jika data/dokumen hilang/rusak (pernah memiliki data/dokumen yang
+                                                tercatat di disduk)</small></li>
+                                        <li style="color: red;"><small>F1.02 : Wajib untuk semua layanan</small></li>
+                                        <li><small class="text-danger mt-1 d-block">F1.03 : Jika pindah alamat</small>
+                                        </li>
+                                        <li><small class="text-danger mt-1 d-block">F1.04 : khusus untuk penduduk yang tidak
+                                                memiliki data atau dokumen sama sekali</small>
+                                        </li>
+                                    </ul>
                                 </div>
                                 
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="col-12 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary me-1 mb-1">Simpan</button>
                             </div>
                         </div>
                     </div>
