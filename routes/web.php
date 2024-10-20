@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FormKtpController;
+use App\Http\Controllers\Admin\FormKkController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,24 +17,32 @@ use App\Http\Controllers\Admin\FormKtpController;
 */
 
 //  ADMIN ROUTES GROUP -->
-Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin']], function(){
+Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::resource('/form-ktp', FormKtpController::class);
+    Route::resource('/form-kk', FormKkController::class);
 });
 
 //  ADMIN ROUTES GROUP -->
-Route::group(['prefix' => 'operator', 'middleware' => ['auth:operator']], function(){
+Route::group(['prefix' => 'operator', 'middleware' => 'auth:operator', 'as' => 'operator.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('operator.dashboard');
+    Route::resource('/user', UserController::class);
+    Route::resource('/form-ktp', FormKtpController::class);
+    Route::resource('/form-kk', FormKkController::class);
 });
 
 //  INSTANTIATION ROUTES GROUP -->
-Route::group(['prefix' => 'instantiation', 'middleware' => ['auth:instantiation']], function(){
+Route::group(['prefix' => 'instantiation', 'middleware' => 'auth:instantiation', 'as' => 'instantiation.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('instantiation.dashboard');
-    Route::get('/form-ktp', [FormKtpController::class, 'index'])->name('form-ktp.index');
+    Route::resource('/form-ktp', FormKtpController::class);
+    Route::resource('/form-kk', FormKkController::class);
 });
 
 //  USER ROUTES GROUP -->
-Route::group(['prefix' => 'user', 'middleware' => ['auth:user']], function(){
+Route::group(['prefix' => 'user', 'middleware' => 'auth:user', 'as' => 'user.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
+    Route::resource('/form-ktp', FormKtpController::class);
+    Route::resource('/form-kk', FormKkController::class);
 });
 
 // AUTHENTICATION ROUTES GROUP -->

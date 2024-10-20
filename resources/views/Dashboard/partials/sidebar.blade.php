@@ -21,9 +21,15 @@
                     </a>
                 </li>
                 <li class="sidebar-item  ">
-                    <a href="{{ route('form-ktp.index') }}" class='sidebar-link'>
+                    <a href="{{ route('admin.form-ktp.index') }}" class='sidebar-link'>
                         <i class="bi bi-file-earmark-text-fill"></i>
                         <span>KTP</span>
+                    </a>
+                </li>
+                <li class="sidebar-item  ">
+                    <a href="{{ route('admin.form-kk.index') }}" class='sidebar-link'>
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                        <span>KK</span>
                     </a>
                 </li>
                 

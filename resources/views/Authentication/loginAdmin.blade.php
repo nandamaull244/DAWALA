@@ -21,6 +21,13 @@
         </div>
 
     @endif
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert" id="success-alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    @endif
 
     <div id="auth">
 
@@ -43,7 +50,7 @@
 
 
 
-                    <form action="{{ route('loginAdmin.process') }}" method="POST">
+                    <form action="{{ route('login-admin.process') }}" method="POST">
                         @csrf
                         <div class="form-group position-relative has-icon-left mb-3 ">
                             <input type="text" class="form-control form-control-lg rounded" name="username"
