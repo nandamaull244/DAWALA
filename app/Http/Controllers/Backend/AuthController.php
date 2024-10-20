@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Backend;
+
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\District;
 use App\Models\Village;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 use Dotenv\Exception\ValidationException;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;

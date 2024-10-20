@@ -1,4 +1,4 @@
-<div class="modal fade" id="rejectModal" tabindex="-1"  aria-labelledby="rejectModalLabel" aria-hidden="true">
+<div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="width: 700px;">
         <div class="modal-content">
             <div class="modal-header">
@@ -6,13 +6,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-            
-                <div class="d-flex flex-wrap justify-content-start gap-2 mb-5">
-                    <input type="text" class="form-control" id="alasan_tolak" name="alasan_tolak" placeholder="Masukkan alasan tolak pengajuan">
-                </div>
-                
 
-                
+                <div class="d-flex flex-wrap justify-content-start gap-2 mb-5">
+                    <input type="text" class="form-control" id="alasan_tolak" name="alasan_tolak"
+                        placeholder="Masukkan alasan tolak pengajuan">
+                </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary w-100" onclick="saveRejection()">Submit</button>
@@ -37,15 +36,14 @@
                         alert('Mohon masukkan alasan penolakan.');
                         return;
                     }
-                    
+
                     // Here you can add logic to save the rejection reason
                     console.log('Alasan penolakan:', alasanTolak);
-                    
+
                     // Close the modal after saving
                     $('#rejectModal').modal('hide');
                 }
             </script>
-            
         </div>
     </div>
 </div>

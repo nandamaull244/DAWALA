@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class TableController extends Controller
+class KKController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,9 @@ class TableController extends Controller
      */
     public function index()
     {
-        return view('table-data.index');
+        
+        return view('kk.index');
+        
     }
 
     /**

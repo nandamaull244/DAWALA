@@ -12,4 +12,5 @@
 <link rel="stylesheet" href="/backend/assets/vendors/bootstrap-icons/bootstrap-icons.css">
 <link rel="stylesheet" href="/backend/assets/css/app.css">
 <link rel="shortcut icon" href="/backend/assets/images/favicon.svg" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 @stack('css')

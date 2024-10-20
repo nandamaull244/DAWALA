@@ -15,6 +15,18 @@ function message($type = null, $message = null) {
     }
 }
 
+function dashboardRedirect($role) {
+    if ($role == 'admin') {
+        return route('admin.dashboard');
+    } elseif ($role == 'instantiation') {
+        return route('form-ktp.index');
+    } elseif ($role == 'operator') {
+        return route('operator.dashboard');
+    } else {
+        return route('user.dashboard');
+    }
+}
+
 function getVillagesByDistrict($districtId)
 {
     $villages = Village::where('district_id', $districtId)->get();

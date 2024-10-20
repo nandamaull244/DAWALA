@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class FormKtpController extends Controller
+class ArchiveDataController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class FormKtpController extends Controller
      */
     public function index()
     {
-        return view('Ktp.index');
+        return view('archive-data.index');
     }
 
     /**

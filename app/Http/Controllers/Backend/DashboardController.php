@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -18,10 +18,4 @@ class DashboardController extends Controller
             return view("Dashboard.dashboard_user");
         }
     }
-
-    // public function dashboardUser() {
-    //     return view("Dashboard.user.dashboardUser");
-    // }
-
-
 }   
