@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class FormKtpController extends Controller
+class TableController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class FormKtpController extends Controller
      */
     public function index()
     {
-        return view('Ktp.index');
+        return view('table-data.index');
     }
 
     /**
