@@ -15,51 +15,22 @@
             <ul class="menu">
                 <li class="sidebar-title">Menu</li>
 
-                <li class="sidebar-item active ">
-                    <a href="" class='sidebar-link'>
-                        <i class="bi bi-grid-fill"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li class="sidebar-item  ">
-                    <a href="{{ route('admin.form-ktp.index') }}" class='sidebar-link'>
-                        <i class="bi bi-file-earmark-text-fill"></i>
-                        <span>KTP</span>
-                    </a>
-                </li>
-                <li class="sidebar-item  ">
-                    <a href="{{ route('admin.form-kk.index') }}" class='sidebar-link'>
-                        <i class="bi bi-file-earmark-text-fill"></i>
-                        <span>KK</span>
-                    </a>
-                </li>
-                <li class="sidebar-item  ">
-                    <a href="{{ url('admin/table-data') }}" class='sidebar-link'>
-                        <i class="bi bi-file-earmark-text-fill"></i>
-                        <span>Data table</span>
-                    </a>
-                </li>
+                @if (Auth::user()->role == 'admin')
+                    @include('partials.sidebar.sidebar-admin')
+                @endif
 
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-grid-1x2-fill"></i>
-                        <span>Layouts</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="layout-default.html">Default Layout</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="layout-vertical-1-column.html">1 Column</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="layout-vertical-navbar.html">Vertical with Navbar</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="layout-horizontal.html">Horizontal Menu</a>
-                        </li>
-                    </ul>
-                </li>
+                @if (Auth::user()->role == 'instantiation')
+                    @include('partials.sidebar.sidebar-instantiation')
+                @endif
+
+                @if (Auth::user()->role == 'operator')
+                    @include('partials.sidebar.sidebar-operator')
+                @endif
+
+                @if (Auth::user()->role == 'user')
+                    @include('partials.sidebar.sidebar-user')
+                @endif
+
                 <li class="sidebar-item  ">
                     <div class="text-center mb-3 mt-5">
                         <form action="{{ route('logout') }}" method="POST" style="display: inline;">
