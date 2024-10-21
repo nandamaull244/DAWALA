@@ -202,7 +202,6 @@
 
 
     @include('article.modal_edit_artikel')
-    @include('article.modal_tambah_artikel')
     @include('article.delete_modal_artikel')
 @endsection
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\Backend\AuthController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\ArchiveDataController;
 use App\Http\Controllers\Backend\ArticleController;
+use App\Http\Controllers\Backend\FormArticleController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,6 +28,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
     Route::resource('/form-kk', KKController::class);
     Route::resource('/arsip-kependudukan', ArchiveDataController::class);  
     Route::resource('/artikel', ArticleController::class);
+    Route::resource('/form-artikel', FormArticleController::class);
+    
 });
 
 //  ADMIN ROUTES GROUP -->
