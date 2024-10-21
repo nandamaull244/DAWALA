@@ -17,6 +17,11 @@ class PageController extends Controller
         return view('pages.layanan');
     }
 
+    public function fastService()
+    {
+        return view('pages.layanan-cepat');
+    }
+
     public function documentation()
     {
         return view('pages.dokumentasi');

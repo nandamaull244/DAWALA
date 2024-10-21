@@ -85,6 +85,7 @@ Route::group(['prefix' => 'auth'], function () {
 Route::group([], function () {
     Route::get('/', [PageController::class, 'home'])->name('page.home');
     Route::get('/layanan', [PageController::class, 'service'])->name('page.service');
+    Route::get('/layanan-cepat', [PageController::class, 'fastService'])->name('page.fast-service');
     Route::get('/dokumentasi', [PageController::class, 'documentation'])->name('page.documentation');
     Route::get('/FAQ', [PageController::class, 'FAQ'])->name('page.FAQ');
     Route::get('/tentang-dawala', [PageController::class, 'about'])->name('page.about');
