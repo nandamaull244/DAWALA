@@ -8,30 +8,29 @@
             <div class="modal-body">
                 <form id="editForm">
                     <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="slug" class="form-label">SLUG</label>
+                       
+                            
                             <input type="text" class="form-control" id="slug" name="slug"
-                                value="{{ $data->slug ?? '' }}">
-                        </div>
-                        <div class="col-md-6">
+                                value="{{ $data->slug ?? '' }}" hidden>
+                      
+                        <div class="col-md-12">
                             <label for="title" class="form-label">JUDUL</label>
                             <input type="text" class="form-control" id="title" name="title"
                                 value="{{ $data->title ?? '' }}">
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label for="body" class="form-label">TEXT</label>
-                            <input type="text" class="form-control" id="body" name="body"
-                                value="{{ $data->body ?? '' }}">
+                            <textarea class="form-control" id="body" name="body" rows="5">{{ $data->body ?? '' }}</textarea>
                         </div>
-                        <div class="col-md-6">
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
                             <label for="image" class="form-label">Upload Image</label>
                             <input type="file" class="form-control" id="image" name="image"
                                 value="{{ $data->image ?? '' }}">
                         </div>
-                    </div>
-                    <div class="row mb-3">
                         <div class="col-md-12">
                             <label class="form-label">Preview Image</label>
                             <div id="imagePreview" class="mt-2">

@@ -111,6 +111,7 @@
 
 @section('content')
     <section class="section">
+       <div>
         <div class="card">
             <div class="card-body">
                 <div class="row">
@@ -198,11 +199,11 @@
                 </div>
             </div>
         </div>
+       </div>
     </section>
 
 
     @include('article.modal_edit_artikel')
-    @include('article.modal_tambah_artikel')
     @include('article.delete_modal_artikel')
 @endsection
 
