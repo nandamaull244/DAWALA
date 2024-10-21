@@ -21,7 +21,15 @@
                             <a href="{{ url('/tim-dawala') }}" class="dropdown-item">Tim Dawala</a>
                         </div>
                     </div>
-                    <a href="{{ url('/layanan') }}" class="nav-item nav-link ">Layanan</a>
+                    <div class="nav-item dropdown layanan">
+                        <a href="{{ url('/layanan') }}" class="nav-item nav-link" data-bs-toggle="dropdown">
+                            <span class="dropdown-toggle">Layanan</span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="{{ url('/layanan') }}" class="dropdown-item">Layanan</a>
+                            <a href="{{ url('/layanan-cepat') }}" class="dropdown-item">Layanan Cepat</a>
+                        </div>
+                    </div>
                     <a href="{{ url('/dokumentasi') }}" class="nav-item nav-link ">Dokumentasi</a>
                     <a href="{{ url('/FAQ') }}" class="nav-item nav-link ">FAQ</a>
 
