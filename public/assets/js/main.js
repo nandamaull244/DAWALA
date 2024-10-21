@@ -142,24 +142,33 @@
     
 
     // statistik carousel
-    $(document).ready(function () {
-        $(".statistik-carousel").owlCarousel({
-            autoplay: true,
-            smartSpeed: 1000,
+    $(document).ready(function(){
+        var owl = $(".statistik-carousel").owlCarousel({
             loop: true,
-            margin: 10,
-            nav: false,
+            margin: 20,
+            nav: false, // Disable default nav
             responsive: {
                 0: {
+                    items: 1
+                },
+                576: {
                     items: 2
                 },
-                600: {
+                992: {
                     items: 3
                 },
-                1000: {
+                1200: {
                     items: 4
                 }
             }
+        });
+
+        // Custom navigation
+        $('#prevBtn').click(function() {
+            owl.trigger('prev.owl.carousel');
+        });
+        $('#nextBtn').click(function() {
+            owl.trigger('next.owl.carousel');
         });
     });
     // dokumentasi carousel

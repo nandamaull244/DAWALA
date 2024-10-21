@@ -1,4 +1,4 @@
-@extends('LandingPage.layouts.landingPage')
+@extends('pages.layouts.main')
 
 @section('content')
         <!-- About Start -->
