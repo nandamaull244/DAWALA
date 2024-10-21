@@ -60,82 +60,93 @@
     <!-- statistik start -->
     <div class="container-fluid statistik bg-light py-5">
         <div class="container py-5">
-            <div class="owl-carousel statistik-carousel wow fadeInUp" data-wow-delay="0.2s">
-                <!-- Stat 1 -->
-                <div class="item">
-                    <div class="card border-0 shadow-sm p-4">
-                        <div class="icon mb-3">
-                            <i class="fas fa-map-marker-alt fa-2x"></i> <!-- Ikon -->
+            <div class="position-relative">
+                <div class="owl-carousel statistik-carousel wow fadeInUp" data-wow-delay="0.2s">
+                    <!-- Stat 1 -->
+                    <div class="item">
+                        <div class="card border-0 shadow-sm p-4">
+                            <div class="icon mb-3">
+                                <i class="fas fa-map-marker-alt fa-2x"></i> <!-- Ikon -->
+                            </div>
+                            <h3 class="fw-bold">250+</h3>
+                            <p class="text-muted">Total Kunjungan</p>
                         </div>
-                        <h3 class="fw-bold">250+</h3>
-                        <p class="text-muted">Total Kunjungan</p>
                     </div>
-                </div>
-                <!-- Stat 2 -->
-                <div class="item">
-                    <div class="card border-0 shadow-sm p-4">
-                        <div class="icon mb-3">
-                            <i class="fas fa-blind fa-2x"></i> <!-- Ikon -->
+                    <!-- Stat 2 -->
+                    <div class="item">
+                        <div class="card border-0 shadow-sm p-4">
+                            <div class="icon mb-3">
+                                <i class="fas fa-blind fa-2x"></i> <!-- Ikon -->
+                            </div>
+                            <h3 class="fw-bold">600+</h3>
+                            <p class="text-muted">Total Lansia</p>
                         </div>
-                        <h3 class="fw-bold">600+</h3>
-                        <p class="text-muted">Total Lansia</p>
                     </div>
-                </div>
-                <!-- Stat 3 -->
-                <div class="item">
-                    <div class="card border-0 shadow-sm p-4">
-                        <div class="icon mb-3">
-                            <i class="fas fa-wheelchair fa-2x"></i> <!-- Ikon -->
+                    <!-- Stat 3 -->
+                    <div class="item">
+                        <div class="card border-0 shadow-sm p-4">
+                            <div class="icon mb-3">
+                                <i class="fas fa-wheelchair fa-2x"></i> <!-- Ikon -->
+                            </div>
+                            <h3 class="fw-bold">1.8K+</h3>
+                            <p class="text-muted">Total Disabilitas</p>
                         </div>
-                        <h3 class="fw-bold">1.8K+</h3>
-                        <p class="text-muted">Total Disabilitas</p>
                     </div>
-                </div>
-                <!-- Stat 4 -->
-                <div class="item">
-                    <div class="card border-0 shadow-sm p-4">
-                        <div class="icon mb-3">
-                            <i class="fas fa-users fa-2x"></i> <!-- Ikon -->
+                    <!-- Stat 4 -->
+                    <div class="item">
+                        <div class="card border-0 shadow-sm p-4">
+                            <div class="icon mb-3">
+                                <i class="fas fa-users fa-2x"></i> <!-- Ikon -->
+                            </div>
+                            <h3 class="fw-bold">500+</h3>
+                            <p class="text-muted">Total Pengguna</p>
                         </div>
-                        <h3 class="fw-bold">500+</h3>
-                        <p class="text-muted">Total Pengguna</p>
                     </div>
-                </div>
-                <!-- Stat 5 -->
-                <div class="item">
-                    <div class="card border-0 shadow-sm p-4">
-                        <div class="icon mb-3">
-                            <i class="fas fa-heart fa-2x"></i> <!-- Ikon -->
+                    <!-- Stat 5 -->
+                    <div class="item">
+                        <div class="card border-0 shadow-sm p-4">
+                            <div class="icon mb-3">
+                                <i class="fas fa-heart fa-2x"></i> <!-- Ikon -->
+                            </div>
+                            <h3 class="fw-bold">300+</h3>
+                            <p class="text-muted">Total Bantuan</p>
                         </div>
-                        <h3 class="fw-bold">300+</h3>
-                        <p class="text-muted">Total Bantuan</p>
                     </div>
-                </div>
-                <!-- Stat 6 -->
-                <div class="item">
-                    <div class="card border-0 shadow-sm p-4">
-                        <div class="icon mb-3">
-                            <i class="far fa-file-alt fa-2x"></i> <!-- Ikon -->
+                    <!-- Stat 6 -->
+                    <div class="item">
+                        <div class="card border-0 shadow-sm p-4">
+                            <div class="icon mb-3">
+                                <i class="far fa-file-alt fa-2x"></i> <!-- Ikon -->
+                            </div>
+                            <h3 class="fw-bold">300+</h3>
+                            <p class="text-muted">Total Dokumen Masuk</p>
                         </div>
-                        <h3 class="fw-bold">300+</h3>
-                        <p class="text-muted">Total Dokumen Masuk</p>
                     </div>
-                </div>
-                <!-- Stat 7 -->
-                <div class="item">
-                    <div class="card border-0 shadow-sm p-4">
-                        <div class="icon mb-3">
-                            <i class="fas fa-smile fa-2x"></i><!-- Ikon -->
+                    <!-- Stat 7 -->
+                    <div class="item">
+                        <div class="card border-0 shadow-sm p-4">
+                            <div class="icon mb-3">
+                                <i class="fas fa-smile fa-2x"></i><!-- Ikon -->
+                            </div>
+                            <h3 class="fw-bold">300+</h3>
+                            <p class="text-muted">Masyarakat Puas</p>
                         </div>
-                        <h3 class="fw-bold">300+</h3>
-                        <p class="text-muted">Masyarakat Puas</p>
                     </div>
+                    <!-- Tambahan statistik lainnya -->
                 </div>
-                <!-- Tambahan statistik lainnya -->
+                
+                <!-- Navigation buttons -->
+                <div class="owl-nav d-none d-md-block">
+                    <button class="btn btn-primary position-absolute top-50 start-0 translate-middle-y ms-n5" id="prevBtn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="btn btn-primary position-absolute top-50 end-0 translate-middle-y me-n5" id="nextBtn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-
 
     <!-- statistik end -->
     <!-- layanan Start -->

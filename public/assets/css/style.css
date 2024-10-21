@@ -412,6 +412,18 @@
     font-size: 1rem; /* Mengubah ukuran teks deskripsi */
 }
 
+.statistik .owl-nav button {
+    z-index: 1;
+}
+.statistik .owl-nav button.btn {
+    padding: 0.375rem 0.75rem;
+}
+@media (max-width: 767.98px) {
+    .statistik .owl-nav {
+        display: none;
+    }
+}
+
 
 /*** statistik end ***/
 
