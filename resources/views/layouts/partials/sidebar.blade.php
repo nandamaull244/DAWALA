@@ -31,14 +31,7 @@
                     @include('layouts.partials.sidebar.sidebar-user')
                 @endif
 
-                <li class="sidebar-item  ">
-                    <div class="text-center mb-3 mt-5">
-                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                            @csrf
-                            <button type="submit" class="btn btn-danger">Logout</button>
-                        </form>
-                    </div>
-                </li>
+               
             </ul>
         </div>
         <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>

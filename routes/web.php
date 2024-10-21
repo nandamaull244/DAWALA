@@ -8,6 +8,7 @@ use App\Http\Controllers\Backend\KTPController;
 use App\Http\Controllers\Backend\AuthController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\ArchiveDataController;
+use App\Http\Controllers\Backend\ArticleController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,6 +26,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
     Route::resource('/form-ktp', KTPController::class);
     Route::resource('/form-kk', KKController::class);
     Route::resource('/arsip-kependudukan', ArchiveDataController::class);  
+    Route::resource('/artikel', ArticleController::class);
 });
 
 //  ADMIN ROUTES GROUP -->

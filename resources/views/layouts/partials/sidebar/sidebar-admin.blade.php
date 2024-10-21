@@ -26,5 +26,21 @@
                 Form KTP
             </a>
         </li>
+       
     </ul>
+    <li class="sidebar-item ">
+        <a href="{{ route('admin.artikel.index') }}" class='sidebar-link'>
+            <i class="bi bi-newspaper"></i>
+            <span>Artikel</span>
+        </a>
+    </li>
+    <li class="sidebar-item  ">
+        <div class="text-center mb-3 mt-5">
+            <form action="{{ route('logout-admin') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
+    </li>
+    
 </li>
