@@ -40,11 +40,11 @@
 @endpush
 
 @section('page-heading')
-    Tambah Artikel
+    Edit Artikel 
 @endsection
 
 @section('page-subheading')
-    Formulir Pembuatan Artikel Baru
+    Formulir Edit Artikel ( Author : {{ $article->user->full_name }} )
 @endsection
 
 @section('content')
@@ -52,31 +52,52 @@
     <div class="card">
         <div class="card-body">
             <div class="form-group">
-                <form id="articleForm" action="{{ route('admin.article.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="articleForm" action="{{ route('admin.article.update', $article->getHashedId()) }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    @method('POST')
+                    @method('PUT')
                     
                     <div class="row mb-3 mt-1">
                         <input type="text" class="form-control" id="slug" name="slug" hidden>
                         
                         <div class="col-md-12">
                             <label for="title" class="form-label">JUDUL</label>
-                            <input type="text" class="form-control" id="title" name="title">
+                            <input type="text" class="form-control" id="title" name="title" value="{{ $article->title }}">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3 mt-1">
+                        <div class="col-md-12">
+                            <label for="author" class="form-label">Author</label>
+                            <input type="text" class="form-control" id="author" name="author" value="{{ $article->user->full_name }}" readonly>
                         </div>
                     </div>
                     
                     <div class="row mb-2 mt-1">
                         <div class="col-md-6 mt-4">
                             <label for="image" class="form-label">UPLOAD FOTO</label>
-                            <input type="file" class="form-control" id="image" name="image" accept="image/png, image/jpeg, image/jpg, image/webp">
+                            <input type="file" class="form-control" id="image" name="image" accept="image/png, image/jpeg, image/jpg, image/webp" value="{{ str_replace('uploads/articles/', '', $article->image) }}">
                             <small class="form-text text-muted">Hanya file PNG, JPG, JPEG, dan WEBP yang diizinkan.</small>
                         </div>
                         <div class="col-md-6">
                             <div class="image-preview-wrapper">
+                                @php
+                                    $filePath = storage_path('app/public/' . $article->image_name);
+                                    $fileSize = file_exists($filePath) ? filesize($filePath) : 0;
+                                    $fileSizeInMB = $fileSize / (1024 * 1024);
+                                    $fileSizeFormatted = $fileSize > 0 
+                                        ? ($fileSizeInMB >= 1 
+                                            ? number_format($fileSizeInMB, 2) . ' MB' 
+                                            : number_format($fileSize / 1024, 2) . ' KB')
+                                        : 'Unknown';
+                                @endphp
                                 <div id="imagePreview" class="image-preview-container">
-                                    <p class="no-image-text">Belum ada foto yang diupload!</p>
+                                    @if ($article->image_name)
+                                        <img src="{{ asset('storage/' . $article->image_name) }}" alt="{{ $article->title }}" class="preview-image">
+                                    @else
+                                        <p class="no-image-text">Belum ada foto yang diupload!</p>
+                                    @endif
                                 </div>
-                                <p class="file-info mt-2"></p>
+                                <p class="file-info mt-2">{{ $article->original_name }} ({{ $fileSizeFormatted }})</p>
                             </div>
                         </div>
                     </div>
@@ -84,7 +105,7 @@
                     <div class="row mb-3 mt-1">
                         <div class="col-md-12">
                             <label for="body" class="form-label">TEXT</label>
-                            <textarea class="form-control summernote" id="body" name="body" rows="3"></textarea>
+                            <textarea class="form-control summernote" id="body" name="body" rows="3">{{ htmlspecialchars_decode($article->body) }}</textarea>
                         </div>
                     </div>
                     

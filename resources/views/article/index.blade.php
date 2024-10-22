@@ -138,9 +138,9 @@
                                 <tr class="text-center">
                                     <th>No</th>
                                     <th>Judul</th>
-                                    <th>Image</th>
                                     <th>Isi Artikel</th>
-                                    <th>Action</th>
+                                    <th>Foto</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                         </table>
@@ -181,11 +181,11 @@
                     }
                 },
                 columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, className: 'text-center'},
-                    {data: 'title', name: 'title'},
-                    {data: 'image', name: 'image'},
-                    {data: 'body', name: 'body'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, className: 'text-center', width: '5%'},
+                    {data: 'title', name: 'title', width: '30%'},
+                    {data: 'body', name: 'body', width: '40%'},
+                    {data: 'image', name: 'image', width: '15%'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false, width: '15%'},
                 ],
                 order: [[1, 'asc']] 
             });

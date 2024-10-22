@@ -45,19 +45,23 @@ class ArticleController extends Controller
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('action', function($row){
-                $actionBtn = '<span data-bs-toggle="modal" data-bs-target="#dataModalEditArticle" data-id="'.$row->id.'" style="cursor: pointer;">✏️</span> ';
-                $actionBtn .= '<span data-bs-toggle="modal" data-bs-target="#deleteModalArticle" data-id="'.$row->id.'" style="cursor: pointer;">🗑️</span>';
+                $hashedId = $row->getHashedId();
+                $actionBtn = '<a href="'.route('admin.article.edit', $hashedId).'" style="cursor: pointer;">✏️</a> ';
+                $actionBtn .= '<span data-bs-toggle="modal" data-bs-target="#deleteModalArticle" data-id="'.$hashedId.'" style="cursor: pointer;">🗑️</span>';
                 return $actionBtn;
             })
+            ->editColumn('title', function($row) {
+                return '<p>' . $row->title . '</p> <p> Author : ' . $row->user->full_name . '</p>';
+            })
             ->editColumn('image', function($row) {
-                return $row->image 
-                    ? '<img src="' . asset('storage/' . $row->image) . '" alt="' . $row->title . '" width="80">' 
+                return $row->image_name 
+                    ? '<img src="' . asset('storage/' . $row->image_name) . '" alt="' . $row->title . '" width="300" height="auto">' 
                     : 'No Image';
             })
             ->editColumn('body', function($row) {
                 return Str::limit(strip_tags(htmlspecialchars_decode($row->body)), 30);
             })
-            ->rawColumns(['action', 'image'])
+            ->rawColumns(['title','action', 'image'])
             ->make(true);
     }
 
@@ -97,11 +101,11 @@ class ArticleController extends Controller
             $fullPath = $path . '/' . $filename;
 
             $fileSize = $image->getSize();
-            $maxSize = 4 * 1024 * 1024;
+            $maxSize = 6 * 1024 * 1024;
 
             if ($fileSize > $maxSize) {
                 $img = Image::make($image->getRealPath());
-                $img->resize(1200, null, function ($constraint) {
+                $img->resize(2400, null, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 });
@@ -114,7 +118,7 @@ class ArticleController extends Controller
                     $compressedSize = File::size($tempPath);
                     
                     if ($compressedSize > $maxSize) {
-                        $quality -= 5;
+                        $quality -= 3;
                     }
                     File::delete($tempPath);
 
@@ -125,12 +129,13 @@ class ArticleController extends Controller
                 $image->move($path, $filename);
             }
 
-            $article->image = 'uploads/articles/' . $filename;
+            $article->image_name = 'uploads/articles/' . $filename;
+            $article->original_name = $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension();
         }
 
         $article->save();
 
-        return redirect()->route('admin.article.index')->with('success', 'Artikel berhasil ditambahkan');
+        return redirectByRole(auth()->user()->role, 'index', 'success', 'Data Artikel Berhasil Disimpan');
     }
 
     /**
@@ -150,9 +155,13 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($hashedId)
     {
-        //
+        $article = Article::findByHash($hashedId);
+        if (!$article) {
+            abort(404);
+        }
+        return view('article.edit', compact('article'));
     }
 
     /**
@@ -162,9 +171,14 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $hashedId)
     {
-        //
+        $article = Article::findByHash($hashedId);
+        if (!$article) {
+            abort(404);
+        }
+
+        return redirect()->route('admin.article.index')->with(message('update', 'Artikel'));
     }
 
     /**

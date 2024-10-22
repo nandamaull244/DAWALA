@@ -18,7 +18,7 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        return view("Authentication.login")->with(message('login'));
+        return view("Authentication.login")->with('success', 'Berhasil Login');
     }
 
     public function loginProcess(Request $request)
@@ -139,7 +139,7 @@ class AuthController extends Controller
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput()
-                ->with('error', message('error', $errorMessage));
+                ->with('error', $errorMessage);
         }
 
         try {
