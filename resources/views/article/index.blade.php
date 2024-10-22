@@ -2,27 +2,6 @@
 
 @push('css')
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-
         .status {
             padding: 5px 10px;
             border-radius: 15px;
@@ -63,6 +42,7 @@
         .filter-item {
             display: flex;
             flex-direction: column;
+            margin-bottom: 15px;
         }
 
         .filter-item select {
@@ -98,6 +78,10 @@
         .bi-plus-circle {
             margin-right: 5px;
         }
+
+        .form-control, .flatpickr-input {
+            height: 38px; 
+        }
     </style>
 @endpush
 
@@ -111,45 +95,52 @@
 
 @section('content')
     <section class="section">
-       <div>
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="filter-container">
-                        <div class="filter-item">
-                            <label for="tanggal">Tanggal</label>
-                            <select id="tanggal" name="tanggal">
-                                <option value="">Semua</option>
-                                <!-- Add date options here -->
-                            </select>
+                    <div class="filter-container col-md-12 form-group">
+                        <div class="filter-item col-md-2-5">
+                            <label for="start_date">Tanggal Awal</label>
+                            <input type="text" id="start_date" name="start_date" class="form-control flatpickr-date" placeholder="Pilih tanggal awal">
                         </div>
-                        <div class="filter-item">
-                            <label for="tipe_layanan">Waktu</label>
-                            <select id="tipe_layanan" name="tipe_layanan">
+                    
+                        <div class="filter-item col-md-2-5">
+                            <label for="end_date">Tanggal Akhir</label>
+                            <input type="text" id="end_date" name="end_date" class="form-control flatpickr-date" placeholder="Pilih tanggal akhir">
+                        </div>
+                    
+                        <div class="filter-item col-md-2">
+                            <label for="time">Waktu</label>
+                            <select id="time" name="time" class="form-control">
                                 <option value="">Semua</option>
                                 <option value="Terbaru">Terbaru</option>
                                 <option value="Terlama">Terlama</option>
-                                <!-- Add more service types as needed -->
                             </select>
                         </div>
-                        <button class="reset-filter" onclick="resetFilters()">Reset Filter</button>
-                        <button class="btn btn-primary add-new-btn" data-bs-toggle="modal" data-bs-target="#dataModalAddArticle">
-                            <i class="bi bi-plus-circle"></i> Tambah Artikel
-                        </button>
-
+                    
+                        <div class="filter-item col-md-1">
+                            <label>&nbsp;</label>
+                            <button class="btn btn-danger w-100" onclick="resetFilters()">Reset</button>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="filter-item col-md-2">
+                            <label>&nbsp;</label>
+                            <a class="btn btn-primary w-100" href="{{ route('admin.article.create') }}">
+                                <i class="bi bi-plus-circle"></i> Tambah Artikel
+                            </a>
+                        </div>
                     </div>
 
                     <div class="table-responsive">
-                        <table>
+                        <table class="table table-hover table-bordered table-responsive">
                             <thead>
                                 <tr>
-                                    <th>NO</th>
+                                    <th>No</th>
                                     <th>Slug</th>
                                     <th>Judul</th>
                                     <th>Image</th>
                                     <th>Isi Artikel</th>
                                     <th>Action</th>
-                                
                                 </tr>
                             </thead>
                             <tbody>
@@ -166,47 +157,29 @@
                                             style="cursor: pointer;">🗑️</span>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>artikel-kedua</td>
-                                    <td>Artikel Kedua</td>
-                                    <td><img src="path/to/image2.jpg" alt="Artikel Kedua" width="50"></td>
-                                    <td>Ini adalah isi dari artikel kedua...</td>
-                                    <td class="sticky-column action-icons">
-                                        <span data-bs-toggle="modal" data-bs-target="#dataModalEditArticle"
-                                            style="cursor: pointer;">✏️</span>
-                                        <span data-bs-toggle="modal" data-bs-target="#deleteModalArticle"
-                                            style="cursor: pointer;">🗑️</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>artikel-ketiga</td>
-                                    <td>Artikel Ketiga</td>
-                                    <td><img src="path/to/image3.jpg" alt="Artikel Ketiga" width="50"></td>
-                                    <td>Ini adalah isi dari artikel ketiga...</td>
-                                    <td class="sticky-column action-icons">
-                                        <span data-bs-toggle="modal" data-bs-target="#dataModalEditArticle"
-                                            style="cursor: pointer;">✏️</span>
-                                        <span data-bs-toggle="modal" data-bs-target="#deleteModalArticle"
-                                            style="cursor: pointer;">🗑️</span>
-                                    </td>
-                                </tr>
-                              
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-       </div>
     </section>
 
-
-    @include('article.modal_edit_artikel')
-    @include('article.delete_modal_artikel')
+    @include('article.modal_delete')
 @endsection
 
 @push('scripts')
- 
+    <script>
+        $(document).ready(function() {
+            flatpickr.localize(flatpickr.l10ns.id);
+            $(".flatpickr-date").flatpickr({
+                dateFormat: "Y-m-d",
+                allowInput: true,
+                altInput: true,
+                altFormat: "d F Y",
+                locale: "id",
+                disableMobile: "true"
+            });
+        });
+    </script>
 @endpush

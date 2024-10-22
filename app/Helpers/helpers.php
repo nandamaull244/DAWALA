@@ -7,11 +7,11 @@ function message($type = null, $message = null) {
         case 'logout':
             return 'logout' . ', ' . isset($message) ? $message : 'Berhasil Logout';
         case 'success':
-            return 'success' . ', ' . isset($message) ? $message : 'Data Berhasil Disimpan';
+            return 'success' . ', ' . 'Data '. $message . ' Berhasil Disimpan';
         case 'warning':
-            return 'warning' . ', ' . isset($message) ? $message : 'Yakin untuk menghapus data ini?';
+            return 'warning' . ', ' . 'Yakin untuk menghapus data '. $message . ' ini?';
         case 'error':
-            return 'error' . ', ' . isset($message) ? $message : 'Gagal Menyimpan Data';
+            return 'error' . ', ' . 'Gagal Menyimpan Data '. $message;
     }
 }
 

@@ -43,7 +43,7 @@
     </span>
     <ul class="submenu ">
         <li class="submenu-item ">
-            <a href="{{ route('admin.artikel.index') }}" class='sidebar-link'>
+            <a href="{{ route('admin.article.index') }}" class='sidebar-link'>
                 <i class="bi bi-table"></i>
                 <span>Data Artikel</span>
             </a>
@@ -54,8 +54,6 @@
                 <span>Form Artikel</span>
             </a>
         </li>
-       
-       
     </ul>
     <li class="sidebar-item has-sub">
         <span href="#" class='sidebar-link disabled'>

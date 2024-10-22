@@ -22,7 +22,7 @@
                     $pageSubheading = trim($__env->yieldContent('page-subheading'));
                 @endphp
                 <div class="page-heading">
-                    <h3>{{ $pageHeading }}</h3>
+                    <h2>{{ $pageHeading }}</h2>
 
                     @if ($pageHeading && $pageHeading !== 'Dashboard')
                         <div class="page-title">

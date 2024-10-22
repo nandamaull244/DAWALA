@@ -29,7 +29,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
     Route::resource('/form-ktp', KTPController::class);
     Route::resource('/form-kk', KKController::class);
     Route::resource('/arsip-kependudukan', ArchiveDataController::class);  
-    Route::resource('/artikel', ArticleController::class);
+    Route::resource('/article', ArticleController::class);
     Route::resource('/form-artikel', FormArticleController::class);
     Route::get('/akun-manajemen/verification-table', [UserController::class, 'verificationTable'])->name('akun-manajemen.verification-table');
     Route::resource('/akun-manajemen', UserController::class);
