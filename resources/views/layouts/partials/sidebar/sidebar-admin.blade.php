@@ -57,6 +57,35 @@
        
        
     </ul>
+    <li class="sidebar-item has-sub">
+        <span href="#" class='sidebar-link disabled'>
+            <i class="bi bi-people"></i>
+            <span>Akun Manajemen</span>
+        </span>
+        <ul class="submenu ">
+            <li class="submenu-item ">
+                <a href="{{ route('admin.akun-manajemen.index') }}" class='sidebar-link'>
+                    <i class="bi bi-table"></i>
+                    <span>Data Akun</span>
+                </a>
+            </li>
+            <li class="submenu-item ">
+                <a href="{{ route('admin.akun-manajemen.create') }}" class='sidebar-link'>
+                    <i class="bi bi-file-earmark-text"></i>
+                    <span>Form Akun</span>
+                </a>
+            </li>
+            <li class="submenu-item ">
+                <a href="{{ route('admin.akun-manajemen.verification-table') }}" class='sidebar-link'>
+                    <i class="bi bi-file-earmark-text"></i>
+                    <span>Verifikasi Akun</span>
+                </a>
+            </li>
+    
+           
+           
+        </ul>
+    </li>
 </li>
 <li class="sidebar-item has-sub">
     <div class="text-center mb-3 mt-5">
@@ -66,3 +95,4 @@
         </form>
     </div>
 </li>
+

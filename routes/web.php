@@ -10,6 +10,8 @@ use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\ArchiveDataController;
 use App\Http\Controllers\Backend\ArticleController;
 use App\Http\Controllers\Backend\FormArticleController;
+use App\Http\Controllers\Backend\UserController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,7 +31,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
     Route::resource('/arsip-kependudukan', ArchiveDataController::class);  
     Route::resource('/artikel', ArticleController::class);
     Route::resource('/form-artikel', FormArticleController::class);
-    
+    Route::get('/akun-manajemen/verification-table', [UserController::class, 'verificationTable'])->name('akun-manajemen.verification-table');
+    Route::resource('/akun-manajemen', UserController::class);
 });
 
 //  ADMIN ROUTES GROUP -->
@@ -98,3 +101,5 @@ Route::group([], function () {
     Route::get('/visi-misi', [PageController::class, 'visiMisi'])->name('page.visimisi');
     Route::get('/detail-persyaratan', [PageController::class, 'detailPersyaratan'])->name('page.detail-persyaratan');
 });
+
+
