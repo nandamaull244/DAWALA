@@ -3,29 +3,55 @@ var optionsProfileVisit = {
 		position: 'back'
 	},
 	dataLabels: {
-		enabled:false
+		enabled: false
 	},
 	chart: {
 		type: 'bar',
-		height: 300
+		height: 300,
+		scrollX: true
 	},
 	fill: {
-		opacity:1
+		opacity: 1
 	},
 	plotOptions: {
+		bar: {
+			horizontal: false,
+			columnWidth: '55%',
+			endingShape: 'rounded'
+		},
 	},
 	series: [{
-		name: 'sales',
-		data: [9,20,30,20,10,20,30,20,10,20,30,20]
+		name: 'Progress Penyelesaian',
+		data: [65, 59, 80, 81, 56, 55, 40, 70, 75, 67, 72, 78, 69, 74, 77, 82, 63, 58, 71, 76, 79, 68, 73, 66, 61, 64, 83, 85, 60, 62, 84, 57]
 	}],
 	colors: '#435ebe',
 	xaxis: {
-		categories: ["Jan","Feb","Mar","Apr","May","Jun","Jul", "Aug","Sep","Oct","Nov","Dec"],
+		categories: ["Kec. 1", "Kec. 2", "Kec. 3", "Kec. 4", "Kec. 5", "Kec. 6", "Kec. 7", "Kec. 8", "Kec. 9", "Kec. 10", "Kec. 11", "Kec. 12", "Kec. 13", "Kec. 14", "Kec. 15", "Kec. 16", "Kec. 17", "Kec. 18", "Kec. 19", "Kec. 20", "Kec. 21", "Kec. 22", "Kec. 23", "Kec. 24", "Kec. 25", "Kec. 26", "Kec. 27", "Kec. 28", "Kec. 29", "Kec. 30", "Kec. 31", "Kec. 32"],
+		tickPlacement: 'on',
+		labels: {
+			rotate: -45,
+			rotateAlways: true,
+			style: {
+				fontSize: '12px'
+			}
+		}
 	},
+	yaxis: {
+		title: {
+			text: 'Progress (%)'
+		}
+	},
+	tooltip: {
+		y: {
+			formatter: function (val) {
+				return val + "%"
+			}
+		}
+	}
 }
 let optionsVisitorsProfile  = {
-	series: [70, 30],
-	labels: ['Male', 'Female'],
+	series: [20, 15, 25, 18, 12, 10],
+	labels: ['disabilitas', 'ODGJ','Lansia','Penduduk sakit','Penduduk terlantar','terdampak bencana'],
 	colors: ['#435ebe','#55c6e8'],
 	chart: {
 		type: 'donut',
