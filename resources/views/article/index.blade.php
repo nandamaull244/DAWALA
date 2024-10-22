@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
 @push('css')
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css">
     <style>
         .status {
             padding: 5px 10px;
@@ -132,32 +133,16 @@
                     </div>
 
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-responsive">
+                        <table class="table table-hover table-bordered" id="articlesTable" width="100%">
                             <thead>
-                                <tr>
+                                <tr class="text-center">
                                     <th>No</th>
-                                    <th>Slug</th>
                                     <th>Judul</th>
                                     <th>Image</th>
                                     <th>Isi Artikel</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>artikel-pertama</td>
-                                    <td>Artikel Pertama</td>
-                                    <td><img src="path/to/image1.jpg" alt="Artikel Pertama" width="50"></td>
-                                    <td>Ini adalah isi dari artikel pertama...</td>
-                                    <td class="sticky-column action-icons">
-                                        <span data-bs-toggle="modal" data-bs-target="#dataModalEditArticle"
-                                            style="cursor: pointer;">✏️</span>
-                                        <span data-bs-toggle="modal" data-bs-target="#deleteModalArticle"
-                                            style="cursor: pointer;">🗑️</span>
-                                    </td>
-                                </tr>
-                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -169,6 +154,8 @@
 @endsection
 
 @push('scripts')
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
     <script>
         $(document).ready(function() {
             flatpickr.localize(flatpickr.l10ns.id);
@@ -178,8 +165,41 @@
                 altInput: true,
                 altFormat: "d F Y",
                 locale: "id",
-                disableMobile: "true"
+                disableMobile: "true",
+                defaultDate: "today"
             });
+
+            var table = $('#articlesTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('admin.article.data') }}",
+                    data: function (d) {
+                        d.start_date = $('#start_date').val();
+                        d.end_date = $('#end_date').val();
+                        d.time = $('#time').val();
+                    }
+                },
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, className: 'text-center'},
+                    {data: 'title', name: 'title'},
+                    {data: 'image', name: 'image'},
+                    {data: 'body', name: 'body'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ],
+                order: [[1, 'asc']] 
+            });
+
+            $('#start_date, #end_date, #time').change(function(){
+                table.ajax.reload();
+            });
+
+            window.resetFilters = function() {
+                $('#start_date').val('').trigger('change');
+                $('#end_date').val('').trigger('change');
+                $('#time').val('').trigger('change');
+                table.ajax.reload();
+            }
         });
     </script>
 @endpush

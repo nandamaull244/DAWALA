@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Yajra\DataTables\Facades\DataTables;
+use Carbon\Carbon;
 
 class ArticleController extends Controller
 {
@@ -20,6 +22,43 @@ class ArticleController extends Controller
     public function index()
     {
         return view('article.index');
+    }
+
+    public function getData(Request $request)
+    {
+        $query = Article::query();
+
+        $start_date = Carbon::parse($request->start_date)->toDateString();
+        $end_date = Carbon::parse($request->end_date)->toDateString();
+        
+        $query->whereDate('created_at', '>=', $start_date)
+              ->whereDate('created_at', '<=', $end_date);
+
+        if ($request->has('time')) {
+            if ($request->time == 'Terbaru') {
+                $query->orderBy('created_at', 'desc');
+            } elseif ($request->time == 'Terlama') {
+                $query->orderBy('created_at', 'asc');
+            }
+        }
+
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('action', function($row){
+                $actionBtn = '<span data-bs-toggle="modal" data-bs-target="#dataModalEditArticle" data-id="'.$row->id.'" style="cursor: pointer;">✏️</span> ';
+                $actionBtn .= '<span data-bs-toggle="modal" data-bs-target="#deleteModalArticle" data-id="'.$row->id.'" style="cursor: pointer;">🗑️</span>';
+                return $actionBtn;
+            })
+            ->editColumn('image', function($row) {
+                return $row->image 
+                    ? '<img src="' . asset('storage/' . $row->image) . '" alt="' . $row->title . '" width="80">' 
+                    : 'No Image';
+            })
+            ->editColumn('body', function($row) {
+                return Str::limit(strip_tags(htmlspecialchars_decode($row->body)), 30);
+            })
+            ->rawColumns(['action', 'image'])
+            ->make(true);
     }
 
     /**
