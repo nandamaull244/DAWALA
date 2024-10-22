@@ -67,6 +67,18 @@
                 profileDropdown.classList.add('active');
             }
         }
+        // Tambahkan kelas active pada link "layanan" jika berada di salah satu halaman dropdown
+        const pathLayanan = ['/layanan', '/layanan-cepat'];
+        const layananDropdown = document.querySelector('.navbar-nav .layanan > .nav-link');
+    
+        if (pathLayanan.includes(currentPath)) {
+            console.log('Dropdown Path Matched:', currentPath); // Debugging jika ada path yang match di dropdown
+            removeActiveClass();
+            if (layananDropdown) {
+                layananDropdown.classList.add('active');
+            }
+        }
+        
     });
     
     
@@ -130,24 +142,33 @@
     
 
     // statistik carousel
-    $(document).ready(function () {
-        $(".statistik-carousel").owlCarousel({
-            autoplay: true,
-            smartSpeed: 1000,
+    $(document).ready(function(){
+        var owl = $(".statistik-carousel").owlCarousel({
             loop: true,
-            margin: 10,
-            nav: false,
+            margin: 20,
+            nav: false, // Disable default nav
             responsive: {
                 0: {
+                    items: 1
+                },
+                576: {
                     items: 2
                 },
-                600: {
+                992: {
                     items: 3
                 },
-                1000: {
+                1200: {
                     items: 4
                 }
             }
+        });
+
+        // Custom navigation
+        $('#prevBtn').click(function() {
+            owl.trigger('prev.owl.carousel');
+        });
+        $('#nextBtn').click(function() {
+            owl.trigger('next.owl.carousel');
         });
     });
     // dokumentasi carousel

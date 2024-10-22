@@ -10,6 +10,8 @@ use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\ArchiveDataController;
 use App\Http\Controllers\Backend\ArticleController;
 use App\Http\Controllers\Backend\FormArticleController;
+use App\Http\Controllers\Backend\UserController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,7 +31,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
     Route::resource('/arsip-kependudukan', ArchiveDataController::class);  
     Route::resource('/artikel', ArticleController::class);
     Route::resource('/form-artikel', FormArticleController::class);
-    
+    Route::get('/akun-manajemen/verification-table', [UserController::class, 'verificationTable'])->name('akun-manajemen.verification-table');
+    Route::resource('/akun-manajemen', UserController::class);
 });
 
 //  ADMIN ROUTES GROUP -->
@@ -90,6 +93,7 @@ Route::group(['prefix' => 'auth'], function () {
 Route::group([], function () {
     Route::get('/', [PageController::class, 'home'])->name('page.home');
     Route::get('/layanan', [PageController::class, 'service'])->name('page.service');
+    Route::get('/layanan-cepat', [PageController::class, 'fastService'])->name('page.fast-service');
     Route::get('/dokumentasi', [PageController::class, 'documentation'])->name('page.documentation');
     Route::get('/FAQ', [PageController::class, 'FAQ'])->name('page.FAQ');
     Route::get('/tentang-dawala', [PageController::class, 'about'])->name('page.about');
@@ -97,3 +101,5 @@ Route::group([], function () {
     Route::get('/visi-misi', [PageController::class, 'visiMisi'])->name('page.visimisi');
     Route::get('/detail-persyaratan', [PageController::class, 'detailPersyaratan'])->name('page.detail-persyaratan');
 });
+
+
