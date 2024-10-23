@@ -1,5 +1,5 @@
 <div id="sidebar" class="active">
-    <div class="sidebar-wrapper active">
+    <div class="sidebar-wrapper active" style="width: 270px !important; max-width: 270px !important;">
         <div class="sidebar-header">
             <div class="d-flex justify-content-between">
                 <div class="logo">
@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="sidebar-menu">
-            <ul class="menu">
+            <ul class="menu" style="margin-left: -20px !important; ">
                 <li class="sidebar-title">Menu</li>
 
                 @if (Auth::user()->role == 'admin')

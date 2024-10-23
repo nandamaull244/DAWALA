@@ -1,5 +1,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
 <title>Dashboard - Admin Dawala</title>
 
 <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -16,4 +18,21 @@
 <link rel="stylesheet" href="/backend/assets/css/app.css">
 <link rel="shortcut icon" href="/backend/assets/images/favicon.svg" type="image/x-icon">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    
+    thead {
+        background-color: #f2f2f2;
+    }
+
+    @media (min-width: 768px) {
+        .col-md-2-5 {
+            width: 20.83333333%; 
+        }
+    }
+</style>
 @stack('css')

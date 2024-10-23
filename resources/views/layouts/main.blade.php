@@ -21,18 +21,18 @@
                     $pageHeading = trim($__env->yieldContent('page-heading'));
                     $pageSubheading = trim($__env->yieldContent('page-subheading'));
                 @endphp
-                <div class="page-heading">
-                    <h3>{{ $pageHeading }}</h3>
+                <div class="page-heading" style="margin: 0 -10px 0 -35px !important;">
+                    <h2>{{ $pageHeading }}</h2>
 
                     @if ($pageHeading && $pageHeading !== 'Dashboard')
                         <div class="page-title">
                             <div class="row">
-                                <div class="col-12 col-md-6 order-md-1 order-last">
+                                <div class="col-12 col-md-8 order-md-1 order-last">
                                     @if (!empty($pageSubheading))
                                         <p class="text-subtitle text-muted">{{ $pageSubheading }}</p>
                                     @endif
                                 </div>
-                                <div class="col-12 col-md-6 order-md-2 order-first">
+                                <div class="col-12 col-md-4 order-md-2 order-first">
                                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a
@@ -48,7 +48,7 @@
 
                 </div>
 
-                <div class="page-content">
+                <div class="page-content" style="margin: 0 -10px 0 -35px !important;">
                     @yield('content')
                 </div>
 
