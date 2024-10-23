@@ -21,7 +21,7 @@
                     $pageHeading = trim($__env->yieldContent('page-heading'));
                     $pageSubheading = trim($__env->yieldContent('page-subheading'));
                 @endphp
-                <div class="page-heading">
+                <div class="page-heading" style="margin: 0 -10px 0 -35px !important;">
                     <h2>{{ $pageHeading }}</h2>
 
                     @if ($pageHeading && $pageHeading !== 'Dashboard')
@@ -48,7 +48,7 @@
 
                 </div>
 
-                <div class="page-content">
+                <div class="page-content" style="margin: 0 -10px 0 -35px !important;">
                     @yield('content')
                 </div>
 

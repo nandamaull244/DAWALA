@@ -140,6 +140,7 @@
                                     <th>Judul</th>
                                     <th>Isi Artikel</th>
                                     <th>Foto</th>
+                                    <th>Penulis</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -183,7 +184,8 @@
                     {data: 'title', name: 'title', width: '30%'},
                     {data: 'body', name: 'body', width: '40%'},
                     {data: 'image', name: 'image', width: '15%'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false, width: '15%'},
+                    {data: 'author', name: 'author', width: '15%'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false, width: '25%'},
                 ],
                 order: [[1, 'asc']] 
             });
@@ -210,14 +212,14 @@
                 e.preventDefault();
                 $.ajax({
                     url: $(this).attr('action'),
-                    type: 'POST',
+                    type: 'DELETE',
                     data: {
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
                         $('#deleteModalArticle').modal('hide');
                         table.ajax.reload();
-                        toastr.success('Artikel berhasil dihapus');
+                        toastr.success(response.success);
                     },
                     error: function(xhr) {
                         toastr.error('Terjadi kesalahan: ' + xhr.statusText);

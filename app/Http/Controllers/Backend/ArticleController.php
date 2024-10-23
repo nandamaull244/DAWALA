@@ -50,8 +50,11 @@ class ArticleController extends Controller
                 $actionBtn .= '<span class="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModalArticle" data-id="'.$hashedId.'" style="cursor: pointer;">🗑️</span>';
                 return $actionBtn;
             })
+            ->addColumn('author', function($row) {
+                return $row->user->full_name;
+            })
             ->editColumn('title', function($row) {
-                return '<p>' . $row->title . '</p> <p> Author : ' . $row->user->full_name . '</p>';
+                return '<p>' . $row->title . '</p>';
             })
             ->editColumn('image', function($row) {
                 return $row->image_name 
@@ -119,7 +122,7 @@ class ArticleController extends Controller
 
             $article->save();
 
-            return redirectByRole('admin', 'index', 'success', 'Artikel baru berhasil dibuat!');
+            return redirectByRole('admin', 'article', 'index', ['success' => 'Artikel baru berhasil dibuat!']);
         } catch (\Exception $e) {
             return redirect()->route('admin.article.create')
                 ->withInput()
@@ -148,7 +151,7 @@ class ArticleController extends Controller
     {
         $article = Article::findByHash($hashedId);
         if (!$article) {
-            return redirectByRole(auth()->user()->role, 'index', 'error', 'Data Artikel Tidak Ditemukan');
+            return redirectByRole(auth()->user()->role, 'article', 'index', ['error' => 'Data Artikel Tidak Ditemukan']);
         }
         return view('article.edit', compact('article'));
     }
@@ -164,7 +167,7 @@ class ArticleController extends Controller
     {
         $article = Article::findByHash($hashedId);
         if (!$article) {
-            return redirectByRole(auth()->user()->role, 'index', 'error', 'Data Artikel Tidak Ditemukan');
+            return redirectByRole(auth()->user()->role, 'article', 'index', ['error' => 'Data Artikel Tidak Ditemukan']);
         }
 
         $validatedData = $request->validate([
@@ -205,7 +208,7 @@ class ArticleController extends Controller
 
             $article->update();
 
-            return redirectByRole(auth()->user()->role, 'index', 'success', 'Artikel "' . $article->title . '" berhasil diperbarui!');
+            return redirectByRole('admin', 'article', 'index', ['success' => 'Artikel "' . $article->title . '" berhasil diperbarui!']);
         } catch (\Exception $e) {
             return redirect()->route('admin.article.edit', $hashedId)
                 ->withInput()
@@ -223,10 +226,10 @@ class ArticleController extends Controller
     {
         $article = Article::findByHash($hashedId);
         if (!$article) {
-            return redirectByRole(auth()->user()->role, 'index', 'error', 'Data Artikel Tidak Ditemukan');
+            return redirectByRole(auth()->user()->role, 'article', 'index', ['error' => 'Data Artikel Tidak Ditemukan']);
         } else {
             $article->delete();
-            return redirectByRole(auth()->user()->role, 'index', 'success', 'Artikel "' . $article->title . '" berhasil dihapus!');
+            return response()->json(['success' => 'Artikel "' . $article->title . '" berhasil dihapus!']);
         }
     }
 }
