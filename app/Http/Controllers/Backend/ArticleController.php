@@ -83,59 +83,48 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        $article = new Article();
-        $article->user_id = auth()->user()->id;
-        $article->slug = $request->slug;
-        $article->title = htmlspecialchars($request->title);
-        $article->body = htmlspecialchars($request->body);
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif', 
+        ]);
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $filename = Str::random(20) . '.' . $image->getClientOriginalExtension();
+        try {
+            $article = new Article();
+            $article->user_id = auth()->user()->id;
+            $article->slug = Str::slug($validatedData['title']);
+            $article->title = htmlspecialchars($validatedData['title']);
+            $article->body = htmlspecialchars($validatedData['body']);
 
-            $path = storage_path('app/public/uploads/articles');
-            if (!file_exists($path)) {
-                mkdir($path, 0755, true);
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $filename = Str::random(12) . strtotime(date('dmY')) . '.' . $image->getClientOriginalExtension();
+
+                if ($image->getSize() > 5 * 1024 * 1024) { 
+                    $img = Image::make($image->getRealPath());
+                    $img->resize(2400, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                        $constraint->upsize();
+                    });
+
+                    $path = storage_path('app/public/uploads/articles/' . $filename);
+                    $img->save($path, 80);
+                } else {
+                    $image->storeAs('public/uploads/articles', $filename);
+                }
+
+                $article->image_name = 'uploads/articles/' . $filename;
+                $article->original_name = $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension();
             }
 
-            $fullPath = $path . '/' . $filename;
+            $article->save();
 
-            $fileSize = $image->getSize();
-            $maxSize = 6 * 1024 * 1024;
-
-            if ($fileSize > $maxSize) {
-                $img = Image::make($image->getRealPath());
-                $img->resize(2400, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                });
-
-                $quality = 90;
-                do {
-                    $tempPath = $path . '/temp_' . $filename;
-                    $img->save($tempPath, $quality);
-                    
-                    $compressedSize = File::size($tempPath);
-                    
-                    if ($compressedSize > $maxSize) {
-                        $quality -= 3;
-                    }
-                    File::delete($tempPath);
-
-                } while ($compressedSize > $maxSize && $quality > 0);
-
-                $img->save($fullPath, $quality);
-            } else {
-                $image->move($path, $filename);
-            }
-
-            $article->image_name = 'uploads/articles/' . $filename;
-            $article->original_name = $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension();
+            return redirectByRole('admin', 'index', 'success', 'Artikel baru berhasil dibuat!');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.article.create')
+                ->withInput()
+                ->with('error', 'Gagal menyimpan artikel, ' . $e->getMessage());
         }
-
-        $article->save();
-
-        return redirectByRole(auth()->user()->role, 'index', 'success', 'Data Artikel Berhasil Disimpan');
     }
 
     /**
@@ -159,7 +148,7 @@ class ArticleController extends Controller
     {
         $article = Article::findByHash($hashedId);
         if (!$article) {
-            abort(404);
+            return redirectByRole(auth()->user()->role, 'index', 'error', 'Data Artikel Tidak Ditemukan');
         }
         return view('article.edit', compact('article'));
     }
@@ -175,10 +164,53 @@ class ArticleController extends Controller
     {
         $article = Article::findByHash($hashedId);
         if (!$article) {
-            abort(404);
+            return redirectByRole(auth()->user()->role, 'index', 'error', 'Data Artikel Tidak Ditemukan');
         }
 
-        return redirect()->route('admin.article.index')->with(message('update', 'Artikel'));
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+        ]);
+
+        try {
+            $article->title = htmlspecialchars($validatedData['title']);
+            $article->slug = Str::slug($validatedData['title']);
+            $article->body = htmlspecialchars($validatedData['body']);
+
+            if ($request->hasFile('image')) {
+                if ($article->image_name) {
+                    Storage::delete('public/uploads/articles/' . $article->image_name);
+                }
+                
+                $image = $request->file('image');
+                $filename = Str::random(12) . strtotime(date('dmY')) . '.' . $image->getClientOriginalExtension();
+
+                if ($image->getSize() > 5 * 1024 * 1024) { 
+                    $img = Image::make($image->getRealPath());
+                    $img->resize(2400, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                        $constraint->upsize();
+                    });
+
+                    $path = storage_path('app/public/uploads/articles/' . $filename);
+                    $img->save($path, 80);
+                } else {
+                    $image->storeAs('public/uploads/articles', $filename);
+                }
+
+                $article->image_name = 'uploads/articles/' . $filename;
+                $article->original_name = $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension();
+            }
+
+            $article->update();
+
+            return redirectByRole(auth()->user()->role, 'index', 'success', 'Artikel "' . $article->title . '" berhasil diperbarui!');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.article.edit', $hashedId)
+                ->withInput()
+                ->with('error', 'Gagal memperbarui artikel. ' . $e->getMessage());
+        }
     }
 
     /**

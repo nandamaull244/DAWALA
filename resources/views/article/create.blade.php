@@ -61,14 +61,14 @@
                         
                         <div class="col-md-12">
                             <label for="title" class="form-label">JUDUL</label>
-                            <input type="text" class="form-control" id="title" name="title">
+                            <input type="text" class="form-control" id="title" name="title" required>
                         </div>
                     </div>
                     
                     <div class="row mb-2 mt-1">
                         <div class="col-md-6 mt-4">
                             <label for="image" class="form-label">UPLOAD FOTO</label>
-                            <input type="file" class="form-control" id="image" name="image" accept="image/png, image/jpeg, image/jpg, image/webp">
+                            <input type="file" class="form-control" id="image" name="image" accept="image/png, image/jpeg, image/jpg, image/webp" required>
                             <small class="form-text text-muted">Hanya file PNG, JPG, JPEG, dan WEBP yang diizinkan.</small>
                         </div>
                         <div class="col-md-6">
@@ -84,7 +84,7 @@
                     <div class="row mb-3 mt-1">
                         <div class="col-md-12">
                             <label for="body" class="form-label">TEXT</label>
-                            <textarea class="form-control summernote" id="body" name="body" rows="3"></textarea>
+                            <textarea class="form-control summernote" id="body" name="body" rows="3" required></textarea>
                         </div>
                     </div>
                     

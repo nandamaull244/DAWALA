@@ -44,7 +44,7 @@
 @endsection
 
 @section('page-subheading')
-    Formulir Edit Artikel ( Author : {{ $article->user->full_name }} )
+    {{ $article->title }} ( Author : {{ $article->user->full_name }} )
 @endsection
 
 @section('content')
@@ -61,7 +61,7 @@
                         
                         <div class="col-md-12">
                             <label for="title" class="form-label">JUDUL</label>
-                            <input type="text" class="form-control" id="title" name="title" value="{{ $article->title }}">
+                            <input type="text" class="form-control" id="title" name="title" value="{{ $article->title }}" required>
                         </div>
                     </div>
 
@@ -75,7 +75,7 @@
                     <div class="row mb-2 mt-1">
                         <div class="col-md-6 mt-4">
                             <label for="image" class="form-label">UPLOAD FOTO</label>
-                            <input type="file" class="form-control" id="image" name="image" accept="image/png, image/jpeg, image/jpg, image/webp" value="{{ str_replace('uploads/articles/', '', $article->image) }}">
+                            <input type="file" class="form-control" id="image" name="image" accept="image/png, image/jpeg, image/jpg, image/webp" value="{{ str_replace('uploads/articles/', '', $article->image) }}" re    >
                             <small class="form-text text-muted">Hanya file PNG, JPG, JPEG, dan WEBP yang diizinkan.</small>
                         </div>
                         <div class="col-md-6">
@@ -105,7 +105,7 @@
                     <div class="row mb-3 mt-1">
                         <div class="col-md-12">
                             <label for="body" class="form-label">TEXT</label>
-                            <textarea class="form-control summernote" id="body" name="body" rows="3">{{ htmlspecialchars_decode($article->body) }}</textarea>
+                            <textarea class="form-control summernote" id="body" name="body" rows="3" required>{{ htmlspecialchars_decode($article->body) }}</textarea>
                         </div>
                     </div>
                     
@@ -173,7 +173,7 @@
     });
 
     $(document).ready(function() {
-        $('#title').on('keyup', function() {
+        $('#title').on('keyup change', function() {
             var title = $(this).val();
             var slug = createSlug(title);
             $('#slug').val(slug);
