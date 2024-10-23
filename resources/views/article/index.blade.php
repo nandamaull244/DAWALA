@@ -154,8 +154,6 @@
 @endsection
 
 @push('scripts')
-    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
     <script>
         $(document).ready(function() {
             flatpickr.localize(flatpickr.l10ns.id);
@@ -200,6 +198,32 @@
                 $('#time').val('').trigger('change');
                 table.ajax.reload();
             }
+
+            $(document).on('click', '.delete-btn', function() {
+                var id = $(this).data('id');
+                var url = "{{ route('admin.article.destroy', ':id') }}";
+                url = url.replace(':id', id);
+                $('#deleteForm').attr('action', url);
+            });
+
+            $('#deleteForm').on('submit', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        $('#deleteModalArticle').modal('hide');
+                        table.ajax.reload();
+                        toastr.success('Artikel berhasil dihapus');
+                    },
+                    error: function(xhr) {
+                        toastr.error('Terjadi kesalahan: ' + xhr.statusText);
+                    }
+                });
+            });
         });
     </script>
 @endpush

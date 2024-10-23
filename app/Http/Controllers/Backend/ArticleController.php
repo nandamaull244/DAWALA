@@ -47,7 +47,7 @@ class ArticleController extends Controller
             ->addColumn('action', function($row){
                 $hashedId = $row->getHashedId();
                 $actionBtn = '<a href="'.route('admin.article.edit', $hashedId).'" style="cursor: pointer;">✏️</a> ';
-                $actionBtn .= '<span data-bs-toggle="modal" data-bs-target="#deleteModalArticle" data-id="'.$hashedId.'" style="cursor: pointer;">🗑️</span>';
+                $actionBtn .= '<span class="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModalArticle" data-id="'.$hashedId.'" style="cursor: pointer;">🗑️</span>';
                 return $actionBtn;
             })
             ->editColumn('title', function($row) {
@@ -219,8 +219,14 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($hashedId)
     {
-        //
+        $article = Article::findByHash($hashedId);
+        if (!$article) {
+            return redirectByRole(auth()->user()->role, 'index', 'error', 'Data Artikel Tidak Ditemukan');
+        } else {
+            $article->delete();
+            return redirectByRole(auth()->user()->role, 'index', 'success', 'Artikel "' . $article->title . '" berhasil dihapus!');
+        }
     }
 }
