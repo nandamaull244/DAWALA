@@ -25,12 +25,12 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         $faker = Faker::create('id_ID');
-
+        // Admin user
         DB::table('users')->insert([
             'nik' => $this->generateNIK(),
             'username' => 'admindawala',
             'password' => Hash::make('dawala2024'),
-            'full_name' => 'DAWALA',
+            'full_name' => 'DAWALA Admin',
             'birth_date' => $faker->date('Y-m-d'),
             'gender' => $faker->randomElement(['Laki-Laki', 'Perempuan']),
             'no_kk' => $faker->numerify('################'),
@@ -43,7 +43,30 @@ class DatabaseSeeder extends Seeder
             'address' => $faker->address,
             'role' => 'admin',
             'registration_type' => 'Admin',
-            'registration_status' => $faker->randomElement(['Process', 'Rejected', 'Completed']),
+            'registration_status' => 'Completed',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Operator user
+        DB::table('users')->insert([
+            'nik' => $this->generateNIK(),
+            'username' => 'operatordawala',
+            'password' => Hash::make('dawala2024'),
+            'full_name' => 'DAWALA Operator',
+            'birth_date' => $faker->date('Y-m-d'),
+            'gender' => $faker->randomElement(['Laki-Laki', 'Perempuan']),
+            'no_kk' => $faker->numerify('################'),
+            'email' => 'operator@example.com',
+            'phone_number' => $faker->phoneNumber,
+            'district_id' => $faker->randomDigitNotNull,
+            'village_id' => $faker->randomDigitNotNull,
+            'rt' => $faker->numerify('##'),
+            'rw' => $faker->numerify('##'),
+            'address' => $faker->address,
+            'role' => 'operator',
+            'registration_type' => 'Operator',
+            'registration_status' => 'Completed',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

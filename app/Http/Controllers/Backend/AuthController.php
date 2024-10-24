@@ -75,13 +75,18 @@ class AuthController extends Controller
             
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
-                if ($user->role !== 'admin') {
-                    Auth::logout();
-                    return redirect()->back()->with('error', 'Anda tidak memiliki akses sebagai admin.');
-                }
                 
-                $request->session()->regenerate();
-                return redirect()->intended('/admin/dashboard')->with('success', 'Anda berhasil Login sebagai Admin');
+                switch ($user->role) {
+                    case 'admin':
+                        $request->session()->regenerate();
+                        return redirect()->intended('/admin/dashboard')->with('success', 'Anda berhasil Login sebagai Admin');
+                    case 'operator':
+                        $request->session()->regenerate();
+                        return redirect()->intended('/operator/dashboard')->with('success', 'Anda berhasil Login sebagai Operator');
+                    default:
+                        Auth::logout();
+                        return redirect()->back()->with('error', 'Anda tidak memiliki akses yang sesuai.');
+                }
             }
            
             return redirect()->back()->with('error', 'Username atau Password tidak sesuai');
