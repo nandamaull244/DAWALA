@@ -109,7 +109,7 @@
     Data Seluruh Layanan Kependudukan
 @endsection
 
-@section('content')
+@section('data-table')
     <section class="section">
         <div class="card">
             <div class="card-body">
