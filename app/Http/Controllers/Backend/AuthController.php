@@ -42,7 +42,7 @@ class AuthController extends Controller
                         return redirect()->route('instantiation.dashboard')->with('success', 'Anda berhasil Login sebagai Instantiation');
                     case 'user':
                     default:
-                        return redirect()->route('user.dashboard')->with('success', 'Anda berhasil Login');
+                        return redirect()->route('user.user.dashboard')->with('success', 'Anda berhasil Login');
                 }
             } else {
                 return redirect()->back()->with('error', 'NIK atau Password tidak sesuai');
