@@ -56,4 +56,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'district_id', 'id');
+    }
+
+    public function village()
+    {
+        return $this->belongsTo(Village::class, 'village_id', 'id');
+    }
 }

@@ -36,3 +36,15 @@ function getDay($day) {
 
     return $days[$day];
 }
+
+function getLateWorkingStatus($date) {
+    $dateTimestamp = strtotime($date);
+    $diffDays = floor((time() - $dateTimestamp) / (60 * 60 * 24));
+
+    if ($diffDays > 7) {
+        $lateDay = $diffDays - 7;
+        return ['true' => "Telat H + {$lateDay}"];
+    }
+
+    return ['false' => null];
+}

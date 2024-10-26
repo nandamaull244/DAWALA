@@ -28,6 +28,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     Route::resource('/pelayanan', MainServiceController::class);  
+    Route::get('/service/data', [MainServiceController::class, 'getData'])->name('pelayanan.data');
 
     // ARTICLES -->
     Route::resource('/article', ArticleController::class);
@@ -41,21 +42,29 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
 //  OPERATOR ROUTES GROUP -->
 Route::group(['prefix' => 'operator', 'middleware' => 'auth:operator', 'as' => 'operator.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('/arsip-kependudukan', MainServiceController::class);
+    Route::get('/articles/data', [ArticleController::class, 'getData'])->name('article.data');
+
+
+    Route::resource('/pelayanan', MainServiceController::class);  
+    Route::get('/service/data', [MainServiceController::class, 'getData'])->name('pelayanan.data');
 });
 
 
-//  INSTANTIATION ROUTES GROUP -->
-Route::group(['prefix' => 'instantiation', 'middleware' => 'auth:instantiation', 'as' => 'instantiation.'], function(){
+//  INSTITUTE ROUTES GROUP -->
+Route::group(['prefix' => 'institute', 'middleware' => 'auth:institute', 'as' => 'institute.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('/arsip-kependudukan', MainServiceController::class);
+
+    Route::resource('/pelayanan', MainServiceController::class);  
+    Route::get('/service/data', [MainServiceController::class, 'getData'])->name('pelayanan.data');
 });
 
 
 //  USER ROUTES GROUP -->
 Route::group(['prefix' => 'user', 'middleware' => 'auth:user', 'as' => 'user.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('/arsip-kependudukan', MainServiceController::class);
+
+    Route::resource('/pelayanan', MainServiceController::class);  
+    Route::get('/service/data', [MainServiceController::class, 'getData'])->name('pelayanan.data');
 });
 
 

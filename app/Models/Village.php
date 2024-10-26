@@ -12,4 +12,9 @@ class Village extends Model
     protected $table = "villages";
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
+
+    public function user()
+    {
+        return $this->hasMany(User::class, 'village_id');
+    }
 }

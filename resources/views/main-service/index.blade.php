@@ -98,6 +98,11 @@
         .bi-plus-circle {
             margin-right: 5px;
         }
+
+        #serviceTable {
+            table-layout: auto;
+            width: 100%;
+        }
     </style>
 @endpush
 
@@ -128,7 +133,6 @@
                         <div class="filter-item col-md-2" style="margin-top: -1px;">
                             <label for="time">Waktu</label>
                             <select id="time" name="time" class="form-select" style="height: 38px !important;">
-                                <option value="">Semua</option>
                                 <option value="Terbaru">Terbaru</option>
                                 <option value="Terlama">Terlama</option>
                             </select>
@@ -147,13 +151,13 @@
                     </div>
 
                     <div class="table-responsive">
-                        <table>
+                        <table id="serviceTable" class="table table-bordered table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>NO. TIKET</th>
+                                    <th>NO</th>
                                     <th>NAMA</th>
-                                    <th>KATEGORI</th>
-                                    <th>TANGGAL</th>
+                                    <th>KATEGORI LAYANAN</th>
+                                    <th>TANGGAL PENGAJUAN</th>
                                     <th>TIPE LAYANAN</th>
                                     <th>TANGGAL LAHIR</th>
                                     <th>ALAMAT</th>
@@ -168,38 +172,12 @@
                                     <th>FOTO KK</th>
                                     <th>FORMULIR</th>
                                     <th class="sticky-column">STATUS Pengerjaan</th>
-                                    <th class="sticky-column">STATUS</th>
+                                    <th class="sticky-column">STATUS Pelayanan</th>
                                     <th class="sticky-column">ACTION</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>00001</td>
-                                    <td>Christine Brooks</td>
-                                    <td>Disabilitas</td>
-                                    <td>04 Sep 2024</td>
-                                    <td>Persamaan KTP</td>
-                                    <td>01 Jan 1990</td>
-                                    <td>Jl. Contoh No. 123</td>
-                                    <td>001</td>
-                                    <td>002</td>
-                                    <td>Kelurahan Contoh</td>
-                                    <td>Kecamatan Contoh</td>
-                                    <td>081234567890</td>
-                                    <td>Perubahan Data</td>
-                                    <td><a href="#">Lihat Foto</a></td>
-                                    <td><a href="#">Lihat Foto</a></td>
-                                    <td><a href="#">Lihat Foto</a></td>
-                                    <td><a href="#">Lihat Formulir</a></td>
-                                    <td class="sticky-column"><span class="status rejected">Telat H+1</span></td>
-                                    <td class="sticky-column"><span class="status completed">Completed</span></td>
-                                    <td class="sticky-column action-icons">
-                                        <span data-bs-toggle="modal" data-bs-target="#dataModalEdit"
-                                            style="cursor: pointer;">✏️</span>
-                                        <span data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                            style="cursor: pointer;">🗑️</span>
-                                    </td>
-                                </tr>
+                                
                             </tbody>
                         </table>
                     </div>
@@ -247,11 +225,12 @@
         });
 
         $(document).ready(function() {
-            var table = $('#articlesTable').DataTable({
+            var table = $('#serviceTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('admin.article.data') }}",
+                    url: "{{ route('admin.pelayanan.data') }}",
+                    method: 'GET',
                     data: function (d) {
                         d.start_date = $('#start_date').val();
                         d.end_date = $('#end_date').val();
@@ -260,10 +239,24 @@
                 },
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, className: 'text-center', width: '5%'},
-                    {data: 'title', name: 'title', width: '30%'},
-                    {data: 'body', name: 'body', width: '40%'},
-                    {data: 'image', name: 'image', width: '15%'},
-                    {data: 'author', name: 'author', width: '15%'},
+                    {data: 'name', name: 'name'},
+                    {data: 'service_category', name: 'service_category'},
+                    {data: 'tanggal', name: 'tanggal'},
+                    {data: 'service_type', name: 'service_type'},
+                    {data: 'birth_date', name: 'birth_date'},
+                    {data: 'address', name: 'address'},
+                    {data: 'rt', name: 'rt'},
+                    {data: 'rw', name: 'rw'},
+                    {data: 'district', name: 'district'},
+                    {data: 'village', name: 'village'},
+                    {data: 'phone_number', name: 'phone_number'},
+                    {data: 'reason', name: 'reason'},
+                    {data: 'evidence_of_disability_image', name: 'evidence_of_disability_image', orderable: false, searchable: false},
+                    {data: 'ktp_image', name: 'ktp_image', orderable: false, searchable: false},
+                    {data: 'kk_image', name: 'kk_image', orderable: false, searchable: false},
+                    {data: 'formulir', name: 'formulir', orderable: false, searchable: false},
+                    {data: 'working_status', name: 'working_status', orderable: false, searchable: false},
+                    {data: 'service_status', name: 'service_status', orderable: false, searchable: false},
                     {data: 'action', name: 'action', orderable: false, searchable: false, width: '25%'},
                 ],
                 order: [[1, 'asc']] 

@@ -14,4 +14,9 @@ class ServiceImage extends Model
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
     protected $dates = ['deleted_at'];
+
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id', 'id');
+    }
 }
