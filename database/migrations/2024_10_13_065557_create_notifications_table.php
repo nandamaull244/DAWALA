@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('body');
             $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
+            $table->softDeletes();
         });
         
     }

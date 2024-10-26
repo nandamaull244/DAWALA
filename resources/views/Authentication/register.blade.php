@@ -45,7 +45,6 @@
     <body>
         <div id="auth">
             <div class="row h-100 justify-content-center align-items-center my-5 mb-5">
-                <!-- Added margin top and bottom -->
                 <div class="col-lg-8 col-6">
                     <div id="auth-left">
                         <h4 class="auth-title text-center">Registrasi Akun</h4>
@@ -66,9 +65,9 @@
                                         @enderror
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="role" id="instantiation"
-                                            value="instantiation" onclick="setRole('instantiation')" required>
-                                        <label class="form-check-label" for="instantiation">Instansi/Lembaga</label>
+                                        <input class="form-check-input" type="radio" name="role" id="institute"
+                                            value="institute" onclick="setRole('institute')" required>
+                                        <label class="form-check-label" for="institute">Instansi/Lembaga</label>
                                         @error('role')
                                             <span>{{ $message }}</span>
                                         @enderror
@@ -403,7 +402,7 @@
                 const districtSelect = document.getElementById('district-select').closest('.form-group');
                 const villageSelect = document.getElementById('village-select').closest('.form-group');
 
-                if (role === 'instantiation') {
+                if (role === 'institute') {
                     subCategory.style.display = 'block';
                     districtSelect.style.display = 'block';
                     villageSelect.style.display = 'block';
@@ -414,7 +413,7 @@
                 }
 
                 const userInput = document.getElementById('perorangan');
-                const operatorInput = document.getElementById('instantiation');
+                const operatorInput = document.getElementById('institute');
                 if (role === 'user') {
                     operatorInput.required = false;
                     userInput.required = true;

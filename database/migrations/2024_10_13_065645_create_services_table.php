@@ -16,11 +16,12 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->string('reason_not_possible');
+            $table->foreignId('service_list_id')->constrained('service_list')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('reason')->nullable();
             $table->string('latitude');
             $table->string('longitude');
-            $table->enum('service_category', ['Buat Baru', 'Baru Menikah', 'Penambahan Anggota', 'Hilang/Rusak', 'Mutasi KK']);
-            $table->enum('service_type', ['Pembuatan KK', 'Perekaman KTP']);
+            $table->string('service_type');
+            $table->string('service_category');
             $table->enum('service_status', ['Process', 'Rejected', 'Completed'])->default('Process'); 
             $table->enum('working_status', ['Process', 'Late', 'Done'])->default('Process'); 
             $table->timestamps();

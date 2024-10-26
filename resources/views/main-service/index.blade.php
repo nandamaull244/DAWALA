@@ -102,49 +102,48 @@
 @endpush
 
 @section('page-heading')
-    Arsip Data Kependudukan
+    Arsip Layanan
 @endsection
 
 @section('page-subheading')
-    Data Seluruh Layanan Kependudukan
+    Data Seluruh Layanan 
 @endsection
 
-@section('data-table')
+@section('content')
     <section class="section">
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="filter-container">
-                        <div class="filter-item">
-                            <label for="tanggal">Tanggal</label>
-                            <select id="tanggal" name="tanggal">
+                    <div class="filter-container col-md-12 form-group">
+                        <div class="filter-item col-md-2-5">
+                            <label for="start_date">Tanggal Awal</label>
+                            <input type="text" id="start_date" name="start_date" class="form-control flatpickr-date" placeholder="Pilih tanggal awal">
+                        </div>
+                    
+                        <div class="filter-item col-md-2-5">
+                            <label for="end_date">Tanggal Akhir</label>
+                            <input type="text" id="end_date" name="end_date" class="form-control flatpickr-date" placeholder="Pilih tanggal akhir">
+                        </div>
+                    
+                        <div class="filter-item col-md-2" style="margin-top: -1px;">
+                            <label for="time">Waktu</label>
+                            <select id="time" name="time" class="form-select" style="height: 38px !important;">
                                 <option value="">Semua</option>
-                                <!-- Add date options here -->
+                                <option value="Terbaru">Terbaru</option>
+                                <option value="Terlama">Terlama</option>
                             </select>
                         </div>
-                        <div class="filter-item">
-                            <label for="tipe_layanan">Tipe Layanan</label>
-                            <select id="tipe_layanan" name="tipe_layanan">
-                                <option value="">Semua</option>
-                                <option value="Persamaan KTP">Persamaan KTP</option>
-                                <option value="Pembuatan KK">Pembuatan KK</option>
-                                <!-- Add more service types as needed -->
-                            </select>
+                    
+                        <div class="filter-item col-md-1">
+                            <label>&nbsp;</label>
+                            <button class="btn btn-danger w-100" onclick="resetFilters()">Reset</button>
                         </div>
-                        <div class="filter-item">
-                            <label for="status">Status</label>
-                            <select id="status" name="status">
-                                <option value="">Semua</option>
-                                <option value="completed">Completed</option>
-                                <option value="processing">Processing</option>
-                                <option value="rejected">Rejected</option>
-                            </select>
+                        <div class="col-md-1"></div>
+                        <div class="filter-item col-md-2-5">
+                            <label>&nbsp;</label>
+                            <a class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#layananModal"><i class="bi bi-plus-circle"></i> Daftar Pelayanan
+                            </a>
                         </div>
-                        <button class="reset-filter" onclick="resetFilters()">Reset Filter</button>
-                        <button class="btn btn-primary add-new-btn" data-bs-toggle="modal" data-bs-target="#dataModal">
-                            <i class="bi bi-plus-circle"></i> Tambah Baru
-                        </button>
-
                     </div>
 
                     <div class="table-responsive">
@@ -201,61 +200,6 @@
                                             style="cursor: pointer;">🗑️</span>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>00002</td>
-                                    <td>Rosie Pearson</td>
-                                    <td>Disabilitas</td>
-                                    <td>28 May 2024</td>
-                                    <td>Persamaan KTP</td>
-                                    <td>01 Jan 1995</td>
-                                    <td>Jl. Contoh No. 456</td>
-                                    <td>003</td>
-                                    <td>004</td>
-                                    <td>Kelurahan Sample</td>
-                                    <td>Kecamatan Sample</td>
-                                    <td>087654321098</td>
-                                    <td>Pembaruan Data</td>
-                                    <td><a href="#">Lihat Foto</a></td>
-                                    <td><a href="#">Lihat Foto</a></td>
-                                    <td><a href="#">Lihat Foto</a></td>
-                                    <td><a href="#">Lihat Formulir</a></td>
-                                    <td class="sticky-column"><span class="status rejected">Telat H+1</span></td>
-                                    <td class="sticky-column"><span class="status completed">Completed</span></td>
-                                    <td class="sticky-column action-icons">
-                                        <span data-bs-toggle="modal" data-bs-target="#dataModalEdit"
-                                            style="cursor: pointer;">✏️</span>
-                                        <span data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                            style="cursor: pointer;">🗑️</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>00003</td>
-                                    <td>Darrell Caldwell</td>
-                                    <td>Tertantar</td>
-                                    <td>23 Nov 2024</td>
-                                    <td>Pembuatan KK</td>
-                                    <td>01 Jan 1985</td>
-                                    <td>Jl. Contoh No. 789</td>
-                                    <td>005</td>
-                                    <td>006</td>
-                                    <td>Kelurahan Test</td>
-                                    <td>Kecamatan Test</td>
-                                    <td>089876543210</td>
-                                    <td>Pembuatan Baru</td>
-                                    <td><a href="#">Lihat Foto</a></td>
-                                    <td><a href="#">Lihat Foto</a></td>
-                                    <td><a href="#">Lihat Foto</a></td>
-                                    <td><a href="#">Lihat Formulir</a></td>
-                                    <td class="sticky-column"><span class="status rejected">Telat H+1</span></td>
-                                    <td class="sticky-column"><span class="status completed">Completed</span></td>
-                                    <td class="sticky-column action-icons">
-                                        <span data-bs-toggle="modal" data-bs-target="#dataModalEdit"
-                                            style="cursor: pointer;">✏️</span>
-                                        <span data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                            style="cursor: pointer;">🗑️</span>
-                                    </td>
-                                </tr>
-                                <!-- Tambahkan baris lainnya sesuai dengan data pada gambar -->
                             </tbody>
                         </table>
                     </div>
@@ -264,11 +208,10 @@
         </div>
     </section>
 
-
-    @include('archive-data.modal_data')
-    @include('archive-data.modal_edit')
-    @include('archive-data.modal_reject')
-    @include('archive-data.delete_modal')
+    @include('main-service.modal_layanan')
+    @include('main-service.modal_edit')
+    @include('main-service.modal_reject')
+    @include('main-service.delete_modal')
 @endsection
 
 @push('scripts')
@@ -276,16 +219,6 @@
         $(document).ready(function() {
             function resetFilters() {
                 $('#tanggal, #tipe_layanan, #status').val('');
-            }
-
-            function toggleLayanan(button) {
-                $('.layanan-btn').removeClass('btn-primary');
-                $(button).addClass('btn-primary');
-            }
-
-            function selectPelayanan(button) {
-                $('.pelayanan-btn').removeClass('btn-primary');
-                $(button).addClass('btn-primary');
             }
 
             function saveChanges() {
@@ -311,6 +244,67 @@
 
             $('#saveChangesBtn').on('click', saveChanges);
             $('#saveRejectionBtn').on('click', saveRejection);
+        });
+
+        $(document).ready(function() {
+            var table = $('#articlesTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('admin.article.data') }}",
+                    data: function (d) {
+                        d.start_date = $('#start_date').val();
+                        d.end_date = $('#end_date').val();
+                        d.time = $('#time').val();
+                    }
+                },
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, className: 'text-center', width: '5%'},
+                    {data: 'title', name: 'title', width: '30%'},
+                    {data: 'body', name: 'body', width: '40%'},
+                    {data: 'image', name: 'image', width: '15%'},
+                    {data: 'author', name: 'author', width: '15%'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false, width: '25%'},
+                ],
+                order: [[1, 'asc']] 
+            });
+
+            $('#start_date, #end_date, #time').change(function(){
+                table.ajax.reload();
+            });
+
+            window.resetFilters = function() {
+                $('#start_date').val('').trigger('change');
+                $('#end_date').val('').trigger('change');
+                $('#time').val('').trigger('change');
+                table.ajax.reload();
+            }
+
+            $(document).on('click', '.delete-btn', function() {
+                var id = $(this).data('id');
+                var url = "{{ route('admin.article.destroy', ':id') }}";
+                url = url.replace(':id', id);
+                $('#deleteForm').attr('action', url);
+            });
+
+            $('#deleteForm').on('submit', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'DELETE',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        $('#deleteModalArticle').modal('hide');
+                        table.ajax.reload();
+                        toastr.success(response.success);
+                    },
+                    error: function(xhr) {
+                        toastr.error('Terjadi kesalahan: ' + xhr.statusText);
+                    }
+                });
+            });
         });
     </script>
 @endpush

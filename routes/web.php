@@ -7,7 +7,7 @@ use App\Http\Controllers\Backend\KKController;
 use App\Http\Controllers\Backend\KTPController;
 use App\Http\Controllers\Backend\AuthController;
 use App\Http\Controllers\Backend\DashboardController;
-use App\Http\Controllers\Backend\ArchiveDataController;
+use App\Http\Controllers\Backend\MainServiceController;
 use App\Http\Controllers\Backend\ArticleController;
 use App\Http\Controllers\Backend\FormArticleController;
 use App\Http\Controllers\Backend\UserController;
@@ -26,42 +26,38 @@ use App\Http\Controllers\Backend\UserController;
 //  ADMIN ROUTES GROUP -->
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('/form-ktp', KTPController::class);
-    Route::resource('/form-kk', KKController::class);
-    Route::resource('/arsip-kependudukan', ArchiveDataController::class);  
+    
+    Route::resource('/pelayanan', MainServiceController::class);  
 
     // ARTICLES -->
     Route::resource('/article', ArticleController::class);
-    Route::get('/admin/articles/data', [ArticleController::class, 'getData'])->name('article.data');
+    Route::get('/articles/data', [ArticleController::class, 'getData'])->name('article.data');
 
-    Route::resource('/form-artikel', FormArticleController::class);
     Route::get('/akun-manajemen/verification-table', [UserController::class, 'verificationTable'])->name('akun-manajemen.verification-table');
     Route::resource('/akun-manajemen', UserController::class);
 });
 
-//  ADMIN ROUTES GROUP -->
+
+//  OPERATOR ROUTES GROUP -->
 Route::group(['prefix' => 'operator', 'middleware' => 'auth:operator', 'as' => 'operator.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('/form-ktp', KTPController::class);
-    Route::resource('/form-kk', KKController::class);
-    Route::resource('/arsip-kependudukan', ArchiveDataController::class);
+    Route::resource('/arsip-kependudukan', MainServiceController::class);
 });
+
 
 //  INSTANTIATION ROUTES GROUP -->
 Route::group(['prefix' => 'instantiation', 'middleware' => 'auth:instantiation', 'as' => 'instantiation.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('/form-ktp', KTPController::class);
-    Route::resource('/form-kk', KKController::class);
-    Route::resource('/arsip-kependudukan', ArchiveDataController::class);
+    Route::resource('/arsip-kependudukan', MainServiceController::class);
 });
+
 
 //  USER ROUTES GROUP -->
 Route::group(['prefix' => 'user', 'middleware' => 'auth:user', 'as' => 'user.'], function(){
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
-    Route::resource('/form-ktp', KTPController::class);
-    Route::resource('/form-kk', KKController::class);
-    Route::resource('/arsip-kependudukan', ArchiveDataController::class);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('/arsip-kependudukan', MainServiceController::class);
 });
+
 
 // LOCATION ROUTES GROUP -->
 Route::get('/get-villages-by-district/{districtId}', [LocationController::class, 'getVillagesByDistrict'])->name('get-villages');

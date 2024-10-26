@@ -30,14 +30,14 @@ class DatabaseSeeder extends Seeder
             'nik' => $this->generateNIK(),
             'username' => 'admindawala',
             'password' => Hash::make('dawala2024'),
-            'full_name' => 'DAWALA Admin',
+            'full_name' => 'Admin DAWALA',
             'birth_date' => $faker->date('Y-m-d'),
             'gender' => $faker->randomElement(['Laki-Laki', 'Perempuan']),
             'no_kk' => $faker->numerify('################'),
             'email' => 'admin@example.com',
             'phone_number' => $faker->phoneNumber,
-            'district_id' => $faker->randomDigitNotNull,
-            'village_id' => $faker->randomDigitNotNull,
+            'district_id' => 3203,
+            'village_id' => 3203011009,
             'rt' => $faker->numerify('##'),
             'rw' => $faker->numerify('##'),
             'address' => $faker->address,
@@ -67,6 +67,20 @@ class DatabaseSeeder extends Seeder
             'role' => 'operator',
             'registration_type' => 'Operator',
             'registration_status' => 'Completed',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('service_list')->insert([
+            'service_name' => 'KTP eL',
+            'service_description' => 'Pengajuan KTP Elektronik',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('service_list')->insert([
+            'service_name' => 'Kartu Keluarga',
+            'service_description' => 'Pengajuan Kartu Keluarga',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

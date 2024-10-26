@@ -1,7 +1,7 @@
 <?php
 
-function redirectByRole($role, $page, $function, $flashMessage) {
-    return redirect()->route($role . '.' .$page. '.' .$function)->with($flashMessage);
+function redirectByRole($prefix, $page, $flashMessage) {
+    return redirect()->route($prefix . '.' .$page)->with($flashMessage);
 }
 
 function dashboardRedirect($role) {

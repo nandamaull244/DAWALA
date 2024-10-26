@@ -103,6 +103,8 @@ class ArticleController extends Controller
                 $image = $request->file('image');
                 $filename = Str::random(12) . strtotime(date('dmY')) . '.' . $image->getClientOriginalExtension();
 
+                Storage::makeDirectory('public/uploads/articles');
+
                 if ($image->getSize() > 5 * 1024 * 1024) { 
                     $img = Image::make($image->getRealPath());
                     $img->resize(2400, null, function ($constraint) {
@@ -122,7 +124,7 @@ class ArticleController extends Controller
 
             $article->save();
 
-            return redirectByRole('admin', 'article', 'index', ['success' => 'Artikel baru berhasil dibuat!']);
+            return redirectByRole('admin', 'article.index', ['success' => 'Artikel baru berhasil dibuat!']);
         } catch (\Exception $e) {
             return redirect()->route('admin.article.create')
                 ->withInput()
