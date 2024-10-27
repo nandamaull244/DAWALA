@@ -165,17 +165,20 @@ class MainServiceController extends Controller
                 $evidence = $row->service_image()->where('image_type', 'Bukti Keterbatasan')->first();
                 $evidence_odgj = $row->service_image()->where('image_type', 'Bukti Keterbatasan ODGJ')->first();
                 return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal"  
+                        data-title="Foto Bukti Keterbatasan" 
                         data-image="' . (isset($evidence->image_path) ? $evidence->image_path : '-') . '"
                         data-odgj_image="' . (isset($evidence_odgj->image_path) ? $evidence_odgj->image_path : '-') . '">Lihat Foto</a>';
             })
             ->addColumn('ktp_image', function($row) {
                 $ktp = $row->service_image()->where('image_type', 'KTP')->first();
                 return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" 
+                        data-title="Foto KTP"  
                         data-image="' . (isset($ktp->image_path) ? $ktp->image_path : '-') . '">Lihat Foto</a>';
             })
             ->addColumn('kk_image', function($row) {
                 $kk = $row->service_image()->where('image_type', 'Kartu Keluarga')->first();
                 return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" 
+                        data-title="Foto Kartu Keluarga"  
                         data-image="' . (isset($kk->image_path) ? $kk->image_path : '-') . '">Lihat Foto</a>';
             })
             ->addColumn('formulir', function($row) {
@@ -183,7 +186,8 @@ class MainServiceController extends Controller
                 $f102 = $row->service_form()->where('form_type', 'F1.02')->first();
                 $f103 = $row->service_form()->where('form_type', 'F1.03')->first();
                 $f104 = $row->service_form()->where('form_type', 'F1.04')->first();
-                return '<a href="#" data-bs-toggle="modal" data-bs-target="#formModal" 
+                return '<a href="#" data-bs-toggle="modal" data-bs-target="#formModal"
+                        data-title="Formulir" 
                         data-image="' . (isset($f101->form_path) ? $f101->form_path : '-') . '"
                         data-image="' . (isset($f102->form_path) ? $f102->form_path : '-') . '"
                         data-image="' . (isset($f103->form_path) ? $f103->form_path : '-') . '"

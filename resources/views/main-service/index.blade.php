@@ -303,6 +303,7 @@
     @include('main-service.modal_reject')
     @include('main-service.delete_modal')
     @include('main-service.modal_filter')
+    @include('main-service.modal_image')
 @endsection
 
 @push('scripts')
