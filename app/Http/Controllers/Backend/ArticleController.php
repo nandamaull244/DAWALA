@@ -42,7 +42,7 @@ class ArticleController extends Controller
             }
         }
 
-        return DataTables::of($query)
+        return DataTables::of($query->get())
             ->addIndexColumn()
             ->addColumn('action', function($row){
                 $hashedId = $row->getHashedId();

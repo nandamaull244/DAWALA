@@ -103,7 +103,112 @@
             table-layout: auto;
             width: 100%;
         }
+
+        #fixed-controls {
+            position: fixed;
+            top: 70px; /* Sesuaikan dengan header Anda */
+            right: 20px;
+            z-index: 1000;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .table-container {
+            position: relative;
+            padding-top: 50px;  /* Memberikan ruang untuk search box */
+            padding-bottom: 50px;  /* Memberikan ruang untuk pagination */
+        }
+
+        #search-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        #pagination-container {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        .dataTables_filter input {
+            width: 200px !important;
+        }
+
+        .dataTables_paginate .pagination {
+            margin-bottom: 0;
+        }
+
+        .card-body {
+            padding-right: 250px; /* Sesuaikan dengan lebar fixed controls */
+        }
+
+        @media (max-width: 768px) {
+            #fixed-controls, #pagination-container {
+                position: static;
+                margin-bottom: 20px;
+            }
+
+            .card-body {
+                padding-right: 15px;
+            }
+
+            .table-container {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+
+            #search-container, #pagination-container {
+                position: static;
+                margin-bottom: 10px;
+            }
+        }
     </style>
+    <style>
+        #serviceTable_length {
+            margin-top: -40px !important;
+        }
+
+        #serviceTable_length select {
+            width: 70px !important; 
+            height: 35px !important;
+            margin: -5px 5px 5px 5px !important;
+        }
+
+        #serviceTable_length label {
+            display: flex !important;
+            margin: 0.75rem 0.75rem 0.2rem 0.75rem !important;
+            width: 25% !important;
+        }
+
+        #serviceTable_filter select {
+            width: 70px !important; 
+            height: 35px !important;
+            margin: -5px 5px 5px 5px !important;
+        }
+
+        #serviceTable_filter label {
+            display: flex !important;
+            gap: 10px;
+            margin: 0.65rem 0.75rem 0.2rem 0.75rem !important;
+            width: 25% !important;
+        }
+
+        #serviceTable_info {
+            margin-top: 20px !important;
+        }
+
+        #serviceTable_paginate {
+            margin-top: -68px !important;
+        }
+    </style>
+ 
 @endpush
 
 @section('page-heading')
@@ -118,68 +223,75 @@
     <section class="section">
         <div class="card">
             <div class="card-body">
-                <div class="row">
-                    <div class="filter-container col-md-12 form-group">
-                        <div class="filter-item col-md-2-5">
-                            <label for="start_date">Tanggal Awal</label>
-                            <input type="text" id="start_date" name="start_date" class="form-control flatpickr-date" placeholder="Pilih tanggal awal">
+                <div class="row mb-3">
+                    <div class="col-md-6 col-sm-12 mb-2 mb-md-0 row">
+                        <div class="col-md-3">
+                            <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#filterModal">
+                                <i class="bi bi-funnel"></i> Filter
+                            </button>
                         </div>
-                    
-                        <div class="filter-item col-md-2-5">
-                            <label for="end_date">Tanggal Akhir</label>
-                            <input type="text" id="end_date" name="end_date" class="form-control flatpickr-date" placeholder="Pilih tanggal akhir">
+                        <div class="col-md-4">
+                            <button class="btn btn-danger w-100" id="reset">
+                                <i class="bi bi-arrow-repeat"></i> Reset Filter
+                            </button>
                         </div>
-                    
-                        <div class="filter-item col-md-2" style="margin-top: -1px;">
-                            <label for="time">Waktu</label>
-                            <select id="time" name="time" class="form-select" style="height: 38px !important;">
-                                <option value="Terbaru">Terbaru</option>
-                                <option value="Terlama">Terlama</option>
-                            </select>
-                        </div>
-                    
-                        <div class="filter-item col-md-1">
-                            <label>&nbsp;</label>
-                            <button class="btn btn-danger w-100" onclick="resetFilters()">Reset</button>
-                        </div>
-                        <div class="col-md-1"></div>
-                        <div class="filter-item col-md-2-5">
-                            <label>&nbsp;</label>
-                            <a class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#layananModal"><i class="bi bi-plus-circle"></i> Daftar Pelayanan
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="col-md-5 float-end">
+                            <a class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#layananModal">
+                                <i class="bi bi-plus-circle"></i> Daftar Pelayanan
                             </a>
                         </div>
                     </div>
+                </div>
 
+                <div class="table-container">
+                    <div class="col-md-12">
+                        <div id="length-container"></div>
+                    </div>
+                    <div class="col-md-12">
+                        <div id="search-container"></div>
+                    </div>
+
+                    <!-- Table -->
                     <div class="table-responsive">
-                        <table id="serviceTable" class="table table-bordered table-striped table-hover">
+                        <table id="serviceTable" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>NO</th>
-                                    <th>NAMA</th>
-                                    <th>KATEGORI LAYANAN</th>
-                                    <th>TANGGAL PENGAJUAN</th>
-                                    <th>TIPE LAYANAN</th>
-                                    <th>TANGGAL LAHIR</th>
-                                    <th>ALAMAT</th>
-                                    <th>RT</th>
-                                    <th>RW</th>
-                                    <th>DESA/KELURAHAN</th>
-                                    <th>KECAMATAN</th>
-                                    <th>NO HP</th>
-                                    <th>ALASAN PENGJUAN</th>
-                                    <th>FOTO BUKTI KETERBATASAN</th>
-                                    <th>FOTO KTP</th>
-                                    <th>FOTO KK</th>
-                                    <th>FORMULIR</th>
-                                    <th class="sticky-column">STATUS Pengerjaan</th>
-                                    <th class="sticky-column">STATUS Pelayanan</th>
-                                    <th class="sticky-column">ACTION</th>
+                                    <th nowrap>NO</th>
+                                    <th nowrap>NAMA</th>
+                                    <th nowrap>JENIS PELAYANAN</th>
+                                    <th nowrap>KATEGORI LAYANAN</th>
+                                    <th nowrap>TANGGAL PENGAJUAN</th>
+                                    <th nowrap>TIPE LAYANAN</th>
+                                    <th nowrap>TANGGAL LAHIR</th>
+                                    <th nowrap>ALAMAT</th>
+                                    <th nowrap>RT</th>
+                                    <th nowrap>RW</th>
+                                    <th nowrap>KECAMATAN</th>
+                                    <th nowrap>DESA/KELURAHAN</th>
+                                    <th nowrap>NO HP</th>
+                                    <th nowrap>ALASAN PENGAJUAN</th>
+                                    <th nowrap>FOTO BUKTI KETERBATASAN</th>
+                                    <th nowrap>FOTO KTP</th>
+                                    <th nowrap>FOTO KK</th>
+                                    <th nowrap>FORMULIR</th>
+                                    <th nowrap>STATUS PENGERJAAN</th>
+                                    <th nowrap>STATUS PELAYANAN</th>
+                                    <th nowrap>ACTION</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                
+                                <!-- Data akan diisi oleh DataTables -->
                             </tbody>
                         </table>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div id="info-container"></div>
+                    </div>
+                    <div class="col-md-12">
+                        <div id="pagination-container"></div>
                     </div>
                 </div>
             </div>
@@ -190,15 +302,12 @@
     @include('main-service.modal_edit')
     @include('main-service.modal_reject')
     @include('main-service.delete_modal')
+    @include('main-service.modal_filter')
 @endsection
 
 @push('scripts')
     <script>
         $(document).ready(function() {
-            function resetFilters() {
-                $('#tanggal, #tipe_layanan, #status').val('');
-            }
-
             function saveChanges() {
                 $('#dataModalEdit').modal('hide');
             }
@@ -226,20 +335,28 @@
 
         $(document).ready(function() {
             var table = $('#serviceTable').DataTable({
+                responsive: true,
                 processing: true,
                 serverSide: true,
                 ajax: {
                     url: "{{ route('admin.pelayanan.data') }}",
                     method: 'GET',
                     data: function (d) {
-                        d.start_date = $('#start_date').val();
-                        d.end_date = $('#end_date').val();
-                        d.time = $('#time').val();
+                        d.start_date = $('#startDate').val();
+                        d.end_date = $('#endDate').val();
+                        d.time = $('#selectedTime').val();
+                        d.categories = $('#selectedCategories').val();
+                        d.types = $('#selectedTypes').val();
+                        d.kecamatan = $('#kecamatan').val();
+                        d.desa = $('#desa').val();
+                        d.service_statuses = $('#selectedServiceStatuses').val();
+                        d.work_statuses = $('#selectedWorkStatuses').val();
                     }
                 },
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, className: 'text-center', width: '5%'},
                     {data: 'name', name: 'name'},
+                    {data: 'service', name: 'service'},
                     {data: 'service_category', name: 'service_category'},
                     {data: 'tanggal', name: 'tanggal'},
                     {data: 'service_type', name: 'service_type'},
@@ -259,45 +376,65 @@
                     {data: 'service_status', name: 'service_status', orderable: false, searchable: false},
                     {data: 'action', name: 'action', orderable: false, searchable: false, width: '25%'},
                 ],
-                order: [[1, 'asc']] 
+                order: [[1, 'asc']],
+                drawCallback: function(settings) {
+                    $('#search-container').html($('.dataTables_filter').detach());
+                    $('#pagination-container').html($('.dataTables_paginate').detach());
+                    $('#length-container').html($('.dataTables_length').detach());
+                    $('#info-container').html($('.dataTables_info').detach());
+                    var $searchInput = $('#search-container input[type="search"]');
+                    var searchValue = $searchInput.val();
+                    $searchInput.focus().val('').val(searchValue).addClass('hover-effect');
+                }
             });
 
-            $('#start_date, #end_date, #time').change(function(){
+            $('#reset').on('click', function() {
+                $('#startDate, #endDate, #selectedTime, #selectedCategories, #selectedTypes, #kecamatan, #desa, #selectedServiceStatuses, #selectedWorkStatuses').val('').trigger('change');
+                
+                $('.time-btn, .category-btn, .type-btn, .service-status-btn, .work-status-btn')
+                    .removeClass('btn-primary')
+                    .addClass('btn-outline-primary');
+                
+                table.ajax.reload();
+                
+                $('#filterModal').modal('hide');
+            })
+
+            $('.time-btn, .category-btn, .type-btn, .service-status-btn, .work-status-btn').on('click', function() {
                 table.ajax.reload();
             });
 
-            window.resetFilters = function() {
-                $('#start_date').val('').trigger('change');
-                $('#end_date').val('').trigger('change');
-                $('#time').val('').trigger('change');
+            $('#kecamatan, #desa').on('change', function() {
                 table.ajax.reload();
-            }
-
-            $(document).on('click', '.delete-btn', function() {
-                var id = $(this).data('id');
-                var url = "{{ route('admin.article.destroy', ':id') }}";
-                url = url.replace(':id', id);
-                $('#deleteForm').attr('action', url);
             });
 
-            $('#deleteForm').on('submit', function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'DELETE',
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        $('#deleteModalArticle').modal('hide');
-                        table.ajax.reload();
-                        toastr.success(response.success);
-                    },
-                    error: function(xhr) {
-                        toastr.error('Terjadi kesalahan: ' + xhr.statusText);
-                    }
-                });
+            $(window).scroll(function() {
+                var scrollTop = $(window).scrollTop();
+                var headerHeight = $('header').outerHeight(); 
+                
+                $('#fixed-controls').css('top', Math.max(headerHeight, scrollTop + 20) + 'px');
             });
         });
+
+        function getVillages(e) {
+            var districtId = $(e).val();
+            if(districtId) {
+                $.ajax({
+                    url: "{{ route('get-villages', '') }}/" + districtId,
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data) {
+                        $('#desa').empty();
+                        $('#desa').append('<option value="">Pilih Desa</option>');
+                        $.each(data, function(key, value) {
+                            $('#desa').append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#desa').empty();
+                $('#desa').append('<option value="">Pilih Desa</option>');
+            }
+        };
     </script>
 @endpush

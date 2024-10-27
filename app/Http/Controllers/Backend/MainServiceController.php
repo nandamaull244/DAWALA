@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Service;
+use App\Models\Village;
 use App\Models\District;
 use App\Helpers\CRUDHelper;
 use App\Models\ServiceForm;
@@ -39,7 +40,10 @@ class MainServiceController extends Controller
             }
         }
 
-        return view('main-service.index', compact('services'));
+        $districts = District::orderBy('name', 'asc')->get();   
+        $villages = Village::orderBy('name', 'asc')->get();
+
+        return view('main-service.index', compact('services', 'districts', 'villages'));
     }
 
     /**
@@ -50,23 +54,76 @@ class MainServiceController extends Controller
 
     public function getData(Request $request)
     {
-        $query = Service::query();
-
-        $start_date = Carbon::parse($request->start_date)->toDateString();
-        $end_date = Carbon::parse($request->end_date)->toDateString();
-        
-        $query->whereDate('created_at', '>=', $start_date)
-              ->whereDate('created_at', '<=', $end_date);
-
-        if ($request->has('time')) {
-            if ($request->time == 'Terbaru') {
-                $query->orderBy('created_at', 'desc');
-            } elseif ($request->time == 'Terlama') {
-                $query->orderBy('created_at', 'asc');
-            }
+        $query = Service::with(['user', 'user.district', 'user.village']); 
+        if ($request->filled('search') && $request->search['value']) {
+            $searchValue = $request->search['value'];
+            $query->where(function($q) use ($searchValue) {
+                $q->where('services.service_category', 'like', "%{$searchValue}%")
+                    ->orWhere('services.service_type', 'like', "%{$searchValue}%")
+                    ->orWhere('services.reason', 'like', "%{$searchValue}%")
+                    ->orWhereHas('user', function($userQuery) use ($searchValue) {
+                        $userQuery->where('full_name', 'like', "%{$searchValue}%")
+                                    ->orWhere('address', 'like', "%{$searchValue}%")
+                                    ->orWhere('phone_number', 'like', "%{$searchValue}%");
+                    })
+                    ->orWhereHas('user.district', function($districtQuery) use ($searchValue) {
+                        $districtQuery->where('name', 'like', "%{$searchValue}%");
+                    })
+                    ->orWhereHas('user.village', function($villageQuery) use ($searchValue) {
+                        $villageQuery->where('name', 'like', "%{$searchValue}%");
+                    })
+                    ->orWhereHas('service_list', function($serviceListQuery) use ($searchValue) {
+                        $serviceListQuery->where('service_name', 'like', "%{$searchValue}%");
+                    });
+            });
         }
 
-        return DataTables::of($query->get())
+        if ($request->filled('start_date')) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+
+        if ($request->filled('time')) {
+            $query->orderBy('created_at', $request->time === 'Terbaru' ? 'desc' : 'asc');
+        }
+
+        if ($request->filled('categories')) {
+            $query->whereHas('service_list', function($q) use ($request) {
+                $q->whereIn('service_name', explode(',', $request->categories));
+            });
+        }
+
+        if ($request->filled('types')) {
+            $types = explode(',', $request->types);
+            $query->whereIn('service_type', $types);
+        }
+
+        if ($request->filled('kecamatan')) {
+            $query->whereHas('user.district', function($q) use ($request) {
+                $q->where('id', $request->kecamatan);
+            });
+        }
+
+        if ($request->filled('desa')) {
+            $query->whereHas('user.village', function($q) use ($request) {
+                $q->where('id', $request->desa);
+            });
+        }
+
+        if ($request->filled('service_statuses')) {
+            $statuses = explode(',', $request->service_statuses);
+            $query->whereIn('service_status', $statuses);
+        }
+
+        if ($request->filled('work_statuses')) {
+            $statuses = explode(',', $request->work_statuses);
+            $query->whereIn('working_status', $statuses);
+        }
+
+        return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('action', function($row){
                 $hashedId = $row->getHashedId();
@@ -76,6 +133,9 @@ class MainServiceController extends Controller
             })
             ->addColumn('name', function($row) {
                 return $row->user->full_name;
+            })
+            ->addColumn('service', function($row) {
+                return $row->service_list->service_name;
             })
             ->addColumn('tanggal', function($row) {
                 return getFlatpickrDate(date('Y-m-d', strtotime($row->created_at)));
@@ -124,40 +184,65 @@ class MainServiceController extends Controller
                 $f103 = $row->service_form()->where('form_type', 'F1.03')->first();
                 $f104 = $row->service_form()->where('form_type', 'F1.04')->first();
                 return '<a href="#" data-bs-toggle="modal" data-bs-target="#formModal" 
-                        data-formf101="' . (isset($f101->form_path) ? $f101->form_path : '-') . '"
-                        data-formf102="' . (isset($f102->form_path) ? $f102->form_path : '-') . '"
-                        data-formf103="' . (isset($f103->form_path) ? $f103->form_path : '-') . '"
-                        data-formf104="' . (isset($f104->form_path) ? $f104->form_path : '-') . '">Lihat Form</a>';
+                        data-image="' . (isset($f101->form_path) ? $f101->form_path : '-') . '"
+                        data-image="' . (isset($f102->form_path) ? $f102->form_path : '-') . '"
+                        data-image="' . (isset($f103->form_path) ? $f103->form_path : '-') . '"
+                        data-image="' . (isset($f104->form_path) ? $f104->form_path : '-') . '">Lihat Form</a>';
             })
             ->addColumn('working_status', function($row) {
                 switch($row->working_status) {
                     case 'Not Yet':
-                        return '<span class="badge bg-secondary">Menunggu</span>';
+                        return '<span class="badge bg-secondary text-center">Menunggu</span>';
                     case 'Late':
                         $lateStatus = getLateWorkingStatus($row->created_at);
                         if (isset($lateStatus['true'])) {
-                            return '<span class="badge bg-danger">'. $lateStatus['true'] . '</span>';
+                            return '<span class="badge bg-danger text-center">'. $lateStatus['true'] . '</span>';
                         } else {
                             return '<span class="badge bg-danger">Terlambat</span>';
                         }
                     case 'Process':
-                        return '<span class="badge bg-warning">Proses</span>';
+                        return '<span class="badge bg-warning text-center">Proses</span>';
                     case 'Done':
-                        return '<span class="badge bg-success">Selesai</span>';
+                        return '<span class="badge bg-success text-center">Selesai</span>';
                     default:
-                        return '<span class="badge bg-secondary">'. $row->working_status .'</span>';
+                        return '<span class="badge bg-secondary text-center">'. $row->working_status .'</span>';
                 }
             })
             ->addColumn('service_status', function($row) {
                 if($row->service_status == 'Not Yet'){
-                    return '<span class="badge bg-secondary">Belum Dikerjakan</span>';
+                    return '<span class="badge bg-secondary text-center">Belum Dikerjakan</span>';
                 } else if($row->service_status == 'Process'){
-                    return '<span class="badge bg-warning">Proses</span>';
+                    return '<span class="badge bg-warning text-center">Proses</span>';
                 } else if($row->working_status == 'Rejected') {
-                    return '<span class="badge bg-danger">Ditolak</span>';
+                    return '<span class="badge bg-danger text-center">Ditolak</span>';
                 } else if($row->service_status == 'Completed') {
-                    return '<span class="badge bg-success">Selesai</span>';
+                    return '<span class="badge bg-success text-center">Selesai</span>';
                 }
+            })
+            ->filterColumn('name', function($query, $keyword) {
+                $query->whereHas('user', function($q) use ($keyword) {
+                    $q->where('full_name', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('address', function($query, $keyword) {
+                $query->whereHas('user', function($q) use ($keyword) {
+                    $q->where('address', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('village', function($query, $keyword) {
+                $query->whereHas('user.phone_number', function($q) use ($keyword) {
+                    $q->where('phone_number', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('district', function($query, $keyword) {
+                $query->whereHas('user.district', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('village', function($query, $keyword) {
+                $query->whereHas('user.village', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
+                });
             })
             ->rawColumns(['action', 'name', 'tanggal', 'birth_date', 'alamat', 'rt', 'rw', 'district', 'village', 'phone_number', 'evidence_of_disability_image', 'ktp_image', 'kk_image', 'formulir', 'working_status', 'service_status'])
             ->make(true);
@@ -444,8 +529,14 @@ class MainServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($hashedId)
     {
-        //
+        $service = Service::whereHash($hashedId)->firstOrFail();
+        if (!$service) {
+            return redirectByRole(auth()->user()->role, 'pelayanan.index', ['error' => 'Data Pelayanan Tidak Ditemukan']);
+        } else {
+            $service->softDelete();
+            return redirectByRole(auth()->user()->role, 'pelayanan.index', ['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' berhasil dihapus!']);
+        }
     }
 }
