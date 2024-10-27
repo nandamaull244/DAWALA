@@ -6,30 +6,35 @@
 @endpush
 
 @section('page-heading')
-    Pengajuan Layanan {{ $pelayanan }}
+    @if (session('pelayanan') || session('tipe_layanan'))
+        {{ $pelayanan = session('pelayanan') }}
+        {{ $tipe_layanan = session('tipe_layanan') }}
+    @endif
+    Edit Pengajuan Layanan {{ $pelayanan }}
 @endsection
 
 @section('page-subheading')
-    Formulir Pengajuan Layanan {{ $pelayanan }}
+    {{ $service->user->full_name }} - {{ $service->service_category }} ({{ $service->service_type }})
 @endsection
 
 @section('content')
     <section class="section">
-        <form action="{{ route('admin.pelayanan.store') }}" id="pelayanan-form" method="POST" enctype="multipart/form-data" novalidate>
+        <form action="{{ route('admin.pelayanan.update', $service->getHashedId()) }}" id="pelayanan-form" method="POST" enctype="multipart/form-data" novalidate>
+            @csrf
+            @method('PUT')
             <div class="card">
                 <div class="card-body">
-                    @csrf
                     <div class="row">
                         <div class="col-md-6">
                             <input type="hidden" name="service" value="{{ $pelayanan }}">
                             <div class="form-group">
                                 <label for="full_name">Nama Lengkap</label>
-                                <input type="text" class="form-control" id="full_name" name="full_name" value="@if (auth()->user()->role == 'user') {{ auth()->user()->full_name }} @endif" required>
+                                <input type="text" class="form-control" id="full_name" name="full_name" value="{{ $service->user->full_name ?? '' }}" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="address">Alamat lengkap</label>
-                                <input type="text" class="form-control" id="address" name="address" value="@if (auth()->user()->role == 'user') {{ auth()->user()->address }} @endif" required>
+                                <input type="text" class="form-control" id="address" name="address" value="{{ $service->user->address ?? '' }}" required>
                                 {{-- <small class="text-muted">Contoh: Jl. Mangunsarkoro, No. 123, Kec. Cianjur, Kabupaten Cianjur, Jawa Barat 43213</small> --}}
                             </div>
 
@@ -37,9 +42,8 @@
                                 <label for="district-select">Kecamatan</label>
                                 <div class="input-group">
                                     <select id="district-select" class="form-control" name="district_id" required>
-                                        <option value="" disabled @if (auth()->user()->role != 'user' || !isset(auth()->user()->district_id)) selected @endif>Pilih Kecamatan</option>
                                         @foreach ($districts as $district)
-                                            <option value="{{ $district->id }}" @if (auth()->user()->role == 'user' && $district->id == auth()->user()->district_id) selected @endif>{{ $district->name }}</option>
+                                            <option value="{{ $district->id }}" @if ($district->id == $service->user->district_id) selected @endif>{{ $district->name }}</option>
                                         @endforeach
                                     </select>
                                     <span class="input-group-text"><i class="bi bi-chevron-down"></i></span>
@@ -50,7 +54,6 @@
                                 <label for="village-select">Desa/Kelurahan</label>
                                 <div class="input-group">
                                     <select id="village-select" class="form-control" name="village_id" required>
-                                        <option value="" disabled @if (auth()->user()->role != 'user' || !isset(auth()->user()->village_id)) selected @endif>Pilih Desa/Kelurahan</option>
                                     </select>
                                     <span class="input-group-text"><i class="bi bi-chevron-down"></i></span>
                                 </div>
@@ -58,23 +61,30 @@
 
                             <div class="form-group">
                                 <label for="phone_number">No. Telepon/HP (Whatsapp)</label>
-                                <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="+62" value="@if (auth()->user()->role == 'user') {{ auth()->user()->phone_number }} @endif" maxlength="14" required>
+                                <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="+62" value="{{ $service->user->phone_number ?? '' }}" maxlength="14" required>
                             </div>
+
+                            @php
+                                $evidence = $service->service_image()->where('image_type', 'Bukti Keterbatasan')->first() ?? '';
+                                $evidence_odgj = $service->service_image()->where('image_type', 'Bukti Keterbatasan ODGJ')->first() ?? '';
+                                $ktp = $service->service_image()->where('image_type', 'KTP')->first() ?? '';
+                                $kk = $service->service_image()->where('image_type', 'Kartu Keluarga')->first() ?? '';
+                            @endphp
 
                             <div class="form-group">
                                 <label for="evidence_of_disability" class="form-label">Foto Bukti Keterbatasan</label>
-                                <input class="form-control" type="file" id="evidence_of_disability" name="evidence_of_disability_image" accept="image/*" required>
+                                <input class="form-control @if (isset($evidence)) bg-success @endif" type="file" id="evidence_of_disability" name="evidence_of_disability_image" accept="image/*" required>
                             </div>
 
                             @if ($pelayanan == 'KTP eL')
                                 <div class="form-group">
                                     <label for="kk" class="form-label">Foto Kartu Keluarga</label>
-                                    <input class="form-control" type="file" id="kk" name="kk_image" accept="image/*" required>
+                                    <input class="form-control @if (isset($kk)) bg-success @endif" type="file" id="kk" name="kk_image" accept="image/*" value="" required>
                                 </div>
                             @elseif ($pelayanan == 'Kartu Keluarga')
                                 <div class="form-group">
                                     <label for="ktp" class="form-label">Foto KTP-eL</label>
-                                    <input class="form-control" type="file" id="ktp" name="ktp_image" accept="image/*" required>
+                                    <input class="form-control @if (isset($ktp)) bg-success @endif" type="file" id="ktp" name="ktp_image" accept="image/*" required>
                                 </div>
                             @endif
                             
@@ -88,26 +98,26 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nik">NIK</label>
-                                <input type="text" class="form-control" id="nik" name="nik" value="@if (auth()->user()->role == 'user') {{ auth()->user()->nik }} @endif" maxlength="16" required>
+                                <input type="text" class="form-control" id="nik" name="nik" value="{{ $service->user->nik ?? '' }}" maxlength="16" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="birth_date">Tanggal Lahir</label>
-                                <input type="date" class="form-control flatpickr-birth-date" id="birth_date" name="birth_date" value="@if (auth()->user()->role == 'user') {{ auth()->user()->birth_date }} @endif" placeholder="-" required>
+                                <input type="date" class="form-control flatpickr-birth-date" id="birth_date" name="birth_date" value="{{ $service->user->birth_date ?? '' }}" placeholder="-" required>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="rt">RT</label>
-                                        <input type="text" class="form-control form-control-sm" id="rt" name="rt" value="@if (auth()->user()->role == 'user') {{ auth()->user()->rt }} @endif" required>
+                                        <input type="text" class="form-control form-control-sm" id="rt" name="rt" value="{{ $service->user->rt ?? '' }}" required>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="rw">RW</label>
-                                        <input type="text" class="form-control form-control-sm" id="rw" name="rw" value="@if (auth()->user()->role == 'user') {{ auth()->user()->rw }} @endif" required>
+                                        <input type="text" class="form-control form-control-sm" id="rw" name="rw" value="{{ $service->user->rw ?? '' }}" required>
                                     </div>
                                 </div>
                             </div>
@@ -116,14 +126,14 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="latitude">Latitude</label>
-                                        <input type="text" class="form-control geolocation-input" id="latitude" name="latitude" required readonly>
+                                        <input type="text" class="form-control geolocation-input" id="latitude" name="latitude" required readonly value="{{ $service->latitude ?? '' }}">
                                     </div>
                                 </div>
         
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="longitude">Longitude</label>
-                                        <input type="text" class="form-control geolocation-input" id="longitude" name="longitude" required readonly>
+                                        <input type="text" class="form-control geolocation-input" id="longitude" name="longitude" required readonly value="{{ $service->longitude ?? '' }}">
                                     </div>
                                 </div>
                             </div>
@@ -132,18 +142,18 @@
                                 <label for="service_category">Kategori Pelayanan</label>
                                 <div class="input-group">
                                     <select id="service_category" class="form-control" name="service_category" required>
-                                        <option value="" disabled selected>Pilih Kategori Pelayanan</option>
-                                        <option value="Disabilitas Fisik">Disabilitas Fisik</option>
-                                        <option value="Disabilitas Netra/Buta">Disabilitas Netra/Buta</option>
-                                        <option value="Disabilitas Rungu/Bicara">Disabilitas Rungu/Bicara</option>
-                                        <option value="Disabilitas Mental/Jiwa">Disabilitas Mental/Jiwa</option>
-                                        <option value="Disabilitas Fisik dan Mental">Disabilitas Fisik dan Mental</option>
-                                        <option value="Disabilitas Lainnya">Disabilitas Lainnya</option>
-                                        <option value="Lansia">Lansia</option>
-                                        <option value="ODGJ">ODGJ</option>
-                                        <option value="Penduduk Sakit">Penduduk Sakit</option>
-                                        <option value="Penduduk Terlantar">Penduduk Terlantar</option>
-                                        <option value="Penduduk Terkena Bencana">Penduduk Terkena Bencana</option>
+                                        @php
+                                            $categories = [
+                                                'Disabilitas Fisik', 'Disabilitas Netra/Buta', 'Disabilitas Rungu/Bicara',
+                                                'Disabilitas Mental/Jiwa', 'Disabilitas Fisik dan Mental', 'Disabilitas Lainnya', 
+                                                'Lansia', 'ODGJ', 'Penduduk Sakit', 'Penduduk Terlantar', 'Penduduk Terkena Bencana'
+                                            ];
+                                        @endphp
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category }}" {{ $service->service_category == $category ? 'selected' : '' }}>
+                                                {{ $category }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                     <span class="input-group-text"><i class="bi bi-chevron-down"></i></span>
                                 </div>
@@ -151,25 +161,26 @@
 
                             <div class="form-group" id="evidence_of_disability_odgj_image" style="display: none;">
                                 <label for="evidence_of_disability_odgj" class="form-label">Foto bukti instansi terkait (jika benar ODGJ)</label>
-                                <input class="form-control" type="file" id="evidence_of_disability_odgj" name="evidence_of_disability_odgj_image" accept="image/*">
+                                <input class="form-control @if (isset($evidence_odgj)) bg-success @endif" type="file" id="evidence_of_disability_odgj" name="evidence_of_disability_odgj_image" accept="image/*">
                             </div>
 
                             <div class="form-group">
                                 <label for="reason">Alasan Pengajuan (Opsional)</label>
-                                <input type="text" class="form-control" id="reason" name="reason">
+                                <input type="text" class="form-control" id="reason" name="reason" value="{{ $service->reason ?? '' }}">
                             </div>
-
                             <div class="form-group">
                                 <label for="service_type">Tipe Pelayanan</label>
                                 <div class="input-group">
+                                    @php
+                                        $serviceTypes = ['Buat baru', 'Pembaruan KK barcode', 'Baru menikah', 'Penambahan anggota keluarga', 'Hilang/rusak', 'Mutasi KK'];
+                                    @endphp
                                     <select id="service_type" class="form-control" name="service_type" required>
-                                        <option value="" disabled>Pilih Tipe Pelayanan</option>
-                                        <option value="Buat baru" @if ($tipe_layanan == 'Buat baru') selected @endif>Buat baru</option>
-                                        <option value="Pembaruan KK barcode" @if ($tipe_layanan == 'Pembaruan KK barcode') selected @endif>Pembaruan KK barcode</option>
-                                        <option value="Baru menikah" @if ($tipe_layanan == 'Baru menikah') selected @endif>Baru menikah</option>
-                                        <option value="Penambahan anggota keluarga" @if ($tipe_layanan == 'Penambahan anggota keluarga') selected @endif>Penambahan anggota keluarga</option>
-                                        <option value="Hilang/rusak" @if ($tipe_layanan == 'Hilang/rusak') selected @endif>Hilang/rusak</option>
-                                        <option value="Mutasi KK" @if ($tipe_layanan == 'Mutasi KK') selected @endif>Mutasi KK</option>
+                                        <option value="" disabled {{ is_null($service->service_type) ? 'selected' : '' }}>Pilih Tipe Pelayanan</option>
+                                        @foreach($serviceTypes as $type)
+                                            <option value="{{ $type }}" {{ $service->service_type == $type ? 'selected' : '' }}>
+                                                {{ $type }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                     <span class="input-group-text"><i class="bi bi-chevron-down"></i></span>
                                 </div>
@@ -230,13 +241,15 @@
         // @endif
 
         $(document).ready(function() {
-            $('#service_category').change(function() {
-                var isODGJ = $(this).val() === 'ODGJ';
+            function updateODGJField() {
+                var isODGJ = $('#service_category').val() === 'ODGJ';
                 $('#evidence_of_disability_odgj_image').toggle(isODGJ);
-                if(isODGJ) {
-                    $('[name="evidence_of_disability_odgj_image"]').attr('required', true);
-                } 
-            });
+                $('[name="evidence_of_disability_odgj_image"]').attr('required', isODGJ);
+            }
+
+            updateODGJField();
+
+            $('#service_category').change(updateODGJField);
 
             $('#formFile').click(function(e) {
                 e.preventDefault();
@@ -275,30 +288,32 @@
             }
         });
 
-        $('#pelayanan-form').on('submit', function(e) {
-            e.preventDefault();
-            var isValid = true;
+        $(document).ready(function() {
+            $('form').on('submit', function(e) {
+                var isValid = true;
 
-            $(this).find('input, select, textarea').each(function() {
-                var $field = $(this);
-                var fieldName = $field.closest('.form-group').find('label').text() || 'Field';
-                if(fieldName == 'F1.02') fieldName = 'Formulir F1.02';
+                $(this).find('input, select, textarea').each(function() {
+                    var $field = $(this);
+                    var fieldName = $field.closest('.form-group').find('label').text() || 'Field';
+                    if(fieldName == 'F1.02') fieldName = 'Formulir F1.02';
 
-                if ($field.prop('required') && !$field.val()) {
-                    isValid = false;
-                    toastr.warning(fieldName + ' harus diisi', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
-                }
+                    if ($field.attr('type') === 'file') {
+                        var dataExist = $field.data('exist');
+                        if (dataExist === false && !$field.val() && $field.prop('required')) {
+                            isValid = false;
+                            toastr.warning(fieldName + ' harus diisi', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
+                        }
+                    } 
+                    else if ($field.prop('required') && !$field.val()) {
+                        isValid = false;
+                        toastr.warning(fieldName + ' harus diisi', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
+                    }
+                });
 
-                var maxLength = $field.attr('maxlength');
-                if (maxLength && $field.val().length > maxLength) {
-                    isValid = false;
-                    toastr.warning(fieldName + ' tidak boleh lebih dari ' + maxLength + ' karakter', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
+                if (!isValid) {
+                    e.preventDefault();
                 }
             });
-
-            if (isValid) {
-                this.submit();
-            }
         });
 
         var userVillageId = "{{ auth()->user()->role == 'user' ? auth()->user()->village_id : null }}"
@@ -313,7 +328,7 @@
                     method: 'GET',
                     dataType: 'json',
                     success: function(data) {
-                        const userVillageId = "{{ auth()->user()->role == 'user' ? auth()->user()->village_id : null }}"
+                        const userVillageId = "{{ $service->user->village_id ?? null }}"
                             
                         $.each(data, function(index, village) {
                             const $option = $('<option>', {
@@ -350,6 +365,9 @@
         });
     </script>
 @endpush
+
+
+
 
 
 

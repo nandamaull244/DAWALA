@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('longitude');
             $table->string('service_type');
             $table->string('service_category');
-            $table->enum('service_status', ['Process', 'Rejected', 'Completed'])->default('Process'); 
-            $table->enum('working_status', ['Process', 'Late', 'Done'])->default('Process'); 
+            $table->enum('service_status', ['Not Yet', 'Process', 'Rejected', 'Completed'])->default('Not Yet'); 
+            $table->enum('working_status', ['Not Yet', 'Process', 'Late', 'Done'])->default('Not Yet'); 
             $table->timestamps();
             $table->string('deleted_reason')->nullable();
             $table->softDeletes();

@@ -153,7 +153,7 @@ class ArticleController extends Controller
     {
         $article = Article::findByHash($hashedId);
         if (!$article) {
-            return redirectByRole(auth()->user()->role, 'article', 'index', ['error' => 'Data Artikel Tidak Ditemukan']);
+            return redirectByRole(auth()->user()->role, 'article.index', ['error' => 'Data Artikel Tidak Ditemukan']);
         }
         return view('article.edit', compact('article'));
     }
@@ -169,7 +169,7 @@ class ArticleController extends Controller
     {
         $article = Article::findByHash($hashedId);
         if (!$article) {
-            return redirectByRole(auth()->user()->role, 'article', 'index', ['error' => 'Data Artikel Tidak Ditemukan']);
+            return redirectByRole(auth()->user()->role, 'article.index', ['error' => 'Data Artikel Tidak Ditemukan']);
         }
 
         $validatedData = $request->validate([
@@ -210,7 +210,7 @@ class ArticleController extends Controller
 
             $article->update();
 
-            return redirectByRole('admin', 'article', 'index', ['success' => 'Artikel "' . $article->title . '" berhasil diperbarui!']);
+            return redirectByRole('admin', 'article.index', ['success' => 'Artikel "' . $article->title . '" berhasil diperbarui!']);
         } catch (\Exception $e) {
             return redirect()->route('admin.article.edit', $hashedId)
                 ->withInput()
@@ -228,7 +228,7 @@ class ArticleController extends Controller
     {
         $article = Article::findByHash($hashedId);
         if (!$article) {
-            return redirectByRole(auth()->user()->role, 'article', 'index', ['error' => 'Data Artikel Tidak Ditemukan']);
+            return redirectByRole(auth()->user()->role, 'article.index', ['error' => 'Data Artikel Tidak Ditemukan']);
         } else {
             $article->delete();
             return response()->json(['success' => 'Artikel "' . $article->title . '" berhasil dihapus!']);

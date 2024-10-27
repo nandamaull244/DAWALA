@@ -12,8 +12,12 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class CRUDHelper
 {
-    public static function processAndStoreImage(UploadedFile $image, string $folder, string $imageType = ""): array
+    public static function processAndStoreImage(UploadedFile $image, string $folder, string $imageType = "", ?string $oldImagePath = null): array
     {
+        if ($oldImagePath && Storage::exists('public/' . $oldImagePath)) {
+            Storage::delete('public/' . $oldImagePath);
+        }
+
         $filename = Str::random(15) . strtotime(date('Y-m-d')) . '.' . $image->getClientOriginalExtension();
         $path = 'uploads/' . $folder . '/' . $filename;
 
@@ -35,25 +39,37 @@ class CRUDHelper
         return [
             'image_type' => $imageType,
             'image_path' => $path,
-            'original_name' => $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension()
+            'original_name' => $image->getClientOriginalName()
         ];
     }
 
-    public static function processAndStoreFormImage(UploadedFile $formFile, string $folder, string $formType = ""): array
+    public static function deleteOldFile(string $oldFilePath): void
     {
-        $user = Auth::user();
-        $filename = Str::slug($formType . '_' . $user->full_name . '_' . getFlatpickrDate(date('Y-m-d')) . '-' . date('H:i:s'));
-        $originalExtension = $formFile->getClientOriginalExtension();
+        if ($oldFilePath) {
+            Storage::delete('public/' . $oldFilePath);
+        }
+    }
 
-        Storage::makeDirectory('public/uploads/' . $folder);
+    public static function processAndStoreFormImage(UploadedFile $form, string $inputName, string $formType, string $userName, ?string $oldFormPath = null): array
+    {
+        if ($oldFormPath && Storage::exists('public/' . $oldFormPath)) {
+            Storage::delete('public/' . $oldFormPath);
+        }
+
+        $author = empty($userName) ? Auth::user() : $userName;
+
+        $filename = Str::slug($formType . '_' . $author . '_' . getFlatpickrDate(date('Y-m-d')) . '-' . date('H:i:s') . rand(1, 10));
+        $originalExtension = $form->getClientOriginalExtension();
+
+        Storage::makeDirectory('public/uploads/' . $inputName);
         
         $filename .= '.pdf';
-        $path = 'uploads/' . $folder . '/' . $filename;
+        $path = 'uploads/' . $inputName . '/' . $filename;
         
         if (strtolower($originalExtension) == 'pdf') {
-            Storage::putFileAs('public/uploads/' . $folder, $formFile, $filename);
+            Storage::putFileAs('public/uploads/' . $inputName, $form, $filename);
         } else {
-            $img = Image::make($formFile->getRealPath());
+            $img = Image::make($form->getRealPath());
             $img->resize(1200, null, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();

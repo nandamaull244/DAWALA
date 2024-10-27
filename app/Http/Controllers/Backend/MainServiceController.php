@@ -104,43 +104,35 @@ class MainServiceController extends Controller
             ->addColumn('evidence_of_disability_image', function($row) {
                 $evidence = $row->service_image()->where('image_type', 'Bukti Keterbatasan')->first();
                 $evidence_odgj = $row->service_image()->where('image_type', 'Bukti Keterbatasan ODGJ')->first();
-                $evidence_path = isset($evidence->image_path) ? $evidence->image_path : '-';
-                $evidence_odgj_path = isset($evidence_odgj->image_path) ? $evidence_odgj->image_path : '-';
-                return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" 
-                        data-image="'. $evidence_path. '"
-                        data-odgj_image="'. $evidence_odgj_path. '">Lihat Foto</a>';
+                return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal"  
+                        data-image="' . (isset($evidence->image_path) ? $evidence->image_path : '-') . '"
+                        data-odgj_image="' . (isset($evidence_odgj->image_path) ? $evidence_odgj->image_path : '-') . '">Lihat Foto</a>';
             })
             ->addColumn('ktp_image', function($row) {
                 $ktp = $row->service_image()->where('image_type', 'KTP')->first();
-                $path = isset($ktp->image_path) ? $ktp->image_path : '-';
                 return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" 
-                        data-image="'. $path. '">Lihat Foto</a>';
+                        data-image="' . (isset($ktp->image_path) ? $ktp->image_path : '-') . '">Lihat Foto</a>';
             })
             ->addColumn('kk_image', function($row) {
                 $kk = $row->service_image()->where('image_type', 'Kartu Keluarga')->first();
-                $path = isset($kk->image_path) ? $kk->image_path : '-';
                 return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" 
-                        data-image="'. $path. '">Lihat Foto</a>';
+                        data-image="' . (isset($kk->image_path) ? $kk->image_path : '-') . '">Lihat Foto</a>';
             })
             ->addColumn('formulir', function($row) {
                 $f101 = $row->service_form()->where('form_type', 'F1.01')->first();
                 $f102 = $row->service_form()->where('form_type', 'F1.02')->first();
                 $f103 = $row->service_form()->where('form_type', 'F1.03')->first();
                 $f104 = $row->service_form()->where('form_type', 'F1.04')->first();
-                $f101_path = isset($f101->form_path) ? $f101->form_path : '-';
-                $f102_path = isset($f102->form_path) ? $f102->form_path : '-';
-                $f103_path = isset($f103->form_path) ? $f103->form_path : '-';
-                $f104_path = isset($f104->form_path) ? $f104->form_path : '-';
                 return '<a href="#" data-bs-toggle="modal" data-bs-target="#formModal" 
-                        data-formf101="'. $f101_path. '"
-                        data-formf102="'. $f102_path. '"
-                        data-formf103="'. $f103_path. '"
-                        data-formf104="'. $f104_path. '">Lihat Form</a>';
+                        data-formf101="' . (isset($f101->form_path) ? $f101->form_path : '-') . '"
+                        data-formf102="' . (isset($f102->form_path) ? $f102->form_path : '-') . '"
+                        data-formf103="' . (isset($f103->form_path) ? $f103->form_path : '-') . '"
+                        data-formf104="' . (isset($f104->form_path) ? $f104->form_path : '-') . '">Lihat Form</a>';
             })
             ->addColumn('working_status', function($row) {
                 switch($row->working_status) {
-                    case 'Process':
-                        return '<span class="badge bg-warning">Proses</span>';
+                    case 'Not Yet':
+                        return '<span class="badge bg-secondary">Menunggu</span>';
                     case 'Late':
                         $lateStatus = getLateWorkingStatus($row->created_at);
                         if (isset($lateStatus['true'])) {
@@ -148,6 +140,8 @@ class MainServiceController extends Controller
                         } else {
                             return '<span class="badge bg-danger">Terlambat</span>';
                         }
+                    case 'Process':
+                        return '<span class="badge bg-warning">Proses</span>';
                     case 'Done':
                         return '<span class="badge bg-success">Selesai</span>';
                     default:
@@ -155,7 +149,9 @@ class MainServiceController extends Controller
                 }
             })
             ->addColumn('service_status', function($row) {
-                if($row->service_status == 'Process'){
+                if($row->service_status == 'Not Yet'){
+                    return '<span class="badge bg-secondary">Belum Dikerjakan</span>';
+                } else if($row->service_status == 'Process'){
                     return '<span class="badge bg-warning">Proses</span>';
                 } else if($row->working_status == 'Rejected') {
                     return '<span class="badge bg-danger">Ditolak</span>';
@@ -209,7 +205,7 @@ class MainServiceController extends Controller
             
             $service_list = ServiceList::where('service_name', $request->service)->first();
             $service = new Service();  
-            $service->user_id = auth()->user()->id;
+            $service->user_id = $user->id;
             $service->service_list_id = $service_list->id;
             $service->service_type = $request->service_type;
             $service->service_category = $request->service_category;
@@ -248,7 +244,7 @@ class MainServiceController extends Controller
 
             foreach ($formTypes as $inputName => $formType) {
                 if ($request->hasFile($inputName . '_file')) {
-                    $formData = CRUDHelper::processAndStoreFormImage($request->file($inputName . '_file'), $inputName, $formType);
+                    $formData = CRUDHelper::processAndStoreFormImage($request->file($inputName . '_file'), $inputName, $formType, $service->user->full_name);
 
                     ServiceForm::create([
                         'service_id' => $service->id,
@@ -270,7 +266,8 @@ class MainServiceController extends Controller
             return redirect()->route('admin.pelayanan.create')
                 ->withInput()
                 ->with([
-                    'error' => 'Gagal menyimpan pengajuan. Error pada baris ' . $e->getLine() . ': ' . $e->getMessage(),
+                    // 'error' => 'Gagal menyimpan pengajuan. Error pada baris ' . $e->getLine() . ': ' . $e->getMessage(),
+                    'error' => $e->getMessage(),
                     'pelayanan' => $request->service,
                     'tipe_layanan' => $request->service_type
                 ]);
@@ -294,9 +291,24 @@ class MainServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($hashedId)
     {
-        //
+        $service = Service::with(['user', 'service_image', 'service_form', 'user.district', 'user.village'])
+                            ->whereHash($hashedId)
+                            ->first();
+
+        if (!$service) {
+            return redirectByRole(auth()->user()->role, 'pelayanan.index', ['error' => 'Data Pelayanan Tidak Ditemukan']);
+        }
+
+        if (!$service) {
+            return redirectByRole(auth()->user()->role, 'pelayanan.index', ['error' => 'Data Pelayanan Tidak Ditemukan']);
+        }
+        
+        $service_list = ServiceList::where('id', $service->service_list_id)->first();
+        $pelayanan = $service_list->service_name;
+        $districts = District::orderBy('name', 'asc')->get();
+        return view('main-service.edit', compact('service', 'pelayanan', 'districts'));
     }
 
     /**
@@ -306,9 +318,124 @@ class MainServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $hashedId)
     {
-        //
+        try {
+            $service = Service::whereHash($hashedId)->firstOrFail();
+            $user = $service->user;
+
+            $userData = [
+                'nik' => $request->nik,
+                'full_name' => $request->full_name,
+                'phone_number' => $request->phone_number,
+                'birth_date' => $request->birth_date,
+                'address' => $request->address,
+                'district_id' => $request->district_id,
+                'village_id' => $request->village_id,
+                'rt' => $request->rt,
+                'rw' => $request->rw,
+            ];
+
+            $user->update($userData);
+
+            $updateService = $request->only(['reason', 'service_type', 'service_category', 'latitude', 'longitude']);
+            $service->update($updateService);
+
+            // IMAGE
+            $imageTypes = [
+                'ktp_image' => ['folder' => 'ktp', 'type' => 'KTP'],
+                'kk_image' => ['folder' => 'kk', 'type' => 'Kartu Keluarga'],
+                'evidence_of_disability_image' => ['folder' => 'evidence_of_disability', 'type' => 'Bukti Keterbatasan'],
+                'evidence_of_disability_odgj_image' => ['folder' => 'evidence_of_disability_odgj', 'type' => 'Bukti Keterbatasan ODGJ', 'useFormImage' => true]
+            ];
+
+            foreach ($imageTypes as $inputName => $imageInfo) {
+                $oldImage = $service->service_image()->where('image_type', $imageInfo['type'])->first();
+                
+                if ($request->hasFile($inputName) && $oldImage) {
+                    $oldImagePath = $oldImage->image_path;
+
+                    $imageData = CRUDHelper::processAndStoreImage(
+                        $request->file($inputName),
+                        $imageInfo['folder'],
+                        $imageInfo['type'],
+                        $oldImagePath
+                    );
+
+                    $oldImage->update([
+                        'image_path' => $imageData['image_path'],
+                        'original_name' => $imageData['original_name']
+                    ]);
+                } elseif ($request->hasFile($inputName)) {
+                    $imageData = CRUDHelper::processAndStoreImage(
+                        $request->file($inputName),
+                        $imageInfo['folder'],
+                        $imageInfo['type']
+                    );
+
+                    ServiceImage::create([
+                        'service_id' => $service->id,
+                        'image_type' => $imageData['image_type'],
+                        'image_path' => $imageData['image_path'],
+                        'original_name' => $imageData['original_name']
+                    ]);
+                }
+            }
+
+            // FORM
+            $formTypes = ['f101' => 'F1.01', 'f102' => 'F1.02', 'f103' => 'F1.03', 'f104' => 'F1.04'];
+
+            foreach ($formTypes as $inputName => $formType) {
+                $oldForm = $service->service_form()->where('form_type', $formType)->first();
+                
+                if ($request->hasFile($inputName . '_file') && $oldForm) {
+                    $oldFormPath = $oldForm->form_path;
+
+                    $formData = CRUDHelper::processAndStoreFormImage(
+                        $request->file($inputName . '_file'),
+                        $inputName,
+                        $formType,
+                        $service->user->full_name,
+                        $oldFormPath
+                    );
+
+                    $oldForm->update([
+                        'form_path' => $formData['form_path']
+                    ]);
+                } elseif ($request->hasFile($inputName . '_file')) {
+                    $formData = CRUDHelper::processAndStoreFormImage(
+                        $request->file($inputName . '_file'),
+                        $inputName,
+                        $formType,
+                        $service->user->full_name
+                    );
+
+                    ServiceForm::create([
+                        'service_id' => $service->id,
+                        'form_type' => $formData['form_type'],
+                        'form_path' => $formData['form_path'],
+                    ]);
+                }
+            }
+
+            $notifications = new Notification();
+            $notifications->user_id = auth()->user()->id;
+            $notifications->action = 'UPDATE';
+            $notifications->title = 'Pembaruan ' . $request->pelayanan;
+            $notifications->body = 'Pengajuan ' . $request->pelayanan . ' telah diperbarui';
+            $notifications->save();
+
+            return redirectByRole(auth()->user()->role, 'pelayanan.index', ['success' => 'Pengajuan ' . ($request->service) . ' berhasil diperbarui!']);
+        } catch (\Exception $e) {
+            return redirect()->route('admin.pelayanan.edit', $hashedId)
+                ->withInput()
+                ->with([
+                    // 'error' => 'Gagal memperbarui pengajuan. Error pada baris ' . $e->getLine() . ': ' . $e->getMessage(),
+                    'error' => $e->getMessage(),
+                    'pelayanan' => $request->service,
+                    'tipe_layanan' => $request->service_type
+                ]);
+        }
     }
 
     /**
