@@ -31,6 +31,16 @@
 <script>
     $(document).ready(function() {
         flatpickr.localize(flatpickr.l10ns.id);
+        $(".flatpickr").flatpickr({
+            dateFormat: "Y-m-d",
+            allowInput: true,
+            altInput: true,
+            altFormat: "d F Y",
+            locale: "id",
+            disableMobile: "true",
+            defaultDate: ""
+        });
+
         $(".flatpickr-date").flatpickr({
             dateFormat: "Y-m-d",
             allowInput: true,
@@ -44,7 +54,6 @@
         @if (auth()->user()->role == 'user') 
             var birthDate = "{{ auth()->user()->birth_date }}";
         @endif
-
 
         $(".flatpickr-birth-date").flatpickr({
             dateFormat: "Y-m-d",

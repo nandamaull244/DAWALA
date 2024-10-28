@@ -299,8 +299,7 @@
     </section>
 
     @include('main-service.modal_layanan')
-    @include('main-service.modal_edit')
-    @include('main-service.modal_reject')
+    @include('main-service.modal_confirmation')
     @include('main-service.delete_modal')
     @include('main-service.modal_filter')
     @include('main-service.modal_image')

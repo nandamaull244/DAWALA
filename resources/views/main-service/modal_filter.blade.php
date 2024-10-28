@@ -14,13 +14,13 @@
                         <div class="col-md-6 mb-2 mb-md-0">
                             <div class="input-group">
                                 <span class="input-group-text">Dari</span>
-                                <input type="date" class="form-control flatpickr-date" id="startDate">
+                                <input type="date" class="form-control flatpickr" id="startDate" readonly>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-group">
                                 <span class="input-group-text">Sampai</span>
-                                <input type="date" class="form-control flatpickr-date" id="endDate">
+                                <input type="date" class="form-control flatpickr" id="endDate" readonly>
                             </div>
                         </div>
                     </div>

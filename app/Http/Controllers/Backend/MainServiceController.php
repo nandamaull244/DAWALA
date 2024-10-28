@@ -54,7 +54,13 @@ class MainServiceController extends Controller
 
     public function getData(Request $request)
     {
-        $query = Service::with(['user', 'user.district', 'user.village']); 
+        $query = Service::with(['user', 'user.district', 'user.village'])
+                        ->orderByRaw("CASE 
+                            WHEN working_status = 'Late' THEN created_at 
+                            ELSE NULL 
+                            END ASC") 
+                        ->orderBy('created_at', 'desc'); 
+
         if ($request->filled('search') && $request->search['value']) {
             $searchValue = $request->search['value'];
             $query->where(function($q) use ($searchValue) {
@@ -129,7 +135,7 @@ class MainServiceController extends Controller
                 $hashedId = $row->getHashedId();
                 $actionBtn = '<div class="btn-group" role="group">';
                 $actionBtn .= '<a target="_blank" href="'.route('admin.pelayanan.edit', $hashedId).'" class="btn btn-outline-primary" style="cursor: pointer;"><i class="bi bi-pencil-square fs-5"></i></a>';
-                $actionBtn .= '<button type="button" class="btn btn-outline-success delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModalService" data-id="'.$hashedId.'" style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></button>';
+                $actionBtn .= '<button type="button" class="btn btn-outline-success delete-btn" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-id="'.$hashedId.'" data-reason="'. $row->deleted_reason .'" style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></button>';
                 $actionBtn .= '</div>';
                 return $actionBtn;
             })            
@@ -219,7 +225,7 @@ class MainServiceController extends Controller
                     return '<span class="badge bg-secondary text-center">Belum Dikerjakan</span>';
                 } else if($row->service_status == 'Process'){
                     return '<span class="badge bg-warning text-center">Proses</span>';
-                } else if($row->working_status == 'Rejected') {
+                } else if($row->service_status == 'Rejected') {
                     return '<span class="badge bg-danger text-center">Ditolak</span>';
                 } else if($row->service_status == 'Completed') {
                     return '<span class="badge bg-success text-center">Selesai</span>';
@@ -535,14 +541,31 @@ class MainServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($hashedId)
+    public function destroy(Request $request, $hashedId)
     {
         $service = Service::whereHash($hashedId)->firstOrFail();
-        if (!$service) {
-            return redirectByRole(auth()->user()->role, 'pelayanan.index', ['error' => 'Data Pelayanan Tidak Ditemukan']);
+        
+        if ($service) { 
+            if($request->status == 'approved') {  
+                $service->update([
+                    'service_status' => 'Process',
+                    'working_status' => 'Process',
+                    'deleted_reason' => null
+                ]);
+                return redirectByRole(auth()->user()->role, 'pelayanan.index', 
+                    ['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' diterima!']);
+            } else {
+                $service->update([
+                    'service_status' => 'Rejected',
+                    'working_status' => '-',
+                    'deleted_reason' => $request->deleted_reason
+                ]);
+                return redirectByRole(auth()->user()->role, 'pelayanan.index', 
+                    ['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' ditolak!']);
+            }
         } else {
-            $service->softDelete();
-            return redirectByRole(auth()->user()->role, 'pelayanan.index', ['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' berhasil dihapus!']);
+            return redirectByRole(auth()->user()->role, 'pelayanan.index', 
+                ['error' => 'Data Pelayanan Tidak Ditemukan']);
         }
     }
 }
