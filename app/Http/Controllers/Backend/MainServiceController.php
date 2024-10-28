@@ -128,7 +128,7 @@ class MainServiceController extends Controller
             ->addColumn('action', function($row) {
                 $hashedId = $row->getHashedId();
                 $actionBtn = '<div class="btn-group" role="group">';
-                $actionBtn .= '<a href="'.route('admin.pelayanan.edit', $hashedId).'" class="btn btn-outline-primary" style="cursor: pointer;"><i class="bi bi-pencil-square fs-5"></i></a>';
+                $actionBtn .= '<a target="_blank" href="'.route('admin.pelayanan.edit', $hashedId).'" class="btn btn-outline-primary" style="cursor: pointer;"><i class="bi bi-pencil-square fs-5"></i></a>';
                 $actionBtn .= '<button type="button" class="btn btn-outline-success delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModalService" data-id="'.$hashedId.'" style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></button>';
                 $actionBtn .= '</div>';
                 return $actionBtn;

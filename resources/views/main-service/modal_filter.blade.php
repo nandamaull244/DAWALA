@@ -33,7 +33,7 @@
                             <select class="form-select" id="kecamatan" name="kecamatan" onchange="getVillages(this)">
                                 <option value="">Pilih Kecamatan</option>
                                 @foreach ($districts as $district)
-                                    <option value="{{ $district->id }}">{{ $district->name }}</option>
+                                    <option value="{{ $district->id }}" data-value="{{ $district->id }}">{{ $district->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -102,6 +102,7 @@
                 </div>
 
                 <input type="hidden" id="selectedTime" name="time">
+                <input type="hidden" id="selectedDistricts" name="districts">
                 <input type="hidden" id="selectedCategories" name="categories[]">
                 <input type="hidden" id="selectedTypes" name="types[]">
                 <input type="hidden" id="selectedServiceStatuses" name="serviceStatuses[]">
@@ -116,14 +117,20 @@
 
 @push('scripts')
     <script>
+        function selectDistricts(input) {
+            const $input = $(input);
+            const value = $input.val();
+            $('#selectedDistricts').val(value);
+        }
+
         function selectFilter(button, type, multiple = false) {
             const $button = $(button);
-            const value = $button.data('value');
+            let value = $button.data('value');
             const $input = $('#selected' + type);
-            
+
             if (multiple) {
                 let selectedValues = $input.val() ? $input.val().split(',') : [];
-                
+              
                 if ($button.hasClass('btn-primary')) {
                     $button.removeClass('btn-primary').addClass('btn-outline-primary');
                     selectedValues = selectedValues.filter(v => v !== value);
@@ -151,7 +158,7 @@
                 time: $('#selectedTime').val(),
                 categories: $('#selectedCategories').val(),
                 types: $('#selectedTypes').val(),
-                kecamatan: $('#kecamatan').val(),
+                kecamatan: $('#selectedDistricts').val(),
                 desa: $('#desa').val(),
                 serviceStatuses: $('#selectedServiceStatuses').val(),
                 workStatuses: $('#selectedWorkStatuses').val()

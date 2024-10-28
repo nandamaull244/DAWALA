@@ -349,7 +349,7 @@
                         d.time = $('#selectedTime').val();
                         d.categories = $('#selectedCategories').val();
                         d.types = $('#selectedTypes').val();
-                        d.kecamatan = $('#kecamatan').val();
+                        d.kecamatan = $('#selectedDistricts').val();
                         d.desa = $('#desa').val();
                         d.service_statuses = $('#selectedServiceStatuses').val();
                         d.work_statuses = $('#selectedWorkStatuses').val();
@@ -384,6 +384,7 @@
                     $('#pagination-container').html($('.dataTables_paginate').detach());
                     $('#length-container').html($('.dataTables_length').detach());
                     $('#info-container').html($('.dataTables_info').detach());
+
                     var $searchInput = $('#search-container input[type="search"]');
                     var searchValue = $searchInput.val();
                     $searchInput.focus().val('').val(searchValue).addClass('hover-effect');
@@ -391,22 +392,31 @@
             });
 
             $('#reset').on('click', function() {
-                $('#startDate, #endDate, #selectedTime, #selectedCategories, #selectedTypes, #kecamatan, #desa, #selectedServiceStatuses, #selectedWorkStatuses').val('').trigger('change');
+                $('#selectedTime, #selectedCategories, #selectedTypes, #selectedDistricts, #selectedServiceStatuses, #selectedWorkStatuses').val('');
+                
+                $('#kecamatan, #desa').val('').trigger('change');
+                
+                const today = "{{ date('Y-m-d') }}";
+                $('#startDate')[0]._flatpickr.setDate(today);
+                $('#endDate')[0]._flatpickr.setDate(today);
                 
                 $('.time-btn, .category-btn, .type-btn, .service-status-btn, .work-status-btn')
                     .removeClass('btn-primary')
                     .addClass('btn-outline-primary');
                 
                 table.ajax.reload();
-                
                 $('#filterModal').modal('hide');
-            })
-
+            });
             $('.time-btn, .category-btn, .type-btn, .service-status-btn, .work-status-btn').on('click', function() {
                 table.ajax.reload();
             });
 
-            $('#kecamatan, #desa').on('change', function() {
+            $(document).on('change', '#kecamatan', function() {
+                selectDistricts(this);
+                table.ajax.reload();
+            });
+
+            $(document).on('change', '#desa, #startDate, #endDate', function() {
                 table.ajax.reload();
             });
 
