@@ -40,12 +40,12 @@
     </thead>
     <tbody>
         @foreach($services as $index => $service)
-            @php
+            {{-- @php
                 $evidence = $service->service_image()->where('image_type', 'Bukti Keterbatasan')->first();
                 $evidence_odgj = $service->service_image()->where('image_type', 'Bukti Keterbatasan ODGJ')->first();
                 $ktp = $service->service_image()->where('image_type', 'KTP')->first();
                 $kk = $service->service_image()->where('image_type', 'Kartu Keluarga')->first();
-            @endphp
+            @endphp --}}
             <tr>
                 <td class="text-center">{{ $index + 1 }}</td>
                 <td class="text-center">{{ $service->user->full_name }}</td>

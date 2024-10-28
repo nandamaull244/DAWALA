@@ -247,7 +247,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="#" id="downloadPDF">
+                                        <a class="dropdown-item" href="#" id="btnDownloadPDF" data-bs-toggle="modal" data-bs-target="#selectPaperModal">
                                             <i class="bi bi-file-earmark-pdf"></i> Download PDF
                                         </a>
                                     </li>
@@ -323,6 +323,7 @@
     @include('main-service.modal_filter')
     @include('main-service.modal_image')
     @include('main-service.modal_download_formulir')
+    @include('main-service.modal_select_paper')
 @endsection
 
 @push('scripts')
@@ -413,7 +414,9 @@
                     kecamatan: $('#selectedDistricts').val(),
                     desa: $('#desa').val(),
                     service_statuses: $('#selectedServiceStatuses').val(),
-                    work_statuses: $('#selectedWorkStatuses').val()
+                    work_statuses: $('#selectedWorkStatuses').val(),
+                    paper: $('#paper').val(),
+                    orientation: $('#orientation').val(),
                 };
 
                 $.ajax({
