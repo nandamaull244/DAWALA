@@ -304,6 +304,7 @@
     @include('main-service.delete_modal')
     @include('main-service.modal_filter')
     @include('main-service.modal_image')
+    @include('main-service.modal_download_formulir')
 @endsection
 
 @push('scripts')

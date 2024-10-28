@@ -125,12 +125,14 @@ class MainServiceController extends Controller
 
         return DataTables::of($query)
             ->addIndexColumn()
-            ->addColumn('action', function($row){
+            ->addColumn('action', function($row) {
                 $hashedId = $row->getHashedId();
-                $actionBtn = '<a href="'.route('admin.pelayanan.edit', $hashedId).'" style="cursor: pointer;">✏️</a> ';
-                $actionBtn .= '<span class="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModalService" data-id="'.$hashedId.'" style="cursor: pointer;">🗑️</span>';
+                $actionBtn = '<div class="btn-group" role="group">';
+                $actionBtn .= '<a href="'.route('admin.pelayanan.edit', $hashedId).'" class="btn btn-outline-primary" style="cursor: pointer;"><i class="bi bi-pencil-square fs-5"></i></a>';
+                $actionBtn .= '<button type="button" class="btn btn-outline-success delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModalService" data-id="'.$hashedId.'" style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></button>';
+                $actionBtn .= '</div>';
                 return $actionBtn;
-            })
+            })            
             ->addColumn('name', function($row) {
                 return $row->user->full_name;
             })
@@ -186,12 +188,12 @@ class MainServiceController extends Controller
                 $f102 = $row->service_form()->where('form_type', 'F1.02')->first();
                 $f103 = $row->service_form()->where('form_type', 'F1.03')->first();
                 $f104 = $row->service_form()->where('form_type', 'F1.04')->first();
-                return '<a href="#" data-bs-toggle="modal" data-bs-target="#formModal"
+                return '<a href="#" data-bs-toggle="modal" data-bs-target="#formulirDownloadModal"
                         data-title="Formulir" 
-                        data-image="' . (isset($f101->form_path) ? $f101->form_path : '-') . '"
-                        data-image="' . (isset($f102->form_path) ? $f102->form_path : '-') . '"
-                        data-image="' . (isset($f103->form_path) ? $f103->form_path : '-') . '"
-                        data-image="' . (isset($f104->form_path) ? $f104->form_path : '-') . '">Lihat Form</a>';
+                        data-imagef101="' . (isset($f101->form_path) ? $f101->form_path : '-') . '"
+                        data-imagef102="' . (isset($f102->form_path) ? $f102->form_path : '-') . '"
+                        data-imagef103="' . (isset($f103->form_path) ? $f103->form_path : '-') . '"
+                        data-imagef104="' . (isset($f104->form_path) ? $f104->form_path : '-') . '">Lihat Form</a>';
             })
             ->addColumn('working_status', function($row) {
                 switch($row->working_status) {
