@@ -12,4 +12,9 @@ class District extends Model
     protected $table = "districts";
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
+
+    public function villages()
+    {
+        return $this->hasMany(Village::class);
+    }
 }

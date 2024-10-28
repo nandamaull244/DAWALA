@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <h1 class="mb-4">Tambah User</h1>
-    <form id="userForm" action="" method="POST">
+    <form id="userForm" action="{{ route("admin.admin.user.store") }}" method="POST">
         @csrf
         
         <!-- Role selection -->
@@ -55,11 +55,11 @@
             <div class="position-relative">
                 <select class="form-control form-control-xl" id="district-select" name="district_id">
                     <option value="">Pilih Kecamatan</option>
-                    {{-- @foreach ($districts as $district)
+                    @foreach ($districts as $district)
                         <option value="{{ $district->id }}" {{ old('district_id') == $district->id ? 'selected' : '' }}>
                             {{ $district->name }}
                         </option>
-                    @endforeach --}}
+                    @endforeach
                 </select>
                 @error('district_id')
                     <span>{{ $message }}</span>
@@ -75,7 +75,9 @@
             <label for="village-select">Pilih Desa:</label>
             <div class="position-relative">
                 <select class="form-control form-control-xl" id="village-select" name="village_id">
-                    <option value="">Pilih Desa</option>
+                    @foreach($villages as $village)
+                        <option value="{{ $village->id }}">{{ $village->name }}</option>
+                    @endforeach
                 </select>
                 @error('village_id')
                     <span>{{ $message }}</span>
@@ -84,6 +86,49 @@
                     <i class="bi bi-chevron-down" style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
                 </div>
             </div>
+        </div>
+
+        <!-- rt -->
+        <div class="mb-4">
+            <div class="form-group position-relative has-icon-left mb-4">
+                <input type="number" class="form-control form-control-xl"
+                    placeholder="RT contoh(01)" name="rt" value="{{ old('rt') }}"
+                    required>
+                <div class="form-control-icon">
+                    <i class="bi bi-house"></i>
+                </div>
+            </div>
+            @error('rt')
+                <span>{{ $message }}</span>
+            @enderror
+        </div>
+        <!-- rw -->
+        <div class="mb-4">
+            <div class="form-group position-relative has-icon-left mb-4">
+                <input type="number" class="form-control form-control-xl"
+                    placeholder="RW contoh(03)" name="rw" value="{{ old('rw') }}"
+                    required>
+                <div class="form-control-icon">
+                    <i class="bi bi-house"></i>
+                </div>
+            </div>
+            @error('rw')
+                <span>{{ $message }}</span>
+            @enderror
+        </div>
+        <!-- address -->
+        <div class="mb-4">
+            <div class="form-group position-relative has-icon-left mb-4">
+                <input type="text" class="form-control form-control-xl"
+                    placeholder="Alamat" name="address" value="{{ old('address') }}"
+                    required>
+                <div class="form-control-icon">
+                    <i class="bi bi-house"></i>
+                </div>
+            </div>
+            @error('address')
+                <span>{{ $message }}</span>
+            @enderror
         </div>
 
         <!-- Full Name -->
@@ -237,7 +282,7 @@
         <button class="btn btn-primary"
             style="width: 100%; padding: 10px; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); font-size: 1.25rem;"
             onmouseover="this.style.backgroundColor='#003366'"
-            onmouseout="this.style.backgroundColor='#0164eb'">Tambah Akun</button>
+            onmouseout="this.style.backgroundColor='#0164eb'" type="submit">Tambah Akun</button>
     </form>
 </div>
 @endsection

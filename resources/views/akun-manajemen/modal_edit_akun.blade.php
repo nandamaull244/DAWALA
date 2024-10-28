@@ -8,36 +8,15 @@
             <div class="modal-body">
                 <form id="userForm" action="" method="POST">
                     @csrf
-                    
-                    <!-- Role selection -->
-                    <div class="mb-4">
-                        <div class="form-group">
-                            <label for="sub-category-select">Pilih kategori akun:</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="role" id="perorangan"
-                                    value="user" onclick="setRole('user')" required>
-                                <label class="form-check-label" for="perorangan">Perorangan/Untuk Diri Sendiri sendiri</label>
-                                @error('role')
-                                    <span>{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="role" id="instantiation"
-                                    value="instantiation" onclick="setRole('instantiation')" required>
-                                <label class="form-check-label" for="instantiation">Instansi/Lembaga</label>
-                                @error('role')
-                                    <span>{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-            
+                    @method('PUT')
+                   
+                    <input type="hidden" id="userId" name="user_id">
                     <!-- Sub-category selection (hidden by default) -->
-                    <div id="sub-category" class="form-group mb-4" style="display: none;">
-                        <label for="sub-category-select">Pilih Tipe Registrasi:</label>
+                  <div id="sub-category" class="form-group mb-4" style="display: none;">
+                        <label for="sub-category-select">Tipe Registrasi:</label>
                         <div class="position-relative">
                             <select class="form-control form-control-xl" id="sub-category-select" name="registration_type">
-                                <option value="">Pilih Tipe Registrasi</option>
+                                
                                 <option value="Intansi, RT" {{ old('registration_type') == 'Intansi, RT' ? 'selected' : '' }}>RT</option>
                                 <option value="Intansi, RW" {{ old('registration_type') == 'Intansi, RW' ? 'selected' : '' }}>RW</option>
                                 <option value="Intansi, Yayasan" {{ old('registration_type') == 'Intansi, Yayasan' ? 'selected' : '' }}>Yayasan</option>
@@ -51,18 +30,18 @@
                             </div>
                         </div>
                     </div>
-            
+             
                     <!-- District selection (hidden by default) -->
-                    <div id="district-select-group" class="form-group mb-4" style="display: none;">
-                        <label for="district-select">Pilih Kecamatan:</label>
+                    <div id="district-select-group" class="form-group mb-4">
+                        <label for="district-select">Kecamatan:</label>
                         <div class="position-relative">
                             <select class="form-control form-control-xl" id="district-select" name="district_id">
-                                <option value="">Pilih Kecamatan</option>
-                                {{-- @foreach ($districts as $district)
+                               
+                                @foreach ($districts as $district)
                                     <option value="{{ $district->id }}" {{ old('district_id') == $district->id ? 'selected' : '' }}>
                                         {{ $district->name }}
                                     </option>
-                                @endforeach --}}
+                                @endforeach
                             </select>
                             @error('district_id')
                                 <span>{{ $message }}</span>
@@ -74,11 +53,15 @@
                     </div>
             
                     <!-- Village selection (hidden by default) -->
-                    <div id="village-select-group" class="form-group mb-4" style="display: none;">
-                        <label for="village-select">Pilih Desa:</label>
+                    <div id="village-select-group" class="form-group mb-4">
+                        <label for="village-select">Desa:</label>
                         <div class="position-relative">
                             <select class="form-control form-control-xl" id="village-select" name="village_id">
-                                <option value="">Pilih Desa</option>
+                                @foreach ($villages as $village)
+                                    <option value="{{ $village->id }}" {{ old('village_id') == $village->id ? 'selected' : '' }}>
+                                        {{ $village->name }}
+                                    </option>
+                                @endforeach
                             </select>
                             @error('village_id')
                                 <span>{{ $message }}</span>
@@ -88,6 +71,49 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- rt -->
+        <div class="mb-4">
+            <div class="form-group position-relative has-icon-left mb-4">
+                <input type="number" class="form-control form-control-xl"
+                    placeholder="RT contoh(01)" name="rt" value="{{ old('rt') }}"
+                    required>
+                <div class="form-control-icon">
+                    <i class="bi bi-house"></i>
+                </div>
+            </div>
+            @error('rt')
+                <span>{{ $message }}</span>
+            @enderror
+        </div>
+        <!-- rw -->
+        <div class="mb-4">
+            <div class="form-group position-relative has-icon-left mb-4">
+                <input type="number" class="form-control form-control-xl"
+                    placeholder="RW contoh(03)" name="rw" value="{{ old('rw') }}"
+                    required>
+                <div class="form-control-icon">
+                    <i class="bi bi-house"></i>
+                </div>
+            </div>
+            @error('rw')
+                <span>{{ $message }}</span>
+            @enderror
+        </div>
+        <!-- address -->
+        <div class="mb-4">
+            <div class="form-group position-relative has-icon-left mb-4">
+                <input type="text" class="form-control form-control-xl"
+                    placeholder="Alamat" name="address" value="{{ old('address') }}"
+                    required>
+                <div class="form-control-icon">
+                    <i class="bi bi-house"></i>
+                </div>
+            </div>
+            @error('address')
+                <span>{{ $message }}</span>
+            @enderror
+        </div>
             
                     <!-- Full Name -->
                     <div class="mb-4">
@@ -204,43 +230,10 @@
                         @enderror
                     </div>
             
-                    <input type="hidden" name="registration_status" id="registration_status" value="completed">
+                    {{-- <input type="hidden" name="registration_status" id="registration_status" value="completed"> --}}
             
-                    <!-- Password -->
-                    <div class="mb-4">
-                        <div class="form-group position-relative has-icon-left ">
-                            <input type="password" class="form-control form-control-xl"
-                                placeholder="Password" name="password" id="password" required>
-                            <div class="form-control-icon">
-                                <i class="bi bi-shield-lock"></i>
-                            </div>
-                        </div>
-                        <small class="form-text text-muted mb-2">Centang kotak di bawah untuk melihat password sebelum disubmit.</small>
-                        <div class="form-check mb-4">
-                            <input type="checkbox" class="form-check-input" onclick="togglePassword()"
-                                id="showPassword">
-                            <label class="form-check-label" for="showPassword">Lihat Password</label>
-                        </div>
-                        <label for="password">Minimal 8 karakter</label>
-                        @error('password')
-                            <span>{{ $message }}</span>
-                        @enderror
-                    </div>
             
-                    <!-- Password Confirmation -->
-                    <div class="form-group position-relative has-icon-left mb-4">
-                        <input type="password" class="form-control form-control-xl"
-                            placeholder="Ulangi Password" name="password_confirmation" required>
-                        <div class="form-control-icon">
-                            <i class="bi bi-shield-lock"></i>
-                        </div>
-                    </div>
-            
-                    <!-- Submit Button -->
-                    <button class="btn btn-primary"
-                        style="width: 100%; padding: 10px; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); font-size: 1.25rem;"
-                        onmouseover="this.style.backgroundColor='#003366'"
-                        onmouseout="this.style.backgroundColor='#0164eb'">Daftar</button>
+                  
                 </form>
             </div>
             <div class="modal-footer">
@@ -252,7 +245,26 @@
 </div>
 <script>
     function saveChanges() {
-        $('#dataModalEditUser').modal('hide');
+        var formData = $('#userForm').serialize();
+        var userId = $('#userId').val();
+        var url = '/admin/akun-manajemen/' + userId;
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                $('#dataModalEditUser').modal('hide');
+                $('#usersTable').DataTable().ajax.reload();
+                toastr.success('Data berhasil diperbarui');
+            },
+            error: function(xhr) {
+                var errors = xhr.responseJSON.errors;
+                for (var key in errors) {
+                    toastr.error(errors[key][0]);
+                }
+            }
+        });
     }
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -333,16 +345,65 @@
         }
     }
 
-    document.querySelector('form').addEventListener('submit', function(event) {
-        // ... (form validation logic) ...
-    });
 
-    function togglePassword() {
-        var passwordInput = document.getElementById("password");
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
+   
+
+    function openEditModal(userData) {
+        // Set the form action URL
+        const form = document.getElementById('userForm');
+        form.action = `/admin/admin/user/${userData.id}`;
+        
+        // Set user ID
+        document.getElementById('userId').value = userData.id;
+        
+        // Populate form fields
+        if(userData.role == 'instantiation'){
+            document.getElementById('sub-category').style.display = 'block';
+            
+            document.querySelector('select[name="registration_type"]').value = userData.registration_type;
         } else {
-            passwordInput.type = "password";
+            document.getElementById('sub-category').style.display = 'none';
+            document.getElementById('district-select-group').style.display = 'none'; 
+            document.getElementById('village-select-group').style.display = 'none';
         }
+        document.querySelector('input[name="rt"]').value = userData.rt;
+        document.querySelector('input[name="rw"]').value = userData.rw;
+        document.querySelector('input[name="address"]').value = userData.address;
+        document.querySelector('input[name="full_name"]').value = userData.full_name;
+        document.querySelector('input[name="nik"]').value = userData.nik;
+        document.querySelector('input[name="no_kk"]').value = userData.no_kk;
+        document.querySelector('input[name="birth_date"]').value = userData.birth_date;
+        document.querySelector('input[name="email"]').value = userData.email;
+        document.querySelector('input[name="phone_number"]').value = userData.phone_number;
+        document.querySelector('select[name="gender"]').value = userData.gender;
+        
+        // If you have district and village selects
+        if (userData.district_id) {
+            const districtSelect = document.querySelector('select[name="district_id"]');
+            districtSelect.value = userData.district_id;
+            
+            // Get villages for selected district via AJAX
+            fetch(`/api/districts/${userData.district_id}/villages`)
+                .then(response => response.json())
+                .then(villages => {
+                    const villageSelect = document.querySelector('select[name="village_id"]');
+                    villageSelect.innerHTML = ''; // Clear existing options
+                    
+                    villages.forEach(village => {
+                        const option = document.createElement('option');
+                        option.value = village.id;
+                        option.textContent = village.name;
+                        if (userData.village_id == village.id) {
+                            option.selected = true;
+                        }
+                        villageSelect.appendChild(option);
+                    });
+                });
+        }
+        
+        // Show the modal
+        $('#dataModalEditUser').modal('show');
     }
 </script>
+
+
