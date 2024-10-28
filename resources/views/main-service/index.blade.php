@@ -514,8 +514,10 @@
                 $('#kecamatan, #desa').val('').trigger('change');
                 
                 const today = "{{ date('Y-m-d') }}";
-                $('#startDate')[0]._flatpickr.setDate(today);
-                $('#endDate')[0]._flatpickr.setDate(today);
+                // $('#startDate')[0]._flatpickr.setDate(today);
+                // $('#endDate')[0]._flatpickr.setDate(today);
+
+                $('#startDate, #endDate').val('');
                 
                 $('.time-btn, .category-btn, .type-btn, .service-status-btn, .work-status-btn')
                     .removeClass('btn-primary')
