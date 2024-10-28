@@ -226,7 +226,7 @@
                 <div class="row mb-3">
                     <div class="col-md-6 col-sm-12 mb-2 mb-md-0 row">
                         <div class="col-md-3">
-                            <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#filterModal">
+                            <button class="btn btn-secondary w-100 text-white" data-bs-toggle="modal" data-bs-target="#filterModal">
                                 <i class="bi bi-funnel"></i> Filter
                             </button>
                         </div>
@@ -234,6 +234,25 @@
                             <button class="btn btn-danger w-100" id="reset">
                                 <i class="bi bi-arrow-repeat"></i> Reset Filter
                             </button>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="dropdown">
+                                <button class="btn btn-success w-100 dropdown-toggle" type="button" id="reportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-file-earmark-text"></i> Laporan
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="reportDropdown">
+                                    <li>
+                                        <a class="dropdown-item" href="#" id="downloadExcel">
+                                            <i class="bi bi-file-earmark-excel"></i> Download Excel
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" id="downloadPDF">
+                                            <i class="bi bi-file-earmark-pdf"></i> Download PDF
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
@@ -260,9 +279,9 @@
                                 <tr>
                                     <th nowrap>NO</th>
                                     <th nowrap>NAMA</th>
+                                    <th nowrap>TANGGAL PENGAJUAN</th>
                                     <th nowrap>JENIS PELAYANAN</th>
                                     <th nowrap>KATEGORI LAYANAN</th>
-                                    <th nowrap>TANGGAL PENGAJUAN</th>
                                     <th nowrap>TIPE LAYANAN</th>
                                     <th nowrap>TANGGAL LAHIR</th>
                                     <th nowrap>ALAMAT</th>
@@ -332,6 +351,102 @@
 
             $('#saveChangesBtn').on('click', saveChanges);
             $('#saveRejectionBtn').on('click', saveRejection);
+
+            // Handle Excel download
+            $('#downloadExcel').click(function(e) {
+                e.preventDefault();
+                
+                const filters = {
+                    start_date: $('#startDate').val(),
+                    end_date: $('#endDate').val(),
+                    time: $('#selectedTime').val(),
+                    categories: $('#selectedCategories').val(),
+                    types: $('#selectedTypes').val(),
+                    kecamatan: $('#selectedDistricts').val(),
+                    desa: $('#desa').val(),
+                    service_statuses: $('#selectedServiceStatuses').val(),
+                    work_statuses: $('#selectedWorkStatuses').val()
+                };
+
+                $.ajax({
+                    url: "{{ route('admin.pelayanan.export.excel') }}",
+                    method: 'POST',
+                    data: filters,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    xhrFields: {
+                        responseType: 'blob' 
+                    },
+                    success: function(response, status, xhr) {
+                        const blob = new Blob([response], { type: xhr.getResponseHeader('content-type') });
+                        const url = window.URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        
+                        const filename = xhr.getResponseHeader('content-disposition')?.split('filename=')[1] || 'services.xlsx';
+                        link.download = filename;
+                        
+                        document.body.appendChild(link);
+                        link.click();
+                        
+                        window.URL.revokeObjectURL(url);
+                        document.body.removeChild(link);
+                    },
+                    error: function(xhr, status, error) {
+                        toastr.error('Gagal mengunduh file', 'Error');
+                        console.error(error);
+                    }
+                });
+            });
+
+            // Handle PDF download
+            $('#downloadPDF').click(function(e) {
+                e.preventDefault();
+                
+                const filters = {
+                    start_date: $('#startDate').val(),
+                    end_date: $('#endDate').val(),
+                    time: $('#selectedTime').val(),
+                    categories: $('#selectedCategories').val(),
+                    types: $('#selectedTypes').val(),
+                    kecamatan: $('#selectedDistricts').val(),
+                    desa: $('#desa').val(),
+                    service_statuses: $('#selectedServiceStatuses').val(),
+                    work_statuses: $('#selectedWorkStatuses').val()
+                };
+
+                $.ajax({
+                    url: "{{ route('admin.pelayanan.export.pdf') }}",
+                    method: 'POST',
+                    data: filters,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    xhrFields: {
+                        responseType: 'blob'
+                    },
+                    success: function(response, status, xhr) {
+                        const blob = new Blob([response], { type: 'application/pdf' });
+                        const url = window.URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        
+                        const filename = xhr.getResponseHeader('content-disposition')?.split('filename=')[1] || 'services.pdf';
+                        link.download = filename;
+                        
+                        document.body.appendChild(link);
+                        link.click();
+                        
+                        window.URL.revokeObjectURL(url);
+                        document.body.removeChild(link);
+                    },
+                    error: function(xhr, status, error) {
+                        toastr.error('Gagal mengunduh file', 'Error');
+                        console.error(error);
+                    }
+                });
+            });
         });
 
         $(document).ready(function() {
@@ -357,9 +472,9 @@
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, className: 'text-center', width: '5%'},
                     {data: 'name', name: 'name'},
+                    {data: 'tanggal', name: 'tanggal'},
                     {data: 'service', name: 'service'},
                     {data: 'service_category', name: 'service_category'},
-                    {data: 'tanggal', name: 'tanggal'},
                     {data: 'service_type', name: 'service_type'},
                     {data: 'birth_date', name: 'birth_date'},
                     {data: 'address', name: 'address'},
@@ -449,3 +564,29 @@
         };
     </script>
 @endpush
+
+<style>
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-item i {
+    font-size: 1.1em;
+}
+
+/* Warna ikon spesifik */
+.bi-file-earmark-excel {
+    color: #217346; /* Warna Excel */
+}
+
+.bi-file-earmark-pdf {
+    color: #FF0000; /* Warna PDF */
+}
+</style>

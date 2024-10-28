@@ -17,6 +17,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ServicesExport;
 
 
 class MainServiceController extends Controller 
@@ -566,6 +568,79 @@ class MainServiceController extends Controller
         } else {
             return redirectByRole(auth()->user()->role, 'pelayanan.index', 
                 ['error' => 'Data Pelayanan Tidak Ditemukan']);
+        }
+    }
+
+    public function exportExcel(Request $request)
+    {
+        try {
+            $query = Service::with(['user', 'user.district', 'user.village', 'service_image'])
+                ->orderByRaw("CASE 
+                    WHEN working_status = 'Late' THEN created_at 
+                    ELSE NULL 
+                    END ASC") 
+                ->orderBy('created_at', 'desc'); 
+
+            if ($request->filled('search')) {
+                $searchValue = $request->search;
+                $query->where(function($q) use ($searchValue) {
+                    $q->where('services.service_category', 'like', "%{$searchValue}%")
+                        ->orWhere('services.service_type', 'like', "%{$searchValue}%")
+                        ->orWhereHas('user', function($userQuery) use ($searchValue) {
+                            $userQuery->where('full_name', 'like', "%{$searchValue}%");
+                        });
+                });
+            }
+
+            if ($request->filled('start_date')) {
+                $query->whereDate('created_at', '>=', $request->start_date);
+            }
+            if ($request->filled('end_date')) {
+                $query->whereDate('created_at', '<=', $request->end_date);
+            }
+
+            if ($request->filled('categories')) {
+                $query->whereHas('service_list', function($q) use ($request) {
+                    $q->whereIn('service_name', explode(',', $request->categories));
+                });
+            }
+
+            if ($request->filled('types')) {
+                $query->whereIn('service_type', explode(',', $request->types));
+            }
+
+            if ($request->filled('kecamatan')) {
+                $query->whereHas('user.district', function($q) use ($request) {
+                    $q->where('id', $request->kecamatan);
+                });
+            }
+
+            if ($request->filled('desa')) {
+                $query->whereHas('user.village', function($q) use ($request) {
+                    $q->where('id', $request->desa);
+                });
+            }
+
+            if ($request->filled('service_statuses')) {
+                $query->whereIn('service_status', explode(',', $request->service_statuses));
+            }
+
+            if ($request->filled('work_statuses')) {
+                $query->whereIn('working_status', explode(',', $request->work_statuses));
+            }
+
+            $services = $query->get();
+            
+            $startDate = $request->filled('start_date') ? 
+                date('d/m/Y', strtotime($request->start_date)) : null;
+            $endDate = $request->filled('end_date') ? 
+                date('d/m/Y', strtotime($request->end_date)) : null;
+
+            $filename = 'Laporan_Pelayanan_' . str_replace(' ', '_', getFlatpickrDate(date('Y-m-d'))) . '.xlsx';
+
+            return Excel::download(new ServicesExport($services, $startDate, $endDate), $filename);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }
