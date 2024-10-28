@@ -9,18 +9,28 @@
                 @csrf
                 @method('DELETE')
                 <div class="modal-body">
+                    <div id="approvalByContainer" style="display: none;">
+                        <div class="form-group">
+                            <label for="approval_by" class="form-label" id="approvalByLabel">Disetujui Oleh</label>
+                        </div>
+                    </div>
+                    
                     <div class="row">
-                        <div class="d-flex gap-2 mb-3">
-                            <button type="button" class="btn btn-outline-danger w-50" id="btnTolak">Tolak</button>
+                        <div class="d-flex gap-2 mb-3 justify-content-center">
+                            <button type="button" class="btn btn-outline-danger w-50" style="margin:0 !important;" id="btnTolak">Tolak</button>
                             <button type="button" class="btn btn-outline-success w-50" id="btnTerima">Terima</button>
                         </div>
+                    </div>
+
+                    <div class="mb-3" id="visitScheduleContainer" style="display: none;">
+                        <label for="visit_schedule" class="form-label">Tanggal Kunjungan</label>
+                        <input type="date" class="form-control flatpickr-date" id="visit_schedule" name="visit_schedule" required readonly>
                     </div>
                     
                     <div id="alasanTolakContainer" style="display: none;">
                         <div class="form-group">
                             <label for="alasan_tolak" class="form-label">Alasan Penolakan</label>
-                            <textarea class="form-control" id="alasan_tolak" name="deleted_reason" 
-                                rows="3" placeholder="Masukkan alasan penolakan"></textarea>
+                            <textarea class="form-control" id="alasan_tolak" name="rejected_reason" rows="3" placeholder="Masukkan alasan penolakan"></textarea>
                         </div>
                     </div>
 
@@ -43,18 +53,26 @@
             $('#btnTerima').click(function() {
                 $(this).removeClass('btn-outline-success').addClass('btn-success active');
                 $('#btnTolak').addClass('btn-outline-danger').removeClass('btn-danger active');
+                $('#visitScheduleContainer').show();
                 $('#alasanTolakContainer').hide();
+
                 $('#confirmationStatus').val('approved');
                 $('#btnSubmit').show();
+
+                $('#visit_schedule').prop('required', true);
                 $('#alasan_tolak').prop('required', false);
             });
 
             $('#btnTolak').click(function() {
                 $(this).removeClass('btn-outline-danger').addClass('btn-danger active');
                 $('#btnTerima').addClass('btn-outline-success').removeClass('btn-success active');
+                $('#visitScheduleContainer').hide();
                 $('#alasanTolakContainer').show();
+
                 $('#confirmationStatus').val('rejected');
                 $('#btnSubmit').show();
+
+                $('#visit_schedule').prop('required', false);
                 $('#alasan_tolak').prop('required', true);
             });
 
@@ -79,9 +97,36 @@
                 $('#confirmationForm').attr('action', url);
                 
                 const reason = button.data('reason');
-                if(reason) {
+                const visitSchedule = button.data('visit_schedule');
+                // console.log(visitSchedule);
+
+                const approvalBy = button.data('approval_by');
+                if(approvalBy) {
+                    $('#approvalByContainer').show();
+                }
+                
+                if(reason) { // Status ditolak
+                    $('#approvalByLabel').text('Ditolak Oleh ' + approvalBy);
+                    $('#btnTolak').addClass('btn-danger active').removeClass('btn-outline-danger').text('Ditolak').show();
                     $('#alasanTolakContainer').show();
                     $('#alasan_tolak').val(reason);
+                    $('#btnTerima').hide();
+                    $('#visitScheduleContainer').hide();
+                    $('#confirmationModalLabel').text('Status Pengajuan Layanan ini ditolak')
+                } 
+                if(visitSchedule) { // Status diterima
+                    $('#approvalByLabel').text('Disetujui Oleh ' + approvalBy);
+                    $('#btnTerima').addClass('btn-success active').removeClass('btn-outline-success').text('Diterima').show();
+                    $('#visitScheduleContainer').show();
+                    $('#btnTolak').hide();
+                    $('#confirmationModalLabel').text('Pengajuan Layanan ini diterima');
+
+                    const visitScheduleFlatpickr = $('#visit_schedule')[0]._flatpickr;
+
+                    visitScheduleFlatpickr.setDate(visitSchedule);
+                    $('#visit_schedule').each(function() {
+                        this._flatpickr.setDate(visitSchedule);
+                    });
                 }
             });
 

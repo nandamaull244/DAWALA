@@ -87,50 +87,7 @@ class MainServiceController extends Controller
             });
         }
 
-        if ($request->filled('start_date')) {
-            $query->whereDate('created_at', '>=', $request->start_date);
-        }
-
-        if ($request->filled('end_date')) {
-            $query->whereDate('created_at', '<=', $request->end_date);
-        }
-
-        if ($request->filled('time')) {
-            $query->orderBy('created_at', $request->time === 'Terbaru' ? 'desc' : 'asc');
-        }
-
-        if ($request->filled('categories')) {
-            $query->whereHas('service_list', function($q) use ($request) {
-                $q->whereIn('service_name', explode(',', $request->categories));
-            });
-        }
-
-        if ($request->filled('types')) {
-            $types = explode(',', $request->types);
-            $query->whereIn('service_type', $types);
-        }
-
-        if ($request->filled('kecamatan')) {
-            $query->whereHas('user.district', function($q) use ($request) {
-                $q->where('id', $request->kecamatan);
-            });
-        }
-
-        if ($request->filled('desa')) {
-            $query->whereHas('user.village', function($q) use ($request) {
-                $q->where('id', $request->desa);
-            });
-        }
-
-        if ($request->filled('service_statuses')) {
-            $statuses = explode(',', $request->service_statuses);
-            $query->whereIn('service_status', $statuses);
-        }
-
-        if ($request->filled('work_statuses')) {
-            $statuses = explode(',', $request->work_statuses);
-            $query->whereIn('working_status', $statuses);
-        }
+        $query = $this->applyFilters($query, $request);
 
         return DataTables::of($query)
             ->addIndexColumn()
@@ -138,7 +95,7 @@ class MainServiceController extends Controller
                 $hashedId = $row->getHashedId();
                 $actionBtn = '<div class="btn-group" role="group">';
                 $actionBtn .= '<a target="_blank" href="'.route('admin.pelayanan.edit', $hashedId).'" class="btn btn-outline-primary" style="cursor: pointer;"><i class="bi bi-pencil-square fs-5"></i></a>';
-                $actionBtn .= '<button type="button" class="btn btn-outline-success delete-btn" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-id="'.$hashedId.'" data-reason="'. $row->deleted_reason .'" style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></button>';
+                $actionBtn .= '<button type="button" class="btn btn-outline-success delete-btn" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-id="'.$hashedId.'" data-reason="'. $row->rejected_reason .'" data-approval_by="'. $row->approvalBy->full_name .'" data-visit_schedule="'. $row->visit_schedule .'" style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></button>';
                 $actionBtn .= '</div>';
                 return $actionBtn;
             })            
@@ -207,33 +164,49 @@ class MainServiceController extends Controller
             ->addColumn('working_status', function($row) {
                 switch($row->working_status) {
                     case 'Not Yet':
-                        return '<span class="badge bg-secondary text-center">Menunggu</span>';
+                        return '<div class="d-flex justify-content-center"><span class="badge bg-secondary">Menunggu</span></div>';
                     case 'Late':
                         $lateStatus = getLateWorkingStatus($row->created_at);
                         if (isset($lateStatus['true'])) {
-                            return '<span class="badge bg-danger text-center">'. $lateStatus['true'] . '</span>';
+                            return '<div class="d-flex justify-content-center"><span class="badge bg-danger">'. $lateStatus['true'] . '</span></div>';
                         } else {
-                            return '<span class="badge bg-danger">Terlambat</span>';
+                            return '<div class="d-flex justify-content-center"><span class="badge bg-danger">Terlambat</span></div>';
                         }
                     case 'Process':
-                        return '<span class="badge bg-warning text-center">Proses</span>';
+                        return '<div class="d-flex justify-content-center"><span class="badge bg-warning">Proses</span></div>';
                     case 'Done':
-                        return '<span class="badge bg-success text-center">Selesai</span>';
+                        return '<div class="d-flex justify-content-center"><span class="badge bg-success">Selesai</span></div>';
                     default:
-                        return '<span class="badge bg-secondary text-center">'. $row->working_status .'</span>';
+                        return '<div class="d-flex justify-content-center"><span class="badge bg-secondary">'. $row->working_status .'</span></div>';
                 }
             })
             ->addColumn('service_status', function($row) {
-                if($row->service_status == 'Not Yet'){
-                    return '<span class="badge bg-secondary text-center">Belum Dikerjakan</span>';
-                } else if($row->service_status == 'Process'){
-                    return '<span class="badge bg-warning text-center">Proses</span>';
-                } else if($row->service_status == 'Rejected') {
-                    return '<span class="badge bg-danger text-center">Ditolak</span>';
-                } else if($row->service_status == 'Completed') {
-                    return '<span class="badge bg-success text-center">Selesai</span>';
+                $html = '<div class="d-flex flex-column align-items-center">';
+            
+                // Status untuk service_status
+                if ($row->service_status == 'Not Yet') {
+                    $html .= '<span class="badge bg-secondary mb-1">Belum Dikerjakan</span>';
+                } elseif ($row->service_status == 'Process') {
+                    $html .= '<span class="badge bg-warning mb-1">Proses</span>';
+                } elseif ($row->service_status == 'Rejected') {
+                    $html .= '<span class="badge bg-danger mb-1">Ditolak</span>';
+                } elseif ($row->service_status == 'Completed') {
+                    $html .= '<span class="badge bg-success mb-1">Selesai</span>';
                 }
+            
+                // Status untuk document_recieved_status
+                if($row->rejected_reason == null) {
+                    if ($row->document_recieved_status == 'Not Yet Recieved') {
+                        $html .= '<span class="badge bg-danger">Belum diterima</span>';
+                    } else {
+                        $html .= '<span class="badge bg-success">Telah diterima</span>';
+                    }
+                }
+            
+                $html .= '</div>';
+                return $html;
             })
+            
             ->filterColumn('name', function($query, $keyword) {
                 $query->whereHas('user', function($q) use ($keyword) {
                     $q->where('full_name', 'like', "%{$keyword}%");
@@ -547,13 +520,13 @@ class MainServiceController extends Controller
     public function destroy(Request $request, $hashedId)
     {
         $service = Service::whereHash($hashedId)->firstOrFail();
-        
         if ($service) { 
             if($request->status == 'approved') {  
                 $service->update([
                     'service_status' => 'Process',
                     'working_status' => 'Process',
-                    'deleted_reason' => null
+                    'visit_schedule' => $request->visit_schedule,
+                    'rejected_reason' => null
                 ]);
                 return redirectByRole(auth()->user()->role, 'pelayanan.index', 
                     ['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' diterima!']);
@@ -561,7 +534,8 @@ class MainServiceController extends Controller
                 $service->update([
                     'service_status' => 'Rejected',
                     'working_status' => '-',
-                    'deleted_reason' => $request->deleted_reason
+                    'visit_schedule' => null,
+                    'rejected_reason' => $request->rejected_reason
                 ]);
                 return redirectByRole(auth()->user()->role, 'pelayanan.index', 
                     ['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' ditolak!']);
@@ -593,43 +567,7 @@ class MainServiceController extends Controller
                 });
             }
 
-            if ($request->filled('start_date')) {
-                $query->whereDate('created_at', '>=', $request->start_date);
-            }
-            if ($request->filled('end_date')) {
-                $query->whereDate('created_at', '<=', $request->end_date);
-            }
-
-            if ($request->filled('categories')) {
-                $query->whereHas('service_list', function($q) use ($request) {
-                    $q->whereIn('service_name', explode(',', $request->categories));
-                });
-            }
-
-            if ($request->filled('types')) {
-                $query->whereIn('service_type', explode(',', $request->types));
-            }
-
-            if ($request->filled('kecamatan')) {
-                $query->whereHas('user.district', function($q) use ($request) {
-                    $q->where('id', $request->kecamatan);
-                });
-            }
-
-            if ($request->filled('desa')) {
-                $query->whereHas('user.village', function($q) use ($request) {
-                    $q->where('id', $request->desa);
-                });
-            }
-
-            if ($request->filled('service_statuses')) {
-                $query->whereIn('service_status', explode(',', $request->service_statuses));
-            }
-
-            if ($request->filled('work_statuses')) {
-                $query->whereIn('working_status', explode(',', $request->work_statuses));
-            }
-
+            $query = $this->applyFilters($query, $request);
             $services = $query->get();
             
             $startDate = $request->filled('start_date') ? 
@@ -667,43 +605,7 @@ class MainServiceController extends Controller
                 });
             }
 
-            if ($request->filled('start_date')) {
-                $query->whereDate('created_at', '>=', $request->start_date);
-            }
-            if ($request->filled('end_date')) {
-                $query->whereDate('created_at', '<=', $request->end_date);
-            }
-
-            if ($request->filled('categories')) {
-                $query->whereHas('service_list', function($q) use ($request) {
-                    $q->whereIn('service_name', explode(',', $request->categories));
-                });
-            }
-
-            if ($request->filled('types')) {
-                $query->whereIn('service_type', explode(',', $request->types));
-            }
-
-            if ($request->filled('kecamatan')) {
-                $query->whereHas('user.district', function($q) use ($request) {
-                    $q->where('id', $request->kecamatan);
-                });
-            }
-
-            if ($request->filled('desa')) {
-                $query->whereHas('user.village', function($q) use ($request) {
-                    $q->where('id', $request->desa);
-                });
-            }
-
-            if ($request->filled('service_statuses')) {
-                $query->whereIn('service_status', explode(',', $request->service_statuses));
-            }
-
-            if ($request->filled('work_statuses')) {
-                $query->whereIn('working_status', explode(',', $request->work_statuses));
-            }
-
+            $query = $this->applyFilters($query, $request);
             $services = $query->get();
             
             $startDate = $request->filled('start_date') ? 
@@ -733,5 +635,47 @@ class MainServiceController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    private function applyFilters($query, $request)
+    {
+        if ($request->filled('start_date')) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+
+        if ($request->filled('categories')) {
+            $query->whereHas('service_list', function($q) use ($request) {
+                $q->whereIn('service_name', explode(',', $request->categories));
+            });
+        }
+
+        if ($request->filled('types')) {
+            $query->whereIn('service_type', explode(',', $request->types));
+        }
+
+        if ($request->filled('kecamatan')) {
+            $query->whereHas('user.district', function($q) use ($request) {
+                $q->where('id', $request->kecamatan);
+            });
+        }
+
+        if ($request->filled('desa')) {
+            $query->whereHas('user.village', function($q) use ($request) {
+                $q->where('id', $request->desa);
+            });
+        }
+
+        if ($request->filled('service_statuses')) {
+            $query->whereIn('service_status', explode(',', $request->service_statuses));
+        }
+
+        if ($request->filled('work_statuses')) {
+            $query->whereIn('working_status', explode(',', $request->work_statuses));
+        }
+
+        return $query;
     }
 }

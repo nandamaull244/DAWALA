@@ -47,6 +47,12 @@
     .col-md-2-5 {
         width: 20.83333333%;
     }
+
+    .bg-warning {
+        background-color: #f1b90e !important; 
+        color: #ffffff !important;
+    }
+
 </style>
 <style>
     .custom-larger-toast {
