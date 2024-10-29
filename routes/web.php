@@ -115,6 +115,7 @@ Route::group([], function () {
     Route::get('/layanan', [PageController::class, 'service'])->name('page.service');
     Route::get('/layanan-cepat', [PageController::class, 'fastService'])->name('page.fast-service');
     Route::get('/dokumentasi', [PageController::class, 'documentation'])->name('page.documentation');
+    Route::get('/dokumentasi/{article}', [PageController::class, 'documentationDetail'])->name('page.documentation.detail');
     Route::get('/FAQ', [PageController::class, 'FAQ'])->name('page.FAQ');
     Route::get('/tentang-dawala', [PageController::class, 'about'])->name('page.about');
     Route::get('/tim-dawala', [PageController::class, 'dawalaTeam'])->name('page.tim-dawala');
