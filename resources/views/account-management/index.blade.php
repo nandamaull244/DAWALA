@@ -363,7 +363,7 @@ Data Seluruh Akun
             $('#reset').on('click', function() {
                 $('#selectedTime, #selectedGenders, #selectedTypes, #selectedDistricts, #selectedRW, #selectedRT').val('');
                 
-                $('#kecamatan, #desa').val('').trigger('change');
+                $('#kecamatan, #desa, #rt, #rw').val('').trigger('change');
 
                 $('.time-btn, .gender-btn, .type-btn').removeClass('btn-primary').addClass('btn-outline-primary');
                 
