@@ -59,4 +59,9 @@ class PageController extends Controller
     {
         return view('pages.visi-misi');
     }
+    
+    public function detailPersyaratan()
+    {
+        return view('pages.detail-persyaratan');
+    }
 }
