@@ -38,6 +38,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
 
     Route::get('/akun-manajemen/verification-table', [UserController::class, 'verificationTable'])->name('akun-manajemen.verification-table');
     Route::resource('/akun-manajemen', UserController::class);
+    Route::get('/users/data', [UserController::class, 'getData'])->name('admin.user.data'); 
+    // Route::post('/users/update-status/{id}', [UserController::class, 'updateStatus'])->name('admin.user.update-status');
+    Route::post('/users/create', [UserController::class, 'store'])->name('admin.user.store');
+    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('admin.user.edit');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('admin.user.update');
+    // Verification routes
+    Route::get('/verification', [UserController::class, 'verificationTable'])->name('admin.user.verification');
+    Route::get('/verification/data', [UserController::class, 'getVerificationData'])->name('admin.user.verification.data');
+    Route::post('/verification/{user}/approve', [UserController::class, 'approveUser'])->name('admin.user.verification.approve');
+    Route::post('/verification/{user}/reject', [UserController::class, 'rejectUser'])->name('admin.user.verification.reject');
 });
 
 
@@ -60,8 +70,6 @@ Route::group(['prefix' => 'institute', 'middleware' => 'auth:institute', 'as' =>
 
     Route::resource('/pelayanan', MainServiceController::class);  
     Route::get('/service/data', [MainServiceController::class, 'getData'])->name('pelayanan.data');
-    Route::post('/service/export/excel', [MainServiceController::class, 'exportExcel'])->name('pelayanan.export.excel');
-    Route::post('/service/export/pdf', [MainServiceController::class, 'exportPDF'])->name('pelayanan.export.pdf');
 });
 
 
@@ -71,8 +79,6 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:user', 'as' => 'user.'],
 
     Route::resource('/pelayanan', MainServiceController::class);  
     Route::get('/service/data', [MainServiceController::class, 'getData'])->name('pelayanan.data');
-    Route::post('/service/export/excel', [MainServiceController::class, 'exportExcel'])->name('pelayanan.export.excel');
-    Route::post('/service/export/pdf', [MainServiceController::class, 'exportPDF'])->name('pelayanan.export.pdf');
 });
 
 
@@ -118,5 +124,4 @@ Route::group([], function () {
     Route::get('/visi-misi', [PageController::class, 'visiMisi'])->name('page.visimisi');
     Route::get('/detail-persyaratan', [PageController::class, 'detailPersyaratan'])->name('page.detail-persyaratan');
 });
-
 

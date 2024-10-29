@@ -17,4 +17,11 @@ class Village extends Model
     {
         return $this->hasMany(User::class, 'village_id');
     }
+    
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'district_id', 'id');
+    }
+
+    
 }

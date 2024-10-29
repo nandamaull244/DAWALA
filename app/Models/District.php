@@ -17,4 +17,9 @@ class District extends Model
     {
         return $this->hasMany(User::class, 'district_id');
     }
+    
+    public function villages()
+    {
+        return $this->hasMany(Village::class);
+    }
 }

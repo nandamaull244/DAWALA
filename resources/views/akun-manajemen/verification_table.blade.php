@@ -98,170 +98,330 @@
         .bi-plus-circle {
             margin-right: 5px;
         }
+
     </style>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 @endpush
 
 @section('page-heading')
-    Verifikasi Akun
+Verifikasi Akun
 @endsection
 
 @section('page-subheading')
-    Verifikasi akun yang telah terdaftar (instansi, yayasan, rt, rw)
+Data Seluruh Akun yang membutuhkan verifikasi
 @endsection
 
 @section('content')
-    <section class="section">
-       <div>
+<section class="section">
+    <div>
         <div class="card">
             <div class="card-body">
                 <div class="row">
                     <div class="filter-container">
-                    
+                        <div class="filter-item">
+                            <label for="role">ROLE</label>
+                            <select id="role" name="role">
+                                <option value="">Semua</option>
+                                <option value="user">User</option>
+                                <option value="admin">Operator</option>
+                            </select>
+                        </div>
                         <div class="filter-item">
                             <label for="registration_type">TIPE REGISTRASI</label>
                             <select id="registration_type" name="registration_type">
                                 <option value="">Semua</option>
-                                <option value="RT">RT</option>
-                                <option value="RW">RW</option>
-                                <option value="YAYASAN">YAYASAN</option>
-                                <!-- Add more service types as needed -->
-                            </select>
-                        </div>
-                        
-                        <div class="filter-item">
-                            <label for="kecamatan">KECAMATAN</label>
-                            <select id="kecamatan" name="kecamatan">
-                                <option value="">Semua</option>
-                                <!-- Add more kecamatan options here -->
+                                <option value="Intansi, RT">RT</option>
+                                <option value="Intansi, RW">RW</option>
+                                <option value="Intansi, Yayasan">Yayasan</option>
+                                <option value="Intansi, Instansi">Instansi</option>
                             </select>
                         </div>
                         <div class="filter-item">
-                            <label for="desa">DESA</label>
-                            <select id="desa" name="desa">
+                            <label for="status">STATUS</label>
+                            <select id="status" name="status">
                                 <option value="">Semua</option>
-                                <!-- Add more desa options here -->
+                                <option value="completed">Completed</option>
+                                <option value="processing">Process</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                        <div class="filter-item">
+                            <label for="district_id">KECAMATAN</label>
+                            <select id="district_id" name="district_id">
+                                <option value="">Semua</option>
+                                @foreach($districts as $district)
+                                    <option value="{{ $district->id }}">{{ $district->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="filter-item">
+                            <label for="village_id">DESA</label>
+                            <select id="village_id" name="village_id">
+                                <option value="">Semua</option>
+                                @foreach($villages as $village)
+                                    <option value="{{ $village->id }}">{{ $village->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <button class="reset-filter" onclick="resetFilters()">Reset Filter</button>
-                        
-
                     </div>
 
                     <div class="table-responsive">
-                        <table>
+                        <table id="usersTable" class="table">
                             <thead>
                                 <tr>
-                                    <th>NO</th>
-                                    <th>NIK</th>
-                                    <th>NO KK</th>
-                                    <th>USERNAME</th>
-                                    <th>EMAIL</th>
-                                    <th>NO HP</th>
-                                    <th>NAMA LENGKAP</th>
-                                    <th>TANGGAL LAHIR</th>
-                                    <th>GENDER</th>
-                                    <th>ALAMAT</th>
-                                    <th>RT</th>
-                                    <th>RW</th>
-                                    <th>KECAMATAN</th>
-                                    <th>DESA</th>
-                                    <th>ROLE</th>
-                                    <th>REGISTRATION TYPE</th>
-                                    <th>STATUS</th>
-                                    <th>Action</th>
-                                
+                                    <th nowrap>No</th>
+                                    <th nowrap>NIK</th>
+                                    <th nowrap>No KK</th>
+                                    <th nowrap>Username</th>
+                                    <th nowrap>Email</th>
+                                    <th nowrap>No HP</th>
+                                    <th nowrap>Nama Lengkap</th>
+                                    <th nowrap>Tanggal Lahir</th>
+                                    <th nowrap>Gender</th>
+                                    <th nowrap>Alamat</th>
+                                    <th nowrap>RT</th>
+                                    <th nowrap>RW</th>
+                                    <th nowrap>Kecamatan</th>
+                                    <th nowrap>Desa</th>
+                                    <th nowrap>Role</th>
+                                    <th nowrap>Registration Type</th>
+                                    <th nowrap>Status</th>
+                                    <th nowrap>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>3275021234567890</td>
-                                    <td>3275021234567890</td>
-                                    <td>johndoe</td>
-                                    <td>johndoe@example.com</td>
-                                    <td>081234567890</td>
-                                    <td>John Doe</td>
-                                    <td>1990-01-01</td>
-                                    <td>Laki-laki</td>
-                                    <td>Jl. Contoh No. 123</td>
-                                    <td>001</td>
-                                    <td>002</td>
-                                    <td>Kecamatan A</td>
-                                    <td>Desa B</td>
-                                    <td>Instansi</td>
-                                    <td>RT</td>
-                                    <td><span class="status completed">Completed</span></td>
-                                    <td class="sticky-column action-icons">
-                                        <span data-bs-toggle="modal" data-bs-target="#dataModalVerif"
-                                            style="cursor: pointer;">✏️</span>
-                                        <span data-bs-toggle="modal" data-bs-target="#deleteModalVerif"
-                                            style="cursor: pointer;">🗑️</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>3275021234567891</td>
-                                    <td>3275021234567891</td>
-                                    <td>janedoe</td>
-                                    <td>janedoe@example.com</td>
-                                    <td>081234567891</td>
-                                    <td>Jane Doe</td>
-                                    <td>1992-05-15</td>
-                                    <td>Perempuan</td>
-                                    <td>Jl. Contoh No. 456</td>
-                                    <td>003</td>
-                                    <td>004</td>
-                                    <td>Kecamatan C</td>
-                                    <td>Desa D</td>
-                                    <td>Instansi</td>
-                                    <td>RW</td>
-                                    <td><span class="status processing">Processing</span></td>
-                                    <td class="sticky-column action-icons">
-                                        <span data-bs-toggle="modal" data-bs-target="#dataModalVerif"
-                                            style="cursor: pointer;">✏️</span>
-                                        <span data-bs-toggle="modal" data-bs-target="#deleteModalVerif"
-                                            style="cursor: pointer;">🗑️</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>3275021234567892</td>
-                                    <td>3275021234567892</td>
-                                    <td>bobsmith</td>
-                                    <td>bobsmith@example.com</td>
-                                    <td>081234567892</td>
-                                    <td>Bob Smith</td>
-                                    <td>1988-11-30</td>
-                                    <td>Laki-laki</td>
-                                    <td>Jl. Contoh No. 789</td>
-                                    <td>005</td>
-                                    <td>006</td>
-                                    <td>Kecamatan E</td>
-                                    <td>Desa F</td>
-                                    <td>Instansi</td>
-                                    <td>YAYASAN</td>
-                                    <td><span class="status rejected">Rejected</span></td>
-                                    <td class="sticky-column action-icons">
-                                        <span data-bs-toggle="modal" data-bs-target="#dataModalVerif"
-                                            style="cursor: pointer;">✏️</span>
-                                        <span data-bs-toggle="modal" data-bs-target="#deleteModalVerif"
-                                            style="cursor: pointer;">🗑️</span>
-                                    </td>
-                                </tr>
-                            </tbody>
                         </table>
+
                     </div>
                 </div>
             </div>
         </div>
-       </div>
-    </section>
+    </div>
+</section>
 
-
-   @include('akun-manajemen.modal_verification')
-   @include('akun-manajemen.delete_modal_verif')
 @endsection
 
 @push('scripts')
- 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(document).ready(function () {
+            let table = $('#usersTable').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                ajax: {
+                    url: '{{ route("admin.admin.user.verification.data") }}',
+                    type: 'GET',
+                    data: function (d) {
+                        d.role = $('#role').val();
+                        d.registration_type = $('#registration_type').val();
+                        d.status = $('#status').val();
+                        d.district_id = $('#district_id').val();
+                        d.village_id = $('#village_id').val();
+                    },
+                    error: function (xhr, error, thrown) {
+                        console.error('Data Tables error:', error);
+                    }
+                },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'nik',
+                        name: 'nik'
+                    },
+                    {
+                        data: 'no_kk',
+                        name: 'no_kk'
+                    },
+                    {
+                        data: 'username',
+                        name: 'username'
+                    },
+                    {
+                        data: 'email',
+                        name: 'email'
+                    },
+                    {
+                        data: 'phone_number',
+                        name: 'phone_number'
+                    },
+                    {
+                        data: 'full_name',
+                        name: 'full_name'
+                    },
+                    {
+                        data: 'birth_date',
+                        name: 'birth_date'
+                    },
+                    {
+                        data: 'gender',
+                        name: 'gender'
+                    },
+                    {
+                        data: 'address',
+                        name: 'address'
+                    },
+                    {
+                        data: 'rt',
+                        name: 'rt'
+                    },
+                    {
+                        data: 'rw',
+                        name: 'rw'
+                    },
+                    {
+                        data: 'district_name',
+                        name: 'district.name'
+                    },
+                    {
+                        data: 'village_name',
+                        name: 'village.name'
+                    },
+                    {
+                        data: 'role',
+                        name: 'role'
+                    },
+                    {
+                        data: 'registration_type',
+                        name: 'registration_type'
+                    },
+                    {
+                        data: 'registration_status',
+                        name: 'registration_status',
+                        render: function (data) {
+                            if (data === 'Process') {
+                                return '<span class="badge bg-primary">' + data + '</span>';
+                            } else if (data === 'Rejected') {
+                                return '<span class="badge bg-danger">' + data + '</span>';
+                            } else if (data === 'Completed') {
+                                return '<span class="badge bg-success">' + data + '</span>';
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                pageLength: 10,
+                lengthMenu: [
+                    [10, 25, 50, 100],
+                    [10, 25, 50, 100]
+                ],
+                order: [
+                    [0, 'desc']
+                ]
+            });
+
+            // Add change event listeners to all filters
+            $('#role, #registration_type, #status, #district_id, #village_id').change(function () {
+                table.draw();
+            });
+
+            // Make functions globally available
+            window.approveUser = function(userId) {
+                Swal.fire({
+                    title: 'Konfirmasi Approval',
+                    text: "Apakah anda yakin ingin menyetujui user ini?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Setuju!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/admin/verification/${userId}/approve`,
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire(
+                                    'Berhasil!',
+                                    'User telah disetujui.',
+                                    'success'
+                                );
+                                table.ajax.reload();
+                            },
+                            error: function(xhr) {
+                                Swal.fire(
+                                    'Error!',
+                                    xhr.responseJSON?.message || 'Terjadi kesalahan saat memproses permintaan.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            };
+
+            window.rejectUser = function(userId) {
+                Swal.fire({
+                    title: 'Konfirmasi Penolakan',
+                    text: "Apakah anda yakin ingin menolak user ini?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6', 
+                    confirmButtonText: 'Ya, Tolak!',
+                    cancelButtonText: 'Batal',
+                    inputValidator: (value) => {
+                        if (!value) {
+                            return 'Anda harus memasukkan alasan penolakan!'
+                        }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/admin/verification/${userId}/reject`,
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                reason: result.value
+                            },
+                            success: function(response) {
+                                Swal.fire(
+                                    'Ditolak!',
+                                    'User telah ditolak.',
+                                    'success'
+                                );
+                                table.ajax.reload();
+                            },
+                            error: function(xhr) {
+                                Swal.fire(
+                                    'Error!',
+                                    xhr.responseJSON?.message || 'Terjadi kesalahan saat memproses permintaan.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            };
+
+            // Fungsi reset filter
+            window.resetFilters = function() {
+                $('#role').val('');
+                $('#registration_type').val('');
+                $('#status').val('');
+                $('#district_id').val('');
+                $('#village_id').val('');
+                table.draw();
+            };
+        });
+    </script>
 @endpush
