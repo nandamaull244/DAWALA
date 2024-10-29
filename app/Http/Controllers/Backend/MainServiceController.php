@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ServicesExport;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Instance;
 
 
 class MainServiceController extends Controller 
@@ -57,12 +58,23 @@ class MainServiceController extends Controller
 
     public function getData(Request $request)
     {
-        $query = Service::with(['user', 'user.district', 'user.village'])
+        $query = Service::with(['user', 'user.district', 'user.village', 'user.instance', 'user.instance.instanceUsers'])
                         ->orderByRaw("CASE 
                             WHEN working_status = 'Late' THEN created_at 
                             ELSE NULL 
                             END ASC") 
                         ->orderBy('created_at', 'desc'); 
+
+        if (auth()->user()->role == 'user') {
+            $query->where('user_id', auth()->user()->id);
+        }
+
+        if (auth()->user()->role == 'instance') {
+            $instanceId = Instance::where('user_id', auth()->user()->id)->pluck('id');
+            $query->whereHas('user.instance.instanceUsers', function($q) use ($instanceId) {
+                $q->whereIn('instance_id', $instanceId);
+            });
+        }
 
         if ($request->filled('search') && $request->search['value']) {
             $searchValue = $request->search['value'];
@@ -93,9 +105,17 @@ class MainServiceController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function($row) {
                 $hashedId = $row->getHashedId();
+                $approvalName = optional($row->approvalBy)->full_name ?? 'Data tidak ada';
                 $actionBtn = '<div class="btn-group" role="group">';
                 $actionBtn .= '<a target="_blank" href="'.route('admin.pelayanan.edit', $hashedId).'" class="btn btn-outline-primary" style="cursor: pointer;"><i class="bi bi-pencil-square fs-5"></i></a>';
-                $actionBtn .= '<button type="button" class="btn btn-outline-success delete-btn" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-id="'.$hashedId.'" data-reason="'. $row->rejected_reason .'" data-approval_by="'. $row->approvalBy->full_name .'" data-visit_schedule="'. $row->visit_schedule .'" style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></button>';
+                if(auth()->user()->role == 'admin' || auth()->user()->role == 'operator') {
+                     $actionBtn .= '<a class="btn btn-outline-success delete-btn" data-bs-toggle="modal" 
+                                                                             data-bs-target="#confirmationModal" 
+                                                                             data-id="'.$hashedId.'" 
+                                                                             data-reason="'. $row->rejected_reason .'" 
+                                                                             data-approval_by="'. $approvalName.'" 
+                                                                             data-visit_schedule="'. $row->visit_schedule .'" style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></a>';
+                }
                 $actionBtn .= '</div>';
                 return $actionBtn;
             })            

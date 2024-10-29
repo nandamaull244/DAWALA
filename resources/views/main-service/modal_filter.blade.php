@@ -26,28 +26,29 @@
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <div class="row">
-                        <div class="col-md-6 mb-3 mb-md-0">
-                            <p class="text-start mb-2"><b>Kecamatan</b></p>
-                            <select class="form-select" id="kecamatan" name="kecamatan" onchange="getVillages(this)">
-                                <option value="">Pilih Kecamatan</option>
-                                @foreach ($districts as $district)
-                                    <option value="{{ $district->id }}" data-value="{{ $district->id }}">{{ $district->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <p class="text-start mb-2"><b>Kecamatan</b></p>
+                                <select class="form-select" id="kecamatan" name="kecamatan" onchange="getVillages(this)">
+                                    <option value="">Pilih Kecamatan</option>
+                                    @foreach ($districts as $district)
+                                        <option value="{{ $district->id }}" data-value="{{ $district->id }}">{{ $district->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-                        <div class="col-md-6">
-                            <p class="text-start mb-2"><b>Desa</b></p>
-                            <select class="form-select" id="desa" name="desa">
-                                <option value="">Pilih Desa</option>
-                                <!-- Options will be loaded dynamically -->
-                            </select>
+                            <div class="col-md-6">
+                                <p class="text-start mb-2"><b>Desa</b></p>
+                                <select class="form-select" id="desa" name="desa">
+                                    <option value="">Pilih Desa</option>
+                                    <!-- Options will be loaded dynamically -->
+                                </select>
+                            </div>
                         </div>
                     </div>
-                </div>
-
+                @endif
                 <div class="mb-3 row">
                     <div class="col-md-6">
                         <p class="text-start mb-2"><b>Waktu</b></p>

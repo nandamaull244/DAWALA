@@ -235,8 +235,10 @@
                                 <i class="bi bi-arrow-repeat"></i> Reset Filter
                             </button>
                         </div>
-                        <div class="col-md-4">
-                            <div class="dropdown">
+
+                        @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
+                            <div class="col-md-4">
+                                <div class="dropdown">
                                 <button class="btn btn-success w-100 dropdown-toggle" type="button" id="reportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-file-earmark-text"></i> Laporan
                                 </button>
@@ -252,8 +254,10 @@
                                         </a>
                                     </li>
                                 </ul>
+                                </div>
                             </div>
-                        </div>
+                        @endif
+
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="col-md-5 float-end">
@@ -297,7 +301,9 @@
                                     <th nowrap>FORMULIR</th>
                                     <th nowrap>STATUS PENGERJAAN</th>
                                     <th nowrap>STATUS PELAYANAN</th>
-                                    <th nowrap>ACTION</th>
+                                    @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
+                                        <th nowrap>ACTION</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -493,7 +499,9 @@
                     {data: 'formulir', name: 'formulir', orderable: false, searchable: false},
                     {data: 'working_status', name: 'working_status', orderable: false, searchable: false},
                     {data: 'service_status', name: 'service_status', orderable: false, searchable: false},
-                    {data: 'action', name: 'action', orderable: false, searchable: false, width: '25%'},
+                    @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
+                        {data: 'action', name: 'action', orderable: false, searchable: false, width: '25%'},
+                    @endif
                 ],
                 order: [[1, 'asc']],
                 drawCallback: function(settings) {

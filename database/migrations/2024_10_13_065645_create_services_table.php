@@ -26,7 +26,7 @@ return new class extends Migration
             $table->enum('working_status', ['Not Yet', 'Process', 'Late', 'Done'])->default('Not Yet'); 
             $table->enum('document_recieved_status', ['Not Yet Recieved', 'Recieved'])->default('Not Yet Recieved');
             $table->date('visit_schedule')->nullable();
-            $table->foreignId('approval_by')->constrained('users')->onUpdate('cascade')->onDelete('cascade')->nullable();
+            $table->foreignId('approval_by')->nullable()->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
             $table->string('rejected_reason')->nullable();
             $table->softDeletes();

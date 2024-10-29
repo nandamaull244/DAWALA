@@ -66,4 +66,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Village::class, 'village_id', 'id');
     }
+
+    public function instance()
+    {
+        return $this->hasOne(Instance::class, 'user_id', 'id');
+    }
 }
