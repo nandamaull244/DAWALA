@@ -4,7 +4,7 @@
 @endpush
 
 @section('page-heading')
-    Dashboard Instantiation
+    Dashboard Instansi
 @endsection
 
 @section('content')

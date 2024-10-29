@@ -13,11 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('instantiations', function (Blueprint $table) {
+        Schema::create('instance_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('instance_id')->constrained('instances')->onUpdate('cascade')->onDelete('cascade');
             $table->string('name');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('instantiation');
+        Schema::dropIfExists('instance_users');
     }
 };

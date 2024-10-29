@@ -5,13 +5,13 @@
 <title>
 
     @if(Auth::user()->role == 'admin')
-        Admin Dashboard - Dawala
+        Dashboard Admin - Dawala
     @elseif(Auth::user()->role == 'user')
-        User Dashboard - Dawala
+        Dashboard User - Dawala
     @elseif(Auth::user()->role == 'operator')
-        Operator Dashboard - Dawala
-    @elseif(Auth::user()->role == 'instantiation')
-        Instantiation Dashboard - Dawala
+        Dashboard Operator - Dawala
+    @elseif(Auth::user()->role == 'institute')
+        Dashboard Instansi - Dawala
     @else
         Dashboard - Dawala
     @endif
@@ -34,6 +34,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -43,10 +44,32 @@
         background-color: #f2f2f2;
     }
 
-    <blade media|%20(min-width%3A%20768px)%20%7B%0D>.col-md-2-5 {
+    .col-md-2-5 {
         width: 20.83333333%;
     }
+
+    .bg-warning {
+        background-color: #f1b90e !important; 
+        color: #ffffff !important;
     }
 
+</style>
+<style>
+    .custom-larger-toast {
+        width: 400px !important; 
+        font-size: 20px !important;  
+    }
+
+    .custom-larger-toast .toast-message {
+        font-size: 48px !important; 
+    }
+
+    .custom-larger-toast .toast-title {
+        font-size: 40px !important;
+    }
+
+    .custom-larger-toast .toast-message:before {
+        font-size: 24px !important;  
+    }
 </style>
 @stack('css')

@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('service_forms', function (Blueprint $table) {
             $table->id();
             $table->foreignId('service_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->enum('form_type', ['F1.01', 'F1.02', 'F1.04']);
+            $table->enum('form_type', ['F1.01', 'F1.02', 'F1.03', 'F1.04']);
             $table->string('form_path');
             $table->timestamps();
             $table->softDeletes();

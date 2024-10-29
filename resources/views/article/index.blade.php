@@ -157,17 +157,6 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            flatpickr.localize(flatpickr.l10ns.id);
-            $(".flatpickr-date").flatpickr({
-                dateFormat: "Y-m-d",
-                allowInput: true,
-                altInput: true,
-                altFormat: "d F Y",
-                locale: "id",
-                disableMobile: "true",
-                defaultDate: "today"
-            });
-
             var table = $('#articlesTable').DataTable({
                 processing: true,
                 serverSide: true,

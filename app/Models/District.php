@@ -13,6 +13,11 @@ class District extends Model
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
 
+    public function user()
+    {
+        return $this->hasMany(User::class, 'district_id');
+    }
+    
     public function villages()
     {
         return $this->hasMany(Village::class);

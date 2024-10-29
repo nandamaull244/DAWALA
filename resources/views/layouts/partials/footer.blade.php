@@ -30,6 +30,46 @@
 
 <script>
     $(document).ready(function() {
+        flatpickr.localize(flatpickr.l10ns.id);
+        $(".flatpickr").flatpickr({
+            dateFormat: "Y-m-d",
+            allowInput: true,
+            altInput: true,
+            altFormat: "d F Y",
+            locale: "id",
+            disableMobile: "true",
+            defaultDate: ""
+        });
+
+        $(".flatpickr-date").flatpickr({
+            dateFormat: "Y-m-d",
+            allowInput: true,
+            altInput: true,
+            altFormat: "d F Y",
+            locale: "id",
+            disableMobile: "true",
+            defaultDate: "today"
+        });
+        var birthDate = "";
+        @if (auth()->user()->role == 'user') 
+            var birthDate = "{{ auth()->user()->birth_date }}";
+        @endif
+
+        $(".flatpickr-birth-date").flatpickr({
+            dateFormat: "Y-m-d",
+            allowInput: true,
+            altInput: true,
+            altFormat: "d F Y",
+            locale: "id",
+            disableMobile: "true",
+            defaultDate: birthDate,
+            maxDate: "today",
+            parseDate: (datestr, format) => {
+                return flatpickr.parseDate(datestr, "Y-m-d");
+            },
+        });
+
+
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
@@ -41,7 +81,18 @@
             "showEasing": "swing",
             "hideEasing": "linear",
             "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
+            "hideMethod": "fadeOut",
+            "className": "custom-larger-toast"
+        };
+
+        toastr.options.onShown = function() {
+            $('.toast').css({
+                'width': '360px',
+                'font-size': '18px',
+                'min-height': '60px'
+            });
+            $('.toast .toast-title').css('font-size', '21px');
+            $('.toast .toast-message').css('font-size', '17px');
         };
 
         @if (session('success'))
