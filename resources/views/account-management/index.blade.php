@@ -239,8 +239,8 @@ Data Seluruh Akun
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="col-md-5 float-end">
-                            <a class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#layananModal">
-                                <i class="bi bi-plus-circle"></i> Daftar Pelayanan
+                            <a class="btn btn-primary w-100" href="{{ route('admin.manajemen-akun.create') }}">
+                                <i class="bi bi-plus-circle"></i> Tambah User
                             </a>
                         </div>
                     </div>

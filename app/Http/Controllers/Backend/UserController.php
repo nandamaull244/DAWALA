@@ -36,7 +36,7 @@ class UserController extends Controller
     {
         $districts = District::with('villages')->get();
         $villages = Village::all();
-        return view('account-management.form_user', compact('districts', 'villages'));
+        return view('account-management.create', compact('districts', 'villages'));
     }
 
     /**
