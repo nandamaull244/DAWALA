@@ -104,6 +104,11 @@ class UserController extends Controller
                 'registration_type' => $request->role === 'instance' ? $request->registration_type : 'User, Perorangan',
             ]);
 
+            Instance::create([
+                'user_id' => $user->id,
+                'instance_name' => $request->instance_name,
+            ]);
+
             return redirect()->route('admin.manajemen-akun.index')
                            ->with('success', 'Akun berhasil dibuat');
         } catch (\Exception $e) {
@@ -129,12 +134,12 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($hashedId)
     {
         $districts = District::with('villages')->get();
         $villages = Village::all();
-        $user = User::findOrFail($id);
-        return view('manajemen-akun.modal_edit_akun', compact('user', 'districts', 'villages'));
+        $user = User::whereHash($hashedId)->first();
+        return view('account-management.edit', compact('user', 'districts', 'villages'));
     }
 
     /**
