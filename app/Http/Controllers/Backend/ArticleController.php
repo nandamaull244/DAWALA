@@ -234,4 +234,10 @@ class ArticleController extends Controller
             return response()->json(['success' => 'Artikel "' . $article->title . '" berhasil dihapus!']);
         }
     }
+
+    public function dokumentasi()
+    {
+        $articles = Article::orderBy('created_at', 'desc')->get();
+        return view('pages.dokumentasi', compact('articles'));
+    }
 }

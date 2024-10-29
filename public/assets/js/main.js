@@ -48,8 +48,8 @@
             
             console.log('Checking link:', linkPath); // Debugging untuk memeriksa tiap-tiap path link
     
-            // Jika URL dari link sama dengan path saat ini, tambahkan kelas active
-            if (currentPath === linkPath) {
+            // Jika URL dari link sama dengan path saat ini atau path dimulai dengan /dokumentasi, tambahkan kelas active
+            if (currentPath === linkPath || (currentPath.startsWith('/dokumentasi') && linkPath === '/dokumentasi')) {
                 console.log('Matched Path:', linkPath); // Debugging jika ada path yang match
                 removeActiveClass();
                 link.classList.add('active');
@@ -78,6 +78,7 @@
                 layananDropdown.classList.add('active');
             }
         }
+       
         
     });
     
@@ -172,28 +173,28 @@
         });
     });
     // dokumentasi carousel
-    $(document).ready(function () {
+    $(document).ready(function(){
         $(".dokumentasi-carousel").owlCarousel({
             autoplay: true,
-            smartSpeed: 1000,
-            loop: true,
-            margin: 10,
-            nav: false,
+            smartSpeed: 200,
+            margin: 25,
+            loop: false,
+            center: true,
+            dots: false,
+            nav: true,
+            navText : [
+                '<i class="bi bi-chevron-left"></i>',
+                '<i class="bi bi-chevron-right"></i>'
+            ],
             responsive: {
-                0: {
-                    items: 1
+                0:{
+                    items:1
                 },
-                576: {
-                    items: 1
+                768:{
+                    items:2
                 },
-                768: {
-                    items: 2
-                },
-                992: {
-                    items: 3
-                },
-                1200: {
-                    items: 4
+                992:{
+                    items:3
                 }
             }
         });

@@ -40,19 +40,19 @@
         </span>
         <ul class="submenu ">
             <li class="submenu-item ">
-                <a href="{{ route('admin.akun-manajemen.index') }}" class='sidebar-link'>
+                <a href="{{ route('admin.manajemen-akun.index') }}" class='sidebar-link'>
                     <i class="bi bi-table"></i>
                     <span>Data Akun</span>
                 </a>
             </li>
             <li class="submenu-item ">
-                <a href="{{ route('admin.akun-manajemen.create') }}" class='sidebar-link'>
+                <a href="{{ route('admin.manajemen-akun.create') }}" class='sidebar-link'>
                     <i class="bi bi-file-earmark-text"></i>
                     <span>Form Akun</span>
                 </a>
             </li>
             <li class="submenu-item ">
-                <a href="{{ route('admin.akun-manajemen.verification-table') }}" class='sidebar-link'>
+                <a href="{{ route('admin.manajemen-akun.verification') }}" class='sidebar-link'>
                     <i class="bi bi-file-earmark-text"></i>
                     <span>Verifikasi Akun</span>
                 </a>

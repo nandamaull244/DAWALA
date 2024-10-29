@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Article;
 
 class PageController extends Controller
 {
@@ -24,7 +25,16 @@ class PageController extends Controller
 
     public function documentation()
     {
-        return view('pages.dokumentasi');
+        $articles = Article::with('user')
+                          ->orderBy('created_at', 'desc')
+                          ->get();
+        return view('pages.dokumentasi', compact('articles'));
+    }
+
+    public function documentationDetail(Article $article)
+    {
+        $article->load('user'); // Eager load user relationship
+        return view('pages.dokumentasi_detail', compact('article'));
     }
 
     public function FAQ()
