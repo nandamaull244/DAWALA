@@ -22,7 +22,7 @@ Formulir Registrasi Akun
                             <div class="form-group">
                                 <label for="sub-category-select">Pilih Kategori Akun</label>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="role" id="perorangan" value="user" onclick="setRole('user')" required>
+                                    <input class="form-check-input" type="radio" name="role" id="perorangan" value="user" onclick="setRole('user')" checked required>
                                     <label class="form-check-label" for="perorangan">Perorangan/Untuk Diri Sendiri sendiri</label>
                                     @error('role')
                                         <span>{{ $message }}</span>
@@ -128,7 +128,7 @@ Formulir Registrasi Akun
                                 <div class="mb-4 form-group">
                                     <label for="nik">NIK</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" value="{{ old('nik') }}" required>
+                                        <input type="text" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" value="{{ old('nik') }}" minlength="16" required>
                                         <div class="form-control-icon">
                                             <i class="bi bi-card-text"></i>
                                         </div>
@@ -144,7 +144,7 @@ Formulir Registrasi Akun
                                 <div class="mb-4 form-group">
                                     <label for="no_kk">No KK</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="No Kartu Keluarga" id="no_kk" name="no_kk" value="{{ old('no_kk') }}" required>
+                                        <input type="text" class="form-control form-control-md" data-title="No Kartu Keluarga" id="no_kk" name="no_kk" value="{{ old('no_kk') }}" minlength="16" required>
                                         <div class="form-control-icon">
                                             <i class="bi bi-card-text"></i>
                                         </div>
@@ -305,7 +305,7 @@ Formulir Registrasi Akun
                                 <div class="mb-4 form-group">
                                     <label for="password" class="mb-2">Password (Minimal 8 karakter)</label>
                                     <div class="form-group position-relative has-icon-left ">
-                                        <input type="password" class="form-control form-control-md" data-title="Password" placeholder="Password" name="password" id="password" required>
+                                        <input type="password" class="form-control form-control-md" data-title="Password" placeholder="Password" name="password" id="password" minlength="8" required>
                                         <div class="form-control-icon">
                                             <i class="bi bi-shield-lock"></i>
                                         </div>
@@ -326,7 +326,7 @@ Formulir Registrasi Akun
                             <div class="col-md-6 form-group">
                                 <label for="password_confirmation" class="mb-2">Konfirmasi Password</label>
                                 <div class="form-group position-relative has-icon-left mb-4 form-group">
-                                    <input type="password" class="form-control form-control-md" data-title="Konfirmasi Password" id="password_confirmation" placeholder="Ulangi Password" name="password_confirmation" required>
+                                    <input type="password" class="form-control form-control-md" data-title="Konfirmasi Password" id="password_confirmation" placeholder="Ulangi Password" minlength="8" name="password_confirmation" required>
                                     <div class="form-control-icon">
                                         <i class="bi bi-shield-lock"></i>
                                     </div>
@@ -444,34 +444,41 @@ Formulir Registrasi Akun
     }
 
     $('#userForm').on('submit', function(e) {
-            e.preventDefault();
-            var isValid = true;
+        e.preventDefault();
+        var isValid = true;
 
-            $(this).find('input, select, textarea').each(function() {
-                var $field = $(this);
-                var fieldName = $field.data('title') || 'Field';
+        $(this).find('input, select, textarea').each(function() {
+            var $field = $(this);
+            var fieldName = $field.data('title') || 'Field';
 
-                if ($field.prop('required') && !$field.val()) {
-                    isValid = false;
-                    toastr.warning(fieldName + ' harus diisi', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
-                }
+            if ($field.prop('required') && !$field.val()) {
+                isValid = false;
+                toastr.warning(fieldName + ' harus diisi', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
+            }
 
-                var maxLength = $field.attr('maxlength');
-                if (maxLength && $field.val().length > maxLength) {
-                    isValid = false;
-                    toastr.warning(fieldName + ' tidak boleh lebih dari ' + maxLength + ' karakter', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
-                }
+            var maxLength = $field.attr('maxlength');
+            if (maxLength && $field.val().length > maxLength) {
+                isValid = false;
+                toastr.warning(fieldName + ' tidak boleh lebih dari ' + maxLength + ' karakter', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
+            }
 
-                var minLength = $field.attr('minlength');
-                if (minLength && $field.val().length < minLength) {
-                    isValid = false;
-                    toastr.warning(fieldName + 'harus memiliki setidaknya ' + minLength + ' karakter', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
-                }
-            });
-
-            if (isValid) {
-                this.submit();
+            var minLength = $field.attr('minlength');
+            if (minLength && $field.val().length < minLength) {
+                isValid = false;
+                toastr.warning(fieldName + ' harus memiliki setidaknya ' + minLength + ' karakter', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
             }
         });
+
+        const password = $('#password').val();
+        const confirmPassword = $('#password_confirmation').val();
+        if (password && confirmPassword && password !== confirmPassword) {
+            isValid = false;
+            toastr.warning('Password dan Konfirmasi Password tidak cocok!', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
+        }
+
+        if (isValid) {
+            this.submit();
+        }
+    });
 </script>
 @endpush

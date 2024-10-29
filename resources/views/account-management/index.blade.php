@@ -258,22 +258,22 @@ Data Seluruh Akun
                             <table id="userTable" class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>NIK</th>
-                                        <th>No KK</th>
-                                        <th>Nama Lengkap</th>
-                                        <th>Email</th>
-                                        <th>No HP</th>
-                                        <th>Tanggal Lahir</th>
-                                        <th>Gender</th>
-                                        <th>Alamat</th>
-                                        <th>RT</th>
-                                        <th>RW</th>
-                                        <th>Kecamatan</th>
-                                        <th>Desa</th>
-                                        <th>Registration Type</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
+                                        <th nowrap>No</th>
+                                        <th nowrap>NIK</th>
+                                        <th nowrap>No KK</th>
+                                        <th nowrap>Nama Lengkap</th>
+                                        <th nowrap>Email</th>
+                                        <th nowrap>No HP</th>
+                                        <th nowrap>Tanggal Lahir</th>
+                                        <th nowrap>Gender</th>
+                                        <th nowrap>Alamat</th>
+                                        <th nowrap>RT</th>
+                                        <th nowrap>RW</th>
+                                        <th nowrap>Kecamatan</th>
+                                        <th nowrap>Desa</th>
+                                        <th nowrap>Registration Type</th>
+                                        <th nowrap>Status</th>
+                                        <th nowrap>Action</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -292,8 +292,6 @@ Data Seluruh Akun
     </div>
 </section>
 
-
-@include('account-management.modal_edit_akun')
 @include('account-management.delete_modal_akun')
 @include('account-management.modal_filter')
 @endsection

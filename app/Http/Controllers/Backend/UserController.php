@@ -56,12 +56,15 @@ class UserController extends Controller
             'rw' => 'required|string',
             'address' => 'required|string',
             'no_kk' => 'required|string|digits:16',
-            'email' => 'required|email|unique:users,email',
             'phone_number' => 'required|string|digits_between:10,14',
             'role' => 'required|in:admin,operator,user,instance',
             'password' => 'required|min:8|confirmed',
             'password_confirmation' => 'required|same:password',
         ];
+
+        if($request->email != null) {
+            $rules['email'] = 'unique:users,email';
+        } 
 
         if ($request->input('role') === 'instance') {
             $rules['registration_type'] = 'required|string';
@@ -104,10 +107,19 @@ class UserController extends Controller
                 'registration_type' => $request->role === 'instance' ? $request->registration_type : 'User, Perorangan',
             ]);
 
-            Instance::create([
-                'user_id' => $user->id,
-                'instance_name' => $request->instance_name,
-            ]);
+            if($request->role === 'instance') {
+                $instance = Instance::find('user_id', auth()->user()->id)->first();
+                if(empty($instance)) {
+                    $instance = Instance::create([
+                        'user_id' => auth()->user()->id,
+                    ]);
+                } else {
+                    InstanceUser::create([
+                        'instance_id' => $instance->id,
+                        'user_id' => $user->id,
+                    ]);
+                }
+            }
 
             return redirect()->route('admin.manajemen-akun.index')
                            ->with('success', 'Akun berhasil dibuat');
@@ -149,9 +161,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $hashedId)
     {
-        $user = User::findOrFail($id);
+        $user = User::whereHash($hashedId);
         $validate = $request->validate([
             'nik' => 'string|digits:16',
             'full_name' => 'string|max:255',
@@ -163,7 +175,7 @@ class UserController extends Controller
             'district_id' => 'exists:districts,id',
             'village_id' => 'exists:villages,id',
             'no_kk' => 'string|digits:16',
-            'email' => 'email|unique:users,email,' . $id,
+            'email' => 'unique:users',
             'phone_number' => 'string|digits_between:10,14',
             'registration_type' => 'string',
         ]);
