@@ -88,6 +88,18 @@
             $('#selectedDistricts').val(value);
         }
 
+        function selectRtRw(input) {
+            const $input = $(input);
+            const value = $input.val();
+            console.log($input);
+            
+            if($input.attr('id') === 'rw') {
+                $('#selectedRW').val(value);
+            } else {
+                $('#selectedRT').val(value);
+            }
+        }
+
         function selectFilter(button, type, multiple = false) {
             const $button = $(button);
             let value = $button.data('value');

@@ -258,23 +258,22 @@ Data Seluruh Akun
                             <table id="userTable" class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
-                                        <th nowrap>No</th>
-                                        <th nowrap>NIK</th>
-                                        <th nowrap>No KK</th>
-                                        <th nowrap>Username</th>
-                                        <th nowrap>Email</th>
-                                        <th nowrap>No HP</th>
-                                        <th nowrap>Nama Lengkap</th>
-                                        <th nowrap>Tanggal Lahir</th>
-                                        <th nowrap>Gender</th>
-                                        <th nowrap>Alamat</th>
-                                        <th nowrap>RT</th>
-                                        <th nowrap>RW</th>
-                                        <th nowrap>Kecamatan</th>
-                                        <th nowrap>Desa</th>
-                                        <th nowrap>Registration Type</th>
-                                        <th nowrap>Status</th>
-                                        <th nowrap>Action</th>
+                                        <th>No</th>
+                                        <th>NIK</th>
+                                        <th>No KK</th>
+                                        <th>Nama Lengkap</th>
+                                        <th>Email</th>
+                                        <th>No HP</th>
+                                        <th>Tanggal Lahir</th>
+                                        <th>Gender</th>
+                                        <th>Alamat</th>
+                                        <th>RT</th>
+                                        <th>RW</th>
+                                        <th>Kecamatan</th>
+                                        <th>Desa</th>
+                                        <th>Registration Type</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -311,7 +310,7 @@ Data Seluruh Akun
                     type: 'GET',
                     data: function (d) {
                         d.time = $('#selectedTime').val();
-                        d.genders = $('#selectedGenders').val();
+                        d.gender = $('#selectedGenders').val();
                         d.types = $('#selectedTypes').val();
                         d.kecamatan = $('#selectedDistricts').val();
                         d.desa = $('#desa').val();
@@ -323,23 +322,22 @@ Data Seluruh Akun
                     }
                 },
                 columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                    { data: 'nik', name: 'nik'},
-                    { data: 'no_kk', name: 'no_kk'},
-                    { data: 'username', name: 'username'},
-                    { data: 'email', name: 'email'},
-                    { data: 'phone_number',   name: 'phone_number'},
-                    { data: 'full_name', name: 'full_name'},
-                    { data: 'birth_date', name: 'birth_date'},
-                    { data: 'gender', name: 'gender'},
-                    { data: 'address', name: 'address'},
-                    { data: 'rt', name: 'rt'},
-                    { data: 'rw', name: 'rw'},
-                    { data: 'district_name', name: 'district.name'},
-                    { data: 'village_name', name: 'village.name'},
-                    { data: 'registration_type', name: 'registration_type'},
-                    { data: 'registration_status', name: 'registration_status',},
-                    { data: 'action', name: 'action', orderable: false, searchable: false}
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'nik', name: 'nik', orderable: false },
+                    { data: 'no_kk', name: 'no_kk', orderable: false },
+                    { data: 'full_name', name: 'full_name', orderable: true },
+                    { data: 'email', name: 'email', orderable: true },
+                    { data: 'phone_number', name: 'phone_number', orderable: true },
+                    { data: 'birth_date', name: 'birth_date', orderable: true },
+                    { data: 'gender', name: 'gender', orderable: true },
+                    { data: 'address', name: 'address', orderable: false },
+                    { data: 'rt', name: 'rt', orderable: true },
+                    { data: 'rw', name: 'rw', orderable: true },
+                    { data: 'district_name', name: 'district.name', orderable: true },
+                    { data: 'village_name', name: 'village.name', orderable: true },
+                    { data: 'registration_type', name: 'registration_type', orderable: true },
+                    { data: 'registration_status', name: 'registration_status', orderable: true},
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
                 ],
                 pageLength: 10,
                 lengthMenu: [
@@ -349,6 +347,7 @@ Data Seluruh Akun
                 order: [
                     [0, 'desc']
                 ],
+                ordering: true,
                 drawCallback: function(settings) {
                     $('#search-container').html($('.dataTables_filter').detach());
                     $('#pagination-container').html($('.dataTables_paginate').detach());
@@ -361,9 +360,41 @@ Data Seluruh Akun
                 }
             });
 
+            $('#reset').on('click', function() {
+                $('#selectedTime, #selectedGenders, #selectedTypes, #selectedDistricts, #selectedRW, #selectedRT').val('');
+                
+                $('#kecamatan, #desa').val('').trigger('change');
+
+                $('.time-btn, .gender-btn, .type-btn').removeClass('btn-primary').addClass('btn-outline-primary');
+                
+                table.ajax.reload();
+                $('#filterModal').modal('hide');
+            });
+
             // Add change event listeners to all filters
-            $('#role, #registration_type, #status, #district_id, #village_id').change(function () {
-                table.draw();
+            $('#desa, #kecamatan').change(function () {
+                table.ajax.reload();
+            });
+
+            let focusedElement = null;
+
+            $('#rt, #rw').on('keyup', function () {
+                focusedElement = this;
+                selectRtRw(this.id === 'rw' ? '#rw' : '#rt');
+                table.ajax.reload(function() {
+                    if (focusedElement) {
+                        $(focusedElement).focus();
+                    }
+                });
+            });
+
+            $('.time-btn, .gender-btn, .type-btn').click(function () {
+                table.ajax.reload();
+            });
+
+            $(document).on('change', '#kecamatan', function() {
+                selectDistricts(this);
+                table.ajax.reload();
             });
 
             // Fungsi reset filter
@@ -377,5 +408,25 @@ Data Seluruh Akun
             };
         });
 
+        function getVillages(e) {
+            var districtId = $(e).val();
+            if(districtId) {
+                $.ajax({
+                    url: "{{ route('get-villages', '') }}/" + districtId,
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data) {
+                        $('#desa').empty();
+                        $('#desa').append('<option value="">Pilih Desa</option>');
+                        $.each(data, function(key, value) {
+                            $('#desa').append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#desa').empty();
+                $('#desa').append('<option value="">Pilih Desa</option>');
+            }
+        };
     </script>
 @endpush
