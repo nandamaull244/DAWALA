@@ -13,6 +13,8 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PDOException;
+use Illuminate\Support\Facades\DB;
+use App\Models\Instance;
 
 class AuthController extends Controller
 {
@@ -121,16 +123,16 @@ class AuthController extends Controller
             'rw' => 'required|string',
             'address' => 'required|string',
             'no_kk' => 'required|string|digits:16',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'email|unique:users,email',
             'phone_number' => 'required|string|digits_between:10,14',
-            'role' => 'required|in:admin,operator,user,institute',
+            'role' => 'required|in:admin,operator,user,instance',
             'password' => 'required|min:8|confirmed',
-            'password_confirmation' => 'required|same:password',
         ];
 
-        if ($request->input('role') === 'institute') {
+        if ($request->input('role') === 'instance') {
             $rules['registration_type'] = 'required|string';
             $rules['village_id'] = 'required|exists:villages,id';
+            $rules['instansi'] = 'string';
         }
 
         $validator = Validator::make($request->all(), $rules);
@@ -150,6 +152,8 @@ class AuthController extends Controller
         }
 
         try {
+            DB::beginTransaction();
+            
             $user = User::create([
                 'nik' => $request->nik,
                 'full_name' => $request->full_name,
@@ -160,17 +164,26 @@ class AuthController extends Controller
                 'address' => $request->address,
                 'no_kk' => $request->no_kk,
                 'email' => $request->email,
-                'district_id' => $request->role === 'institute' ? $request->district_id : null,
-                'village_id' => $request->role === 'institute' ? $request->village_id : null,
+                'district_id' => $request->district_id,
+                'village_id' => $request->village_id,
                 'phone_number' => $request->phone_number,
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
                 'registration_status' => $request->role === 'user' ? 'Completed' : 'Process',
-                'registration_type' => $request->role === 'institute' ? $request->registration_type : 'User, Perorangan',
+                'registration_type' => $request->role === 'instance' ? $request->registration_type : 'User, Perorangan',
             ]);
 
+            if ($request->role === 'instance') {
+                Instance::create([
+                    'user_id' => $user->id,
+                    'name' => $request->instansi,
+                ]);
+            }
+
+            DB::commit();
             return redirect()->route('login.index')->with('success', 'Pendaftaran berhasil! Silakan login.');
         } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()->route('register.index')->with('error', 'Pendaftaran gagal! Silakan coba lagi.')->withInput();
         }
     }
