@@ -64,8 +64,8 @@ Route::group(['prefix' => 'operator', 'middleware' => 'auth:operator', 'as' => '
 });
 
 
-//  INSTITUTE ROUTES GROUP -->
-Route::group(['prefix' => 'institute', 'middleware' => 'auth:institute', 'as' => 'institute.'], function(){
+//  instance ROUTES GROUP -->
+Route::group(['prefix' => 'instance', 'middleware' => 'auth:instance', 'as' => 'instance.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('/pelayanan', MainServiceController::class);  

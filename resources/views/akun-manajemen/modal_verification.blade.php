@@ -15,9 +15,9 @@
                             <label for="sub-category-select">Kategori Akun:</label>
 
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="role" id="instantiation"
-                                    value="instantiation" onclick="setRole('instantiation')" required>
-                                <label class="form-check-label" for="instantiation">Instansi/Lembaga</label>
+                                <input class="form-check-input" type="radio" name="role" id="instance"
+                                    value="instance" onclick="setRole('instance')" required>
+                                <label class="form-check-label" for="instance">Instansi/Lembaga</label>
                                 @error('role')
                                     <span>{{ $message }}</span>
                                 @enderror

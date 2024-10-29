@@ -70,5 +70,5 @@ class User extends Authenticatable
     public function instance()
     {
         return $this->hasOne(Instance::class, 'user_id', 'id');
-    }
+}
 }

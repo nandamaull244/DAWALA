@@ -58,12 +58,12 @@ class UserController extends Controller
             'no_kk' => 'required|string|digits:16',
             'email' => 'required|email|unique:users,email',
             'phone_number' => 'required|string|digits_between:10,14',
-            'role' => 'required|in:admin,operator,user,instantiation',
+            'role' => 'required|in:admin,operator,user,instance',
             'password' => 'required|min:8|confirmed',
             'password_confirmation' => 'required|same:password',
         ];
 
-        if ($request->input('role') === 'instantiation') {
+        if ($request->input('role') === 'instance') {
             $rules['registration_type'] = 'required|string';
             $rules['village_id'] = 'required|exists:villages,id';
         }
@@ -95,13 +95,13 @@ class UserController extends Controller
                 'address' => $request->address,
                 'no_kk' => $request->no_kk,
                 'email' => $request->email,
-                'district_id' => $request->role === 'instantiation' ? $request->district_id : null,
-                'village_id' => $request->role === 'instantiation' ? $request->village_id : null,
+                'district_id' => $request->role === 'instance' ? $request->district_id : null,
+                'village_id' => $request->role === 'instance' ? $request->village_id : null,
                 'phone_number' => $request->phone_number,
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
                 'registration_status' => $request->role === 'user' ? 'Completed' : 'Process',
-                'registration_type' => $request->role === 'instantiation' ? $request->registration_type : 'User, Perorangan',
+                'registration_type' => $request->role === 'instance' ? $request->registration_type : 'User, Perorangan',
             ]);
 
             return redirect()->route('admin.akun-manajemen.index')
