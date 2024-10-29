@@ -24,7 +24,7 @@ class UserController extends Controller
         $districts = District::with('villages')->get();
         $villages = Village::all();
         $users = User::whereIn('registration_status', ['Completed', 'Rejected'])->get();
-        return view('akun-manajemen.index', compact('districts', 'villages', 'users'));
+        return view('account-management.index', compact('districts', 'villages', 'users'));
     }
 
     /**
@@ -36,7 +36,7 @@ class UserController extends Controller
     {
         $districts = District::with('villages')->get();
         $villages = Village::all();
-        return view('akun-manajemen.form_user', compact('districts', 'villages'));
+        return view('account-management.form_user', compact('districts', 'villages'));
     }
 
     /**
@@ -104,10 +104,10 @@ class UserController extends Controller
                 'registration_type' => $request->role === 'instance' ? $request->registration_type : 'User, Perorangan',
             ]);
 
-            return redirect()->route('admin.akun-manajemen.index')
+            return redirect()->route('admin.manajemen-akun.index')
                            ->with('success', 'Akun berhasil dibuat');
         } catch (\Exception $e) {
-            return redirect()->route('admin.akun-manajemen.create')->with('error', 'Pendaftaran gagal! Silakan coba lagi.')->withInput();
+            return redirect()->route('admin.manajemen-akun.create')->with('error', 'Pendaftaran gagal! Silakan coba lagi.')->withInput();
         }
      
     }
@@ -134,7 +134,7 @@ class UserController extends Controller
         $districts = District::with('villages')->get();
         $villages = Village::all();
         $user = User::findOrFail($id);
-        return view('akun-manajemen.modal_edit_akun', compact('user', 'districts', 'villages'));
+        return view('manajemen-akun.modal_edit_akun', compact('user', 'districts', 'villages'));
     }
 
     /**
@@ -164,7 +164,7 @@ class UserController extends Controller
         ]);
 
         $user->update($validate);
-        return redirect()->route('admin.akun-manajemen.index')->with('success', 'Akun berhasil diubah');
+        return redirect()->route('admin.manajemen-akun.index')->with('success', 'Akun berhasil diubah');
     }
 
     /**
@@ -178,12 +178,12 @@ class UserController extends Controller
         //
     }
 
-    public function verificationTable()
+    public function verification()
     {   
         $districts = District::with('villages')->get();
         $villages = Village::all();
         $users = User::whereIn('registration_status', ['Process'])->get();
-        return view('akun-manajemen.verification_table', compact('districts', 'villages', 'users'));
+        return view('manajemen-akun.verification_table', compact('districts', 'villages', 'users'));
     }
 
     public function getData(Request $request)
