@@ -10,7 +10,10 @@ class PageController extends Controller
 {
     public function home()
     {
-        return view('pages.home');
+        $articles = Article::with('user')
+                          ->orderBy('created_at', 'desc')
+                          ->get();
+        return view('pages.home', compact('articles'));
     }
 
     public function service()

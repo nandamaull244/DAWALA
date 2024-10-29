@@ -178,7 +178,7 @@
             autoplay: true,
             smartSpeed: 200,
             margin: 25,
-            loop: false,
+            loop: true,
             center: true,
             dots: false,
             nav: true,
