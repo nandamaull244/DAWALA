@@ -36,13 +36,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
     Route::resource('/article', ArticleController::class);
     Route::get('/articles/data', [ArticleController::class, 'getData'])->name('article.data');
 
-    Route::get('/akun-manajemen/verification-table', [UserController::class, 'verificationTable'])->name('akun-manajemen.verification-table');
-    Route::resource('/akun-manajemen', UserController::class);
-    Route::get('/users/data', [UserController::class, 'getData'])->name('admin.user.data'); 
-    // Route::post('/users/update-status/{id}', [UserController::class, 'updateStatus'])->name('admin.user.update-status');
-    Route::post('/users/create', [UserController::class, 'store'])->name('admin.user.store');
-    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('admin.user.edit');
-    Route::put('/users/{id}', [UserController::class, 'update'])->name('admin.user.update');
+    Route::get('/manajemen-akun/verification', [UserController::class, 'verification'])->name('manajemen-akun.verification');
+    Route::resource('/manajemen-akun', UserController::class);
+    Route::get('/users/getData', [UserController::class, 'getData'])->name('user.data'); 
+   
     // Verification routes
     Route::get('/verification', [UserController::class, 'verificationTable'])->name('admin.user.verification');
     Route::get('/verification/data', [UserController::class, 'getVerificationData'])->name('admin.user.verification.data');

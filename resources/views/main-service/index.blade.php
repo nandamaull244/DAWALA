@@ -208,7 +208,6 @@
             margin-top: -68px !important;
         }
     </style>
- 
 @endpush
 
 @section('page-heading')
