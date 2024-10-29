@@ -12,8 +12,8 @@ class DashboardController extends Controller
             return view("Dashboard.dashboard_admin");
         } elseif (auth()->user()->role == 'operator') {
             return view("Dashboard.dashboard_operator");
-        } elseif (auth()->user()->role == 'instantiation') {
-            return view("Dashboard.dashboard_instantiation");
+        } elseif (auth()->user()->role == 'instance') {
+            return view("Dashboard.dashboard_instance");
         } else {
             return view("Dashboard.dashboard_user");
         }

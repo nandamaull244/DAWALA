@@ -65,9 +65,9 @@
                                     @enderror
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="role" id="instantiation"
-                                        value="instantiation" onclick="setRole('instantiation')" required>
-                                    <label class="form-check-label" for="instantiation">Instansi/Lembaga</label>
+                                    <input class="form-check-input" type="radio" name="role" id="instance"
+                                        value="instance" onclick="setRole('instance')" required>
+                                    <label class="form-check-label" for="instance">Instansi/Lembaga</label>
                                     @error('role')
                                         <span>{{ $message }}</span>
                                     @enderror
@@ -439,7 +439,7 @@
             // const districtSelect = document.getElementById('district-select').closest('.form-group');
             // const villageSelect = document.getElementById('village-select').closest('.form-group');
 
-            if (role === 'instantiation') {
+            if (role === 'instance') {
                 subCategory.style.display = 'block';
                 // districtSelect.style.display = 'block';
                 // villageSelect.style.display = 'block';
@@ -450,7 +450,7 @@
             }
 
             const userInput = document.getElementById('perorangan');
-            const operatorInput = document.getElementById('instantiation');
+            const operatorInput = document.getElementById('instance');
             if (role === 'user') {
                 operatorInput.required = false;
                 userInput.required = true;

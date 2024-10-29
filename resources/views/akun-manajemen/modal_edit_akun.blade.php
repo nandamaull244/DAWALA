@@ -324,7 +324,7 @@
         const districtSelect = document.getElementById('district-select-group');
         const villageSelect = document.getElementById('village-select-group');
 
-        if (role === 'instantiation') {
+        if (role === 'instance') {
             subCategory.style.display = 'block';
             districtSelect.style.display = 'block';
             villageSelect.style.display = 'block';
@@ -335,7 +335,7 @@
         }
 
         const userInput = document.getElementById('perorangan');
-        const operatorInput = document.getElementById('instantiation');
+        const operatorInput = document.getElementById('instance');
         if (role === 'user') {
             operatorInput.required = false;
             userInput.required = true;
@@ -357,7 +357,7 @@
         document.getElementById('userId').value = userData.id;
         
         // Populate form fields
-        if(userData.role == 'instantiation'){
+        if(userData.role == 'instance'){
             document.getElementById('sub-category').style.display = 'block';
             
             document.querySelector('select[name="registration_type"]').value = userData.registration_type;
