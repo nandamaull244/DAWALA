@@ -181,13 +181,44 @@
             loop: true,
             center: true,
             dots: false,
-            nav: true,
+            nav: false,
             navText : [
                 '<i class="bi bi-chevron-left"></i>',
                 '<i class="bi bi-chevron-right"></i>'
             ],
             responsive: {
                 0:{
+                    items:1
+                },
+                768:{
+                    items:2
+                },
+                992:{
+                    items:3
+                }
+            }
+        });
+    });
+
+    // team carousel
+    $(document).ready(function(){
+        $(".team-carousel").owlCarousel({
+            autoplay: true,
+            smartSpeed: 200,
+            margin: 25,
+            loop: true,
+            center: true,
+            dots: false,
+            nav: false,
+            navText : [
+                '<i class="bi bi-chevron-left"></i>',
+                '<i class="bi bi-chevron-right"></i>'
+            ],
+            responsive: {
+                0:{
+                    items:1
+                },
+                576:{
                     items:1
                 },
                 768:{
