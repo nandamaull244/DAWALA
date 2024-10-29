@@ -42,7 +42,7 @@ class ArticleController extends Controller
             }
         }
 
-        return DataTables::of($query)
+        return DataTables::of($query->get())
             ->addIndexColumn()
             ->addColumn('action', function($row){
                 $hashedId = $row->getHashedId();
@@ -103,6 +103,8 @@ class ArticleController extends Controller
                 $image = $request->file('image');
                 $filename = Str::random(12) . strtotime(date('dmY')) . '.' . $image->getClientOriginalExtension();
 
+                Storage::makeDirectory('public/uploads/articles');
+
                 if ($image->getSize() > 5 * 1024 * 1024) { 
                     $img = Image::make($image->getRealPath());
                     $img->resize(2400, null, function ($constraint) {
@@ -122,7 +124,7 @@ class ArticleController extends Controller
 
             $article->save();
 
-            return redirectByRole('admin', 'article', 'index', ['success' => 'Artikel baru berhasil dibuat!']);
+            return redirectByRole('admin', 'article.index', ['success' => 'Artikel baru berhasil dibuat!']);
         } catch (\Exception $e) {
             return redirect()->route('admin.article.create')
                 ->withInput()
@@ -151,7 +153,7 @@ class ArticleController extends Controller
     {
         $article = Article::findByHash($hashedId);
         if (!$article) {
-            return redirectByRole(auth()->user()->role, 'article', 'index', ['error' => 'Data Artikel Tidak Ditemukan']);
+            return redirectByRole(auth()->user()->role, 'article.index', ['error' => 'Data Artikel Tidak Ditemukan']);
         }
         return view('article.edit', compact('article'));
     }
@@ -167,7 +169,7 @@ class ArticleController extends Controller
     {
         $article = Article::findByHash($hashedId);
         if (!$article) {
-            return redirectByRole(auth()->user()->role, 'article', 'index', ['error' => 'Data Artikel Tidak Ditemukan']);
+            return redirectByRole(auth()->user()->role, 'article.index', ['error' => 'Data Artikel Tidak Ditemukan']);
         }
 
         $validatedData = $request->validate([
@@ -208,7 +210,7 @@ class ArticleController extends Controller
 
             $article->update();
 
-            return redirectByRole('admin', 'article', 'index', ['success' => 'Artikel "' . $article->title . '" berhasil diperbarui!']);
+            return redirectByRole('admin', 'article.index', ['success' => 'Artikel "' . $article->title . '" berhasil diperbarui!']);
         } catch (\Exception $e) {
             return redirect()->route('admin.article.edit', $hashedId)
                 ->withInput()
@@ -226,7 +228,7 @@ class ArticleController extends Controller
     {
         $article = Article::findByHash($hashedId);
         if (!$article) {
-            return redirectByRole(auth()->user()->role, 'article', 'index', ['error' => 'Data Artikel Tidak Ditemukan']);
+            return redirectByRole(auth()->user()->role, 'article.index', ['error' => 'Data Artikel Tidak Ditemukan']);
         } else {
             $article->delete();
             return response()->json(['success' => 'Artikel "' . $article->title . '" berhasil dihapus!']);

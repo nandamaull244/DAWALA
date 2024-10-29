@@ -11,7 +11,7 @@ class Notification extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = "notifications";
-    protected $fillable = ['user_id', 'action', 'title', 'body', 'created_at'];
+    protected $fillable = ['user_id', 'action', 'title', 'body', 'created_at', 'updated_at'];
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
     protected $dates = ['deleted_at'];

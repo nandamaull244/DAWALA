@@ -38,11 +38,10 @@ class AuthController extends Controller
                         return redirect()->route('admin.dashboard')->with('success', 'Anda berhasil Login sebagai Admin');
                     case 'operator':
                         return redirect()->route('operator.dashboard')->with('success', 'Anda berhasil Login sebagai Operator');
-                    case 'instantiation':
-                        return redirect()->route('instantiation.dashboard')->with('success', 'Anda berhasil Login sebagai Instantiation');
+                    case 'institute':
+                        return redirect()->route('institute.dashboard')->with('success', 'Anda berhasil Login sebagai Instansi');
                     case 'user':
-                    default:
-                        return redirect()->route('user.user.dashboard')->with('success', 'Anda berhasil Login');
+                        return redirect()->route('user.dashboard')->with('success', 'Selamat Datang di Sistem DAWALA, ' . $user->full_name);
                 }
             } else {
                 return redirect()->back()->with('error', 'NIK atau Password tidak sesuai');
@@ -124,12 +123,12 @@ class AuthController extends Controller
             'no_kk' => 'required|string|digits:16',
             'email' => 'required|email|unique:users,email',
             'phone_number' => 'required|string|digits_between:10,14',
-            'role' => 'required|in:admin,operator,user,instantiation',
+            'role' => 'required|in:admin,operator,user,institute',
             'password' => 'required|min:8|confirmed',
             'password_confirmation' => 'required|same:password',
         ];
 
-        if ($request->input('role') === 'instantiation') {
+        if ($request->input('role') === 'institute') {
             $rules['registration_type'] = 'required|string';
             $rules['village_id'] = 'required|exists:villages,id';
         }
@@ -161,13 +160,13 @@ class AuthController extends Controller
                 'address' => $request->address,
                 'no_kk' => $request->no_kk,
                 'email' => $request->email,
-                'district_id' => $request->role === 'instantiation' ? $request->district_id : null,
-                'village_id' => $request->role === 'instantiation' ? $request->village_id : null,
+                'district_id' => $request->role === 'institute' ? $request->district_id : null,
+                'village_id' => $request->role === 'institute' ? $request->village_id : null,
                 'phone_number' => $request->phone_number,
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
                 'registration_status' => $request->role === 'user' ? 'Completed' : 'Process',
-                'registration_type' => $request->role === 'instantiation' ? $request->registration_type : 'User, Perorangan',
+                'registration_type' => $request->role === 'institute' ? $request->registration_type : 'User, Perorangan',
             ]);
 
             return redirect()->route('login.index')->with('success', 'Pendaftaran berhasil! Silakan login.');

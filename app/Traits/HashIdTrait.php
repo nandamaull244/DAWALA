@@ -11,8 +11,27 @@ trait HashIdTrait
 
     public static function findByHash($hash)
     {
-        return static::all()->first(function ($model) use ($hash) {
-            return $model->getHashedId() === $hash;
-        });
+        foreach (static::all() as $model) {
+            if ($model->getHashedId() === $hash) {
+                return $model;
+            }
+        }
+        return null;
+    }
+
+    public static function decodeHash($hash)
+    {
+        foreach (static::all() as $model) {
+            if ($model->getHashedId() === $hash) {
+                return $model->id;
+            }
+        }
+        return null;
+    }
+
+    public function scopeWhereHash($query, $hash)
+    {
+        $id = static::decodeHash($hash);
+        return $query->where('id', $id);
     }
 }

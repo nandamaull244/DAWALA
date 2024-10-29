@@ -19,8 +19,8 @@
                     @include('layouts.partials.sidebar.sidebar-admin')
                 @endif
 
-                @if (Auth::user()->role == 'instantiation')
-                    @include('layouts.partials.sidebar.sidebar-instantiation')
+                @if (Auth::user()->role == 'institute')
+                    @include('layouts.partials.sidebar.sidebar-institute')
                 @endif
 
                 @if (Auth::user()->role == 'operator')

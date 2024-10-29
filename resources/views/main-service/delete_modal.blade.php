@@ -17,8 +17,10 @@
     </div>
 </div>
 
-<script>
-    function deleteData() {
-        $('#deleteModal').modal('hide');
-    }
-</script>
+@push('scripts')
+    <script>
+        function deleteData() {
+            $('#deleteModal').modal('hide');
+        }
+    </script>
+@endpush

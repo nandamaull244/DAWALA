@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('service_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('service_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->enum('image_type', ['Kartu Keluarga', 'Bukti Keterbatasan']);
+            $table->string('image_type');
             $table->string('image_path');
+            $table->string('original_name');
             $table->timestamps();
             $table->softDeletes();
         });

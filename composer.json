@@ -12,8 +12,8 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
-        "maatwebsite/excel": "^1.1",
-        "phpoffice/phpspreadsheet": "^3.3",
+        "maatwebsite/excel": "*",
+        "phpoffice/phpspreadsheet": "^1.29",
         "vinkla/hashids": "^10.0",
         "yajra/laravel-datatables-oracle": "^10.11"
     },
@@ -33,7 +33,9 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helpers/helpers.php"
+            "app/Helpers/CRUDHelpers.php",
+            "app/Helpers/TimeHelpers.php",
+            "app/Helpers/GlobalHelpers.php"
         ]
     },
     "autoload-dev": {

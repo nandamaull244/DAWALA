@@ -45,7 +45,6 @@
 <body>
     <div id="auth">
         <div class="row h-100 justify-content-center align-items-center my-5 mb-5">
-            <!-- Added margin top and bottom -->
             <div class="col-lg-8 col-6">
                 <div id="auth-left">
                     <h4 class="auth-title text-center">Registrasi Akun</h4>
