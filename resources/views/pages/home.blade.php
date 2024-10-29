@@ -211,66 +211,28 @@
                 </p>
             </div>
             <div class="row g-4 justify-content-center">
-                <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.2s">
-                    <div class="dokumentasi-item">
-                        <div class="dokumentasi-img">
-                            <img src="{{ asset('assets') }}/img/dokumentasi-1.jpeg" class="img-fluid rounded-top w-100"
-                                alt="">
-
-                        </div>
-                        <div class="dokumentasi-content p-4">
-                            <div class="dokumentasi-comment d-flex justify-content-between mb-3">
-                                <div class="small"><span class="fa fa-user text-primary"></span> Tim DAWALA</div>
-                                <div class="small"><span class="fa fa-calendar text-primary"></span> 16 Januari 2015
+                <div class="row g-4 justify-content-center">
+                    <div class="owl-carousel dokumentasi-carousel">
+                        @foreach($articles as $article)
+                            <div class="dokumentasi-item">
+                                <div class="dokumentasi-img">
+                                    @if($article->image_name)
+                                        <img src="{{ asset('storage/' . $article->image_name) }}" class="img-fluid rounded-top w-100" alt="{{ $article->title }}">
+                                    @else
+                                        <img src="{{ asset('assets/img/logo.png') }}" class="img-fluid rounded-top w-75" alt="No Image">
+                                    @endif
                                 </div>
-
+                                <div class="dokumentasi-content p-4">
+                                    <div class="dokumentasi-comment d-flex justify-content-between mb-3">
+                                        <div class="small"><span class="fa fa-user text-primary"></span> {{ $article->user->full_name }}</div>
+                                        <div class="small"><span class="fa fa-calendar text-primary"></span> {{ $article->created_at->format('d F Y') }}</div>
+                                    </div>
+                                    <a href="{{ route('page.documentation.detail', $article) }}" class="h4 d-inline-block mb-3">{{ $article->title }}</a>
+                                    <p class="mb-3">{{ Str::limit(strip_tags(htmlspecialchars_decode($article->body)), 150) }}</p>
+                                    <a href="{{ route('page.documentation.detail', $article) }}" class="btn p-0">Selengkapnya <i class="fa fa-arrow-right"></i></a>
+                                </div>
                             </div>
-                            <a href="#" class="h4 d-inline-block mb-3">Kunjungan Tim DAWALA untuk pembuatan eKTP</a>
-                            <p class="mb-3">Tim DAWALA mendatangi langsung ke rumah masyarakat disabilitas untuk
-                                pembuatan
-                                eKTP.</p>
-                            <a href="#" class="btn p-0">Selengkapnya <i class="fa fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.4s">
-                    <div class="dokumentasi-item">
-                        <div class="dokumentasi-img">
-                            <img src="{{ asset('assets') }}/img/dokumentasi-2.jpeg" class="img-fluid rounded-top w-100"
-                                alt="">
-
-                        </div>
-                        <div class="dokumentasi-content p-4">
-                            <div class="dokumentasi-comment d-flex justify-content-between mb-3">
-                                <div class="small"><span class="fa fa-user text-primary"></span> Tim DAWALA</div>
-                                <div class="small"><span class="fa fa-calendar text-primary"></span> 25 Maret 2022</div>
-
-                            </div>
-                            <a href="#" class="h4 d-inline-block mb-3">Program Baru DAWALA</a>
-                            <p class="mb-3">Tim DAWALA berhasil memberikan pelayanan yang sangat baik bagi masyarakat
-                                penyandang disabilitas, lansia, maupun ODGJ untuk pembuatan eKTP dan KK.</p>
-                            <a href="#" class="btn p-0">Read More <i class="fa fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.6s">
-                    <div class="dokumentasi-item">
-                        <div class="dokumentasi-img">
-                            <img src="{{ asset('assets') }}/img/dokumentasi-3.jpeg" class="img-fluid rounded-top w-100"
-                                alt="">
-
-                        </div>
-                        <div class="dokumentasi-content p-4">
-                            <div class="dokumentasi-comment d-flex justify-content-between mb-3">
-                                <div class="small"><span class="fa fa-user text-primary"></span> Tim DAWALA</div>
-                                <div class="small"><span class="fa fa-calendar text-primary"></span> 13 Juni 2023</div>
-
-                            </div>
-                            <a href="#" class="h4 d-inline-block mb-3">Kunjungan pelayanan ke rumah Pak Sutisna</a>
-                            <p class="mb-3">Tim DAWALA berhasil membantu Pak Sutisna untuk pembuatan eKTP langsung di
-                                kediamannya. Diketahui Pak Sutisna adalah seorang penyandang disabilitas..</p>
-                            <a href="#" class="btn p-0">Read More <i class="fa fa-arrow-right"></i></a>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
