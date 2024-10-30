@@ -110,7 +110,7 @@ class AuthController extends Controller
             ? 'Anda berhasil logout dari operator.'
             : 'Anda berhasil logout dari admin.';
         
-        return redirect()->route('login.admin.index')->with('success', $message);
+        return redirect()->route('login-admin.index')->with('success', $message);
     }
 
     public function register(Request $request)
