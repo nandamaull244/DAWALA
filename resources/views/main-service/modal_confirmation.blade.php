@@ -18,13 +18,18 @@
             font-size: 12px;
             white-space: nowrap;
         }
+
+        .no-click {
+            pointer-events: none;
+            opacity: 0.7;
+        }
     </style>
 @endpush
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="confirmationModalLabel">Konfirmasi Pengajuan</h5>
+                <h5 class="modal-title" id="confirmationModalLabel">Status Konfirmasi Pengajuan</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="confirmationForm" method="POST" novalidate>
@@ -37,8 +42,11 @@
 
                         <div class="row">
                             <div class="d-flex gap-2 mb-3 justify-content-center">
-                                <button type="button" class="btn btn-outline-danger w-50" style="margin:0 !important;" id="btnTolak" @if(!$isAdminOrOperator) style="cursor: default;" @endif>Tolak</button>
-                                <button type="button" class="btn btn-outline-success w-50" id="btnTerima" @if(!$isAdminOrOperator) style="cursor: default;" @endif>Terima</button>
+                                <button type="button" class="btn btn-outline-danger w-50 {{ !$isAdminOrOperator ? 'no-click' : '' }}" 
+                                        style="margin:0 !important;" 
+                                        id="btnTolak">Tolak</button>
+                                <button type="button" class="btn btn-outline-success w-50 {{ !$isAdminOrOperator ? 'no-click' : '' }}" 
+                                        id="btnTerima">Terima</button>
                             </div>
                         </div>
 
@@ -70,6 +78,13 @@
     <script>
         $(document).ready(function() {
             let selectedStatus = '';
+
+             @if(!$isAdminOrOperator)
+                $('#btnTolak, #btnTerima').on('click', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+            @endif
 
             $('#btnTerima').click(function() {
                 $(this).removeClass('btn-outline-success').addClass('btn-success active');
