@@ -288,8 +288,23 @@ class UserController extends Controller
             ->editColumn('birth_date', function($row) {
                 return getFlatpickrDate($row->birth_date);
             })
+            ->editColumn('registration_type', function($row) {
+                $instaceName = optional($row->instance)->name ?? '';
+                $html = '<div class="d-flex flex-column justify-content-center align-items-center text-center">';
+                if ($row->registration_type == 'Operator') {
+                    $html .= '<span class="badge bg-danger mb-1">'. strtoupper($row->registration_type) .'</span>';
+                } elseif (str_contains($row->registration_type, 'Intansi')) {
+                    $html .= '<a data-bs-toggle="modal" data-bs-target="#instanceModal" style="cursor: pointer;" class="badge bg-warning mb-1" data-instance_name="'. $instaceName .'">'. strtoupper($row->registration_type) .'</a>';
+                } elseif ($row->registration_type == 'User') {
+                    $html .= '<span class="badge bg-success mb-1">'. strtoupper($row->registration_type) .'</span>';
+                } else {
+                    $html .= '<span class="badge bg-secondary mb-1">-</span>';
+                }
+                $html .= '</div>';
+                return $html;
+            })
             ->editColumn('registration_status', function($row) {
-                $html = '';
+                $html = '<div class="d-flex flex-column justify-content-center align-items-center text-center">';
                 if ($row->registration_status == 'Process') {
                     $html .= '<span class="badge bg-warning mb-1">Proses Verifikasi</span>';
                 } elseif ($row->registration_status == 'Rejected') {
@@ -299,6 +314,7 @@ class UserController extends Controller
                 } else {
                     $html .= '<span class="badge bg-secondary mb-1">-</span>';
                 }
+                $html .= '</div>';
                 return $html;
             })
             ->filterColumn('district', function($query, $keyword) {
@@ -311,7 +327,7 @@ class UserController extends Controller
                     $q->where('name', 'like', "%{$keyword}%");
                 });
             })
-            ->rawColumns(['action', 'registration_status'])
+            ->rawColumns(['action', 'registration_status', 'registration_type'])
             ->make(true);
     }
 

@@ -292,8 +292,8 @@ Data Seluruh Akun
     </div>
 </section>
 
-@include('account-management.delete_modal_akun')
 @include('account-management.modal_filter')
+@include('account-management.modal_instance')
 @endsection
 
 @push('scripts')
