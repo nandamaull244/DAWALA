@@ -216,7 +216,7 @@ Verifikasi Akun
 @endsection
 
 @section('page-subheading')
-Data Seluruh Akun yang membutuhkan verifikasi
+Data Seluruh Akun yang Membutuhkan Verifikasi
 @endsection
 
 @section('content')

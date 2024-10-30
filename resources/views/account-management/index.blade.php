@@ -212,11 +212,11 @@
 @endpush
 
 @section('page-heading')
-Akun Manajemen
+Manajemen Akun
 @endsection
 
 @section('page-subheading')
-Data Seluruh Akun
+Data Seluruh Akun yang Terdaftar di DAWALA
 @endsection
 
 @section('content')
