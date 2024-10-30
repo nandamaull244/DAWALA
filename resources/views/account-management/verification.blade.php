@@ -212,11 +212,11 @@
 @endpush
 
 @section('page-heading')
-Akun Manajemen
+Verifikasi Akun
 @endsection
 
 @section('page-subheading')
-Data Seluruh Akun
+Data Seluruh Akun yang membutuhkan verifikasi
 @endsection
 
 @section('content')
@@ -237,13 +237,6 @@ Data Seluruh Akun
                             </button>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-12">
-                        <div class="col-md-5 float-end">
-                            <a class="btn btn-primary w-100" href="{{ route('admin.manajemen-akun.create') }}">
-                                <i class="bi bi-plus-circle"></i> Tambah User
-                            </a>
-                        </div>
-                    </div>
 
                     <div class="table-container">
                         <div class="col-md-12">
@@ -261,9 +254,9 @@ Data Seluruh Akun
                                         <th nowrap>No</th>
                                         <th nowrap>NIK</th>
                                         <th nowrap>No KK</th>
-                                        <th nowrap>Nama Lengkap</th>
                                         <th nowrap>Email</th>
                                         <th nowrap>No HP</th>
+                                        <th nowrap>Nama Lengkap</th>
                                         <th nowrap>Tanggal Lahir</th>
                                         <th nowrap>Gender</th>
                                         <th nowrap>Alamat</th>
@@ -304,7 +297,7 @@ Data Seluruh Akun
                 serverSide: true,
                 responsive: true,
                 ajax: {
-                    url: '{{ route("admin.user.data") }}',
+                    url: '{{ route("admin.user.verification.data") }}',
                     type: 'GET',
                     data: function (d) {
                         d.time = $('#selectedTime').val();
@@ -403,27 +396,99 @@ Data Seluruh Akun
                 $('#village_id').val('');
                 table.draw();
             };
-        });
 
-        function getVillages(e) {
-            var districtId = $(e).val();
-            if(districtId) {
-                $.ajax({
-                    url: "{{ route('get-villages', '') }}/" + districtId,
-                    type: "GET",
-                    dataType: "json",
-                    success:function(data) {
-                        $('#desa').empty();
-                        $('#desa').append('<option value="">Pilih Desa</option>');
-                        $.each(data, function(key, value) {
-                            $('#desa').append('<option value="'+ value.id +'">'+ value.name +'</option>');
+            // Make functions globally available
+            window.approveUser = function(userId) {
+                Swal.fire({
+                    title: 'Konfirmasi Approval',
+                    text: "Apakah anda yakin ingin menyetujui user ini?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Setuju!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/admin/verification/${userId}/approve`,
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire(
+                                    'Berhasil!',
+                                    'User telah disetujui.',
+                                    'success'
+                                );
+                                table.ajax.reload();
+                            },
+                            error: function(xhr) {
+                                Swal.fire(
+                                    'Error!',
+                                    xhr.responseJSON?.message || 'Terjadi kesalahan saat memproses permintaan.',
+                                    'error'
+                                );
+                            }
                         });
                     }
                 });
-            } else {
-                $('#desa').empty();
-                $('#desa').append('<option value="">Pilih Desa</option>');
-            }
-        };
+            };
+
+            window.rejectUser = function(userId) {
+                Swal.fire({
+                    title: 'Konfirmasi Penolakan',
+                    text: "Apakah anda yakin ingin menolak user ini?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6', 
+                    confirmButtonText: 'Ya, Tolak!',
+                    cancelButtonText: 'Batal',
+                    inputValidator: (value) => {
+                        if (!value) {
+                            return 'Anda harus memasukkan alasan penolakan!'
+                        }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/admin/verification/${userId}/reject`,
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                reason: result.value
+                            },
+                            success: function(response) {
+                                Swal.fire(
+                                    'Ditolak!',
+                                    'User telah ditolak.',
+                                    'success'
+                                );
+                                table.ajax.reload();
+                            },
+                            error: function(xhr) {
+                                Swal.fire(
+                                    'Error!',
+                                    xhr.responseJSON?.message || 'Terjadi kesalahan saat memproses permintaan.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            };
+
+            // Fungsi reset filter
+            window.resetFilters = function() {
+                $('#role').val('');
+                $('#registration_type').val('');
+                $('#status').val('');
+                $('#district_id').val('');
+                $('#village_id').val('');
+                table.draw();
+            };
+        });
     </script>
 @endpush

@@ -214,62 +214,15 @@ class UserController extends Controller
         $districts = District::with('villages')->get();
         $villages = Village::all();
         $users = User::whereIn('registration_status', ['Process'])->get();
-        return view('manajemen-akun.verification_table', compact('districts', 'villages', 'users'));
+        return view('account-management.verification', compact('districts', 'villages', 'users'));
     }
 
     public function getData(Request $request)
     {
         $query = User::with(['district', 'village'])->where('role', '!=', 'admin');
 
-        if ($request->filled('search') && $request->search['value']) {
-            $searchValue = $request->search['value'];
-            $query->where(function($q) use ($searchValue) {
-                $q->whereHas('district', function($districtQuery) use ($searchValue) {
-                    $districtQuery->where('name', 'like', "%{$searchValue}%");
-                })
-                ->orWhereHas('village', function($villageQuery) use ($searchValue) {
-                    $villageQuery->where('name', 'like', "%{$searchValue}%");
-                });
-            });
-        }
+        $query = $this->applyFilters($query, $request);
 
-        if ($request->filled('genders')) {
-            $query->whereIn('gender', explode(',', $request->genders));
-        }
-
-        if ($request->filled('types')) {
-            $query->whereIn('registration_type', explode(',', $request->types));
-        }
-
-        if ($request->filled('kecamatan')) {
-            $query->whereHas('district', function($q) use ($request) {
-                $q->where('id', $request->kecamatan);
-            });
-        }
-
-        if ($request->filled('desa')) {
-            $query->whereHas('village', function($q) use ($request) {
-                $q->where('id', $request->desa);
-            });
-        }
-
-        if ($request->filled('time')) {
-            $order = $request->time == 'Terbaru' ? 'desc' : 'asc';
-            $query->orderBy('created_at', $order);
-        }   
-
-        if ($request->filled('gender')) {
-            $query->whereIn('gender', explode(',', $request->gender));
-        }
-
-        if ($request->filled('rt')) {
-            $query->where('rt', 'like', '%' . $request->rt . '%');
-        }
-        
-        if ($request->filled('rw')) {
-            $query->where('rw', 'like', '%' . $request->rw . '%');
-        }
-        
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('action', function($row) {
@@ -294,7 +247,7 @@ class UserController extends Controller
                 if ($row->registration_type == 'Operator') {
                     $html .= '<span class="badge bg-danger mb-1">'. strtoupper($row->registration_type) .'</span>';
                 } elseif (str_contains($row->registration_type, 'Intansi')) {
-                    $html .= '<a data-bs-toggle="modal" data-bs-target="#instanceModal" style="cursor: pointer;" class="badge bg-warning mb-1" data-instance_name="'. $instaceName .'">'. strtoupper($row->registration_type) .'</a>';
+                    $html .= '<a data-bs-toggle="modal" data-bs-target="#instanceModal" style="cursor: pointer;" class="badge bg-primary mb-1" data-instance_name="'. $instaceName .'">'. strtoupper($row->registration_type) .'</a>';
                 } elseif ($row->registration_type == 'User') {
                     $html .= '<span class="badge bg-success mb-1">'. strtoupper($row->registration_type) .'</span>';
                 } else {
@@ -334,49 +287,16 @@ class UserController extends Controller
     public function getVerificationData(Request $request)
     {
         $query = User::with(['district', 'village'])
-            ->where('registration_status', 'Process')
-            ->where('role', '!=', 'admin')
-            ->select([
-                'id',
-                'nik',
-                'no_kk',
-                'username',
-                'email',
-                'phone_number',
-                'full_name',
-                'birth_date',
-                'gender',
-                'address',
-                'rt',
-                'rw',
-                'district_id',
-                'village_id',
-                'role',
-                'registration_type',
-                'registration_status'
-            ]);
+        ->where('role', '!=', 'admin')
+        ->where('registration_status', 'Process');
+        // ->where('registration_type', 'LIKE', '%Instansi%');
 
-        // Apply filters
-        if ($request->has('role') && $request->role != '') {
-            $query->where('role', $request->role);
-        }
-
-        if ($request->has('registration_type') && $request->registration_type != '') {
-            $query->where('registration_type', $request->registration_type);
-        }
-
-        if ($request->has('district_id') && $request->district_id != '') {
-            $query->where('district_id', $request->district_id);
-        }
-
-        if ($request->has('village_id') && $request->village_id != '') {
-            $query->where('village_id', $request->village_id);
-        }
+        $query = $this->applyFilters($query, $request);
 
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $btn = '<div class="btn-group" role="group">';
+                $btn = '<div class="btn-group" role="group">';    
                 $btn .= '<button onclick="approveUser('.$row->id.')" class="btn btn-success btn-sm">Approve</button>';
                 $btn .= '<button onclick="rejectUser('.$row->id.')" class="btn btn-danger btn-sm">Reject</button>';
                 $btn .= '</div>';
@@ -388,7 +308,46 @@ class UserController extends Controller
             ->addColumn('village_name', function($row) {
                 return $row->village ? $row->village->name : '-';
             })
-            ->rawColumns(['action'])
+            ->editColumn('registration_type', function($row) {
+                $instaceName = optional($row->instance)->name ?? '';
+                $html = '<div class="d-flex flex-column justify-content-center align-items-center text-center">';
+                if ($row->registration_type == 'Operator') {
+                    $html .= '<span class="badge bg-danger mb-1">'. strtoupper($row->registration_type) .'</span>';
+                } elseif (str_contains($row->registration_type, 'Intansi')) {
+                    $html .= '<a data-bs-toggle="modal" data-bs-target="#instanceModal" style="cursor: pointer;" class="badge bg-primary mb-1" data-instance_name="'. $instaceName .'">'. strtoupper($row->registration_type) .'</a>';
+                } elseif ($row->registration_type == 'User') {
+                    $html .= '<span class="badge bg-success mb-1">'. strtoupper($row->registration_type) .'</span>';
+                } else {
+                    $html .= '<span class="badge bg-secondary mb-1">-</span>';
+                }
+                $html .= '</div>';
+                return $html;
+            })
+            ->editColumn('registration_status', function($row) {
+                $html = '<div class="d-flex flex-column justify-content-center align-items-center text-center">';
+                if ($row->registration_status == 'Process') {
+                    $html .= '<span class="badge bg-warning mb-1">Proses Verifikasi</span>';
+                } elseif ($row->registration_status == 'Rejected') {
+                    $html .= '<span class="badge bg-danger mb-1">Ditolak</span>';
+                } elseif ($row->registration_status == 'Completed') {
+                    $html .= '<span class="badge bg-success mb-1">Terverifikasi</span>';
+                } else {
+                    $html .= '<span class="badge bg-secondary mb-1">-</span>';
+                }
+                $html .= '</div>';
+                return $html;
+            })
+            ->filterColumn('district', function($query, $keyword) {
+                $query->whereHas('district', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('village', function($query, $keyword) {
+                $query->whereHas('village', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
+                });
+            })
+            ->rawColumns(['action', 'registration_status', 'registration_type'])
             ->make(true);
     }
 
@@ -456,6 +415,45 @@ class UserController extends Controller
                 'message' => 'Terjadi kesalahan saat menolak user'
             ], 500);
         }
+    }
+
+    private function applyFilters($query, $request)
+    {
+        if ($request->filled('genders') || $request->filled('gender')) {
+            $genderFilter = $request->genders ?? $request->gender;
+            $query->whereIn('gender', explode(',', $genderFilter));
+        }
+
+        if ($request->filled('types')) {
+            $query->whereIn('registration_type', explode(',', $request->types));
+        }
+
+        if ($request->filled('kecamatan')) {
+            $query->whereHas('district', function($q) use ($request) {
+                $q->where('id', $request->kecamatan);
+            });
+        }
+
+        if ($request->filled('desa')) {
+            $query->whereHas('village', function($q) use ($request) {
+                $q->where('id', $request->desa);
+            });
+        }
+
+        if ($request->filled('time')) {
+            $order = $request->time == 'Terbaru' ? 'desc' : 'asc';
+            $query->orderBy('created_at', $order);
+        }
+
+        if ($request->filled('rt')) {
+            $query->where('rt', 'like', '%' . $request->rt . '%');
+        }
+        
+        if ($request->filled('rw')) {
+            $query->where('rw', 'like', '%' . $request->rw . '%');
+        }
+
+        return $query;
     }
 
 }
