@@ -292,9 +292,7 @@ class UserController extends Controller
 
     public function getVerificationData(Request $request)
     {
-        $query = User::with(['district', 'village'])
-        ->where('role', '!=', 'admin')
-        ->where('registration_status', 'Process');
+        $query = User::with(['district', 'village'])->where('role', '!=', 'admin')->where('registration_status', 'Process');
         // ->where('registration_type', 'LIKE', '%Instansi%');
 
         $query = $this->applyFilters($query, $request);

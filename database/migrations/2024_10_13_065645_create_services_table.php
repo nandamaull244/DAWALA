@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('longitude');
             $table->string('service_type');
             $table->string('service_category');
-            $table->enum('service_status', ['Not Yet', 'Process', 'Rejected', 'Completed'])->default('Not Yet'); 
-            $table->enum('working_status', ['Not Yet', 'Process', 'Late', 'Done'])->default('Not Yet'); 
+            $table->enum('service_status', ['-', 'Not Yet', 'Process', 'Rejected', 'Completed'])->default('Not Yet'); 
+            $table->enum('working_status', ['-', 'Not Yet', 'Process', 'Late', 'Done'])->default('Not Yet'); 
             $table->enum('document_recieved_status', ['Not Yet Recieved', 'Recieved'])->default('Not Yet Recieved');
             $table->date('visit_schedule')->nullable();
             $table->foreignId('approval_by')->nullable()->constrained('users')->onUpdate('cascade')->onDelete('cascade');

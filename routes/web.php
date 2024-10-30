@@ -54,6 +54,8 @@ Route::group(['prefix' => 'operator', 'middleware' => 'auth:operator', 'as' => '
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/articles/data', [ArticleController::class, 'getData'])->name('article.data');
 
+    Route::get('/manajemen-akun/verification', [UserController::class, 'verification'])->name('manajemen-akun.verification');
+    Route::resource('/manajemen-akun', UserController::class);
 
     Route::resource('/pelayanan', MainServiceController::class);  
     Route::get('/service/data', [MainServiceController::class, 'getData'])->name('pelayanan.data');
