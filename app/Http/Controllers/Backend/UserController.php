@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Backend;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 use App\Models\District;
 use App\Models\Village;
+use App\Models\User;
+use App\Models\Instance;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\User;
-// use App\Models\District;
-// use App\Models\Village;
 use Yajra\DataTables\Facades\DataTables;
 class UserController extends Controller
 {
@@ -108,21 +107,16 @@ class UserController extends Controller
             ]);
 
             if($request->role === 'instance') {
-                $instance = Instance::find('user_id', auth()->user()->id)->first();
+                $instance = Instance::find('user_id', $user->id)->first();
                 if(empty($instance)) {
                     $instance = Instance::create([
-                        'user_id' => auth()->user()->id,
-                    ]);
-                } else {
-                    InstanceUser::create([
-                        'instance_id' => $instance->id,
+                        'name' => $request->instance_name,
                         'user_id' => $user->id,
                     ]);
-                }
+                } 
             }
 
-            return redirect()->route('admin.manajemen-akun.index')
-                           ->with('success', 'Akun berhasil dibuat');
+            return redirect()->route('admin.manajemen-akun.index')->with('success', 'Akun berhasil dibuat');
         } catch (\Exception $e) {
             return redirect()->route('admin.manajemen-akun.create')->with('error', 'Pendaftaran gagal! Silakan coba lagi.')->withInput();
         }
@@ -150,7 +144,7 @@ class UserController extends Controller
     {
         $districts = District::with('villages')->get();
         $villages = Village::all();
-        $user = User::whereHash($hashedId)->first();
+        $user = User::with('instance')->whereHash($hashedId)->first();
         return view('account-management.edit', compact('user', 'districts', 'villages'));
     }
 
@@ -163,25 +157,45 @@ class UserController extends Controller
      */
     public function update(Request $request, $hashedId)
     {
-        $user = User::whereHash($hashedId);
-        $validate = $request->validate([
-            'nik' => 'string|digits:16',
-            'full_name' => 'string|max:255',
-            'birth_date' => 'string',
-            'gender' => 'in:Laki-Laki,Perempuan',
-            'rt' => 'string',
-            'rw' => 'string',
-            'address' => 'string',
-            'district_id' => 'exists:districts,id',
-            'village_id' => 'exists:villages,id',
-            'no_kk' => 'string|digits:16',
-            'email' => 'unique:users',
-            'phone_number' => 'string|digits_between:10,14',
-            'registration_type' => 'string',
-        ]);
+        $user = User::whereHash($hashedId)->first();
 
-        $user->update($validate);
-        return redirect()->route('admin.manajemen-akun.index')->with('success', 'Akun berhasil diubah');
+        if (!$user) {
+            return redirect()->route('admin.manajemen-akun.index')->with('error', 'User tidak ditemukan')->withInput();
+        }
+
+        try {
+            $user->update([
+                'nik' => $request->nik,
+                'full_name' => $request->full_name,
+                'birth_date' => $request->birth_date,
+                'gender' => $request->gender,
+                'rt' => $request->rt,
+                'rw' => $request->rw,
+                'address' => $request->address,
+                'no_kk' => $request->no_kk,
+                'email' => $request->email,
+                'district_id' => $request->role === 'instance' ? $request->district_id : null,
+                'village_id' => $request->role === 'instance' ? $request->village_id : null,
+                'phone_number' => $request->phone_number,
+                'role' => $request->role,
+                'registration_status' => $request->role === 'instance' ? 'Process' : 'Completed',
+                'registration_type' => $request->role === 'instance' ? $request->registration_type : 'User, Perorangan',
+            ]);
+
+            if ($request->role === 'instance') {
+                $instance = Instance::where('user_id', $user->id)->first();
+                if (!$instance) {
+                    Instance::create([
+                        'name' => $request->instance_name,
+                        'user_id' => $user->id,
+                    ]);
+                }
+            }
+
+            return redirect()->route('admin.manajemen-akun.index')->with('success', 'Data akun berhasil diperbarui');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.manajemen-akun.index')->with('error', 'Perbarui data gagal! Silakan coba lagi. Error: ' . $e->getMessage())->withInput();
+        }
     }
 
     /**

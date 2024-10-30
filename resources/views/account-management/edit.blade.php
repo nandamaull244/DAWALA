@@ -14,41 +14,44 @@ Formulir Registrasi Akun
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <form id="userForm" action="{{ route("admin.manajemen-akun.store") }}" method="POST" novalidate>
-                        @csrf
+                    <form id="userForm" action="{{ route("admin.manajemen-akun.update", $user->getHashedId()) }}" method="POST" novalidate>
+                        @csrf 
+                        @method('PUT')
                         
                         <!-- Role selection -->
-                        <div class="mb-4">
-                            <div class="form-group">
-                                <label for="sub-category-select">Pilih Kategori Akun</label>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="role" id="perorangan" value="user" onclick="setRole('user')" required>
-                                    <label class="form-check-label" for="perorangan">Perorangan/Untuk Diri Sendiri sendiri</label>
-                                    @error('role')
-                                        <span>{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="role" id="instance" value="instance" onclick="setRole('instance')" required>
-                                    <label class="form-check-label" for="instance">Instansi/Lembaga</label>
-                                    @error('role')
-                                        <span>{{ $message }}</span>
-                                    @enderror
+                        @if ($user->role != 'operator')
+                            <div class="mb-4">
+                                <div class="form-group">
+                                    <label for="sub-category-select">Pilih Kategori Akun</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="role" id="perorangan" value="user" onclick="setRole('user')" @if($user->role == 'user') checked @endif required>
+                                        <label class="form-check-label" for="perorangan">Perorangan/Untuk Diri Sendiri sendiri</label>
+                                        @error('role')
+                                            <span>{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="role" id="instance" value="instance" onclick="setRole('instance')" @if($user->role == 'instance') checked @endif required>
+                                        <label class="form-check-label" for="instance">Instansi/Lembaga</label>
+                                        @error('role')
+                                            <span>{{ $message }}</span>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
 
                         <div class="row mb-1 mt-1">
                             <div class="col-md-6">
                                 <div class="form-group" id="instance_name_group" style="display: none;">
                                     <label for="instance_name">Nama Intansi</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="Nama Intansi" id="instance_name" name="instance_name" value="{{ old('nama_intansi') }}">
+                                        <input type="text" class="form-control form-control-md" data-title="Nama Intansi" id="instance_name" name="instance_name" value="{{ optional($user->instance)->name ?? '' }}">
                                         <div class="form-control-icon">
                                             <i class="bi bi-card-text"></i>
                                         </div>
                                     </div>
-                                    @error('no_kk')
+                                    @error('instance_name')
                                         <span>{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -60,10 +63,10 @@ Formulir Registrasi Akun
                                     <div class="position-relative">
                                         <select class="form-control form-control-md" data-title="Tipe Registrasi" id="registration_type" name="registration_type">
                                             <option value="">Pilih Tipe Registrasi</option>
-                                            <option value="Intansi, RT" {{ old('registration_type') == 'Intansi, RT' ? 'selected' : '' }}>RT</option>
-                                            <option value="Intansi, RW" {{ old('registration_type') == 'Intansi, RW' ? 'selected' : '' }}>RW</option>
-                                            <option value="Intansi, Yayasan" {{ old('registration_type') == 'Intansi, Yayasan' ? 'selected' : '' }}>Yayasan</option>
-                                            <option value="Intansi, Instansi" {{ old('registration_type') == 'Intansi, Instansi' ? 'selected' : '' }}>Instansi</option>
+                                            <option value="Intansi, RT" {{ $user->registration_type == 'Intansi, RT' ? 'selected' : '' }}>RT</option>
+                                            <option value="Intansi, RW" {{ $user->registration_type == 'Intansi, RW' ? 'selected' : '' }}>RW</option>
+                                            <option value="Intansi, Yayasan" {{ $user->registration_type == 'Intansi, Yayasan' ? 'selected' : '' }}>Yayasan</option>
+                                            <option value="Intansi, Instansi" {{ $user->registration_type == 'Intansi, Instansi' ? 'selected' : '' }}>Instansi</option>
                                         </select>
                                         @error('registration_type')
                                             <span>{{ $message }}</span>
@@ -85,7 +88,7 @@ Formulir Registrasi Akun
                                         <select class="form-control form-control-md" data-title="Kecamatan" id="district-select" name="district_id">
                                             <option value="">Pilih Kecamatan</option>
                                             @foreach ($districts as $district)
-                                                <option value="{{ $district->id }}" {{ old('district_id') == $district->id ? 'selected' : '' }}>
+                                                <option value="{{ $district->id }}" {{ $user->district_id == $district->id ? 'selected' : '' }}>
                                                     {{ $district->name }}
                                                 </option>
                                             @endforeach
@@ -107,7 +110,9 @@ Formulir Registrasi Akun
                                     <div class="position-relative">
                                         <select class="form-control form-control-md" data-title="Desa" id="village-select" name="village_id">
                                             @foreach($villages as $village)
-                                                <option value="{{ $village->id }}">{{ $village->name }}</option>
+                                                <option value="{{ $village->id }}" {{ $user->village_id == $village->id ? 'selected' : '' }}>
+                                                    {{ $village->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                         @error('village_id')
@@ -121,14 +126,13 @@ Formulir Registrasi Akun
                             </div>
                         </div>
 
-
                         <div class="row mb-1 mt-1">
                             <!-- NIK -->
                             <div class="col-md-6">
                                 <div class="mb-4 form-group">
                                     <label for="nik">NIK</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" value="{{ old('nik') }}" required>
+                                        <input type="text" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" value="{{ $user->nik ?? '' }}" minlength="16" required>
                                         <div class="form-control-icon">
                                             <i class="bi bi-card-text"></i>
                                         </div>
@@ -144,7 +148,7 @@ Formulir Registrasi Akun
                                 <div class="mb-4 form-group">
                                     <label for="no_kk">No KK</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="No Kartu Keluarga" id="no_kk" name="no_kk" value="{{ old('no_kk') }}" required>
+                                        <input type="text" class="form-control form-control-md" data-title="No Kartu Keluarga" id="no_kk" name="no_kk" value="{{ $user->no_kk ?? '' }}" minlength="16" required>
                                         <div class="form-control-icon">
                                             <i class="bi bi-card-text"></i>
                                         </div>
@@ -162,7 +166,7 @@ Formulir Registrasi Akun
                                 <div class="mb-4 form-group">
                                    <label for="full_name">Nama Lengkap</label>
                                    <div class="form-group position-relative has-icon-left mb-4 form-group">
-                                       <input type="text" class="form-control form-control-md" data-title="Nama Lengkap" name="full_name" id="full_name" value="{{ old('full_name') }}" required>
+                                       <input type="text" class="form-control form-control-md" data-title="Nama Lengkap" name="full_name" id="full_name" value="{{ $user->full_name ?? '' }}" required>
                                        <div class="form-control-icon">
                                            <i class="bi bi-person"></i>
                                        </div>
@@ -178,7 +182,7 @@ Formulir Registrasi Akun
                                 <div class="mb-4 form-group">
                                     <label for="email">Email (Opsional)</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="email" class="form-control form-control-md" data-title="Email" id="email" name="email" value="{{ old('email') }}">
+                                        <input type="email" class="form-control form-control-md" data-title="Email" id="email" name="email" value="{{ $user->email ?? '' }}">
                                         <div class="form-control-icon">
                                             <i class="bi bi-envelope"></i>
                                         </div>
@@ -196,7 +200,7 @@ Formulir Registrasi Akun
                                 <div class="mb-4 form-group">
                                     <label for="birth_date" class="mb-2">Tanggal Lahir</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="date" class="form-control form-control-md flatpickr-date" data-title="Tanggal Lahir" id="birth_date" placeholder="Pilih Tanggal Lahir" name="birth_date" value="{{ old('birth_date') }}" required>
+                                        <input type="date" class="form-control form-control-md flatpickr-date" data-title="Tanggal Lahir" id="birth_date" placeholder="Pilih Tanggal Lahir" name="birth_date" value="{{ $user->birth_date ?? '' }}" required>
                                         <div class="form-control-icon">
                                             <i class="bi bi-calendar"></i>
                                         </div>
@@ -212,7 +216,7 @@ Formulir Registrasi Akun
                                 <div class="mb-4 form-group">
                                     <label for="phone_number">No. Handphone (Whatsapp)</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="tel" class="form-control form-control-md" data-title="No Handphone (Whatsapp)" id="phone_number" name="phone_number" value="{{ old('phone_number') }}" required>
+                                        <input type="tel" class="form-control form-control-md" data-title="No Handphone (Whatsapp)" id="phone_number" name="phone_number" value="{{ $user->phone_number ?? '' }}" required>
                                         <div class="form-control-icon">
                                             <i class="bi bi-phone"></i>
                                         </div>
@@ -230,7 +234,7 @@ Formulir Registrasi Akun
                                 <div class="mb-4 form-group">
                                     <label for="address">Alamat</label>
                                     <div class="form-group position-relative has-icon-left mb-4 form-group">
-                                        <input type="text" class="form-control form-control-md" data-title="Alamat" id="address" name="address" value="{{ old('address') }}" required>
+                                        <input type="text" class="form-control form-control-md" data-title="Alamat" id="address" name="address" value="{{ $user->address ?? '' }}" required>
                                         <div class="form-control-icon">
                                             <i class="bi bi-house"></i>
                                         </div>
@@ -248,8 +252,8 @@ Formulir Registrasi Akun
                                    <div class="form-group ">
                                        <div class="position-relative">
                                            <select class="form-control form-control-md" data-title="Jenis Kelamin" id="gender-select" name="gender" required>
-                                               <option selected value="Laki-Laki" {{ old('gender') == 'Laki-Laki' ? 'selected' : '' }}> Laki-Laki</option>
-                                               <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : '' }}> Perempuan</option>
+                                               <option selected value="Laki-Laki" {{ $user->gender == 'Laki-Laki' ? 'selected' : '' }}> Laki-Laki</option>
+                                               <option value="Perempuan" {{ $user->gender == 'Perempuan' ? 'selected' : '' }}> Perempuan</option>
                                            </select>
                                            <div class="form-control-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
                                                <i class="bi bi-chevron-down" style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
@@ -269,7 +273,7 @@ Formulir Registrasi Akun
                                 <div class="mb-4 form-group">
                                     <label for="rt">RT</label>
                                     <div class="form-group position-relative has-icon-left mb-4 form-group">
-                                        <input type="number" class="form-control form-control-md" data-title="RT" id="rt" name="rt" value="{{ old('rt') }}" required>
+                                        <input type="number" class="form-control form-control-md" data-title="RT" id="rt" name="rt" value="{{ $user->rt ?? '' }}" required>
                                         <div class="form-control-icon">
                                             <i class="bi bi-house"></i>
                                         </div>
@@ -285,7 +289,7 @@ Formulir Registrasi Akun
                                 <div class="mb-4 form-group">
                                     <label for="rw">RW</label>
                                     <div class="form-group position-relative has-icon-left mb-4 form-group">
-                                        <input type="number" class="form-control form-control-md" data-title="RW" id="rw" name="rw" value="{{ old('rw') }}" required>
+                                        <input type="number" class="form-control form-control-md" data-title="RW" id="rw" name="rw" value="{{ $user->rw ?? '' }}" required>
                                         <div class="form-control-icon">
                                             <i class="bi bi-house"></i>
                                         </div>
@@ -299,44 +303,8 @@ Formulir Registrasi Akun
 
                         <input type="hidden" name="registration_status" id="registration_status" value="completed">
 
-                        <div class="row mb-1 mt-1">
-                            <!-- Password -->
-                            <div class="col-md-6">
-                                <div class="mb-4 form-group">
-                                    <label for="password" class="mb-2">Password (Minimal 8 karakter)</label>
-                                    <div class="form-group position-relative has-icon-left ">
-                                        <input type="password" class="form-control form-control-md" data-title="Password" placeholder="Password" name="password" id="password" required>
-                                        <div class="form-control-icon">
-                                            <i class="bi bi-shield-lock"></i>
-                                        </div>
-                                    </div>
-                                    <small class="form-text text-muted mb-2">Centang kotak di bawah untuk melihat password sebelum disubmit.</small>
-                                    <div class="form-check mb-4">
-                                        <input type="checkbox" class="form-check-input" onclick="togglePassword()"
-                                            id="showPassword">
-                                        <label class="form-check-label" for="showPassword">Lihat Password</label>
-                                    </div>
-                                    @error('password')
-                                        <span>{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- Password Confirmation -->
-                            <div class="col-md-6 form-group">
-                                <label for="password_confirmation" class="mb-2">Konfirmasi Password</label>
-                                <div class="form-group position-relative has-icon-left mb-4 form-group">
-                                    <input type="password" class="form-control form-control-md" data-title="Konfirmasi Password" id="password_confirmation" placeholder="Ulangi Password" name="password_confirmation" required>
-                                    <div class="form-control-icon">
-                                        <i class="bi bi-shield-lock"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
                         <!-- Submit Button -->
-                        <button class="btn btn-primary" type="submit">Tambah Akun</button>
+                        <button class="btn btn-primary float-end" type="submit">Perbarui Data</button>
                     </form>
                 </div>
             </div>
@@ -396,6 +364,8 @@ Formulir Registrasi Akun
         });
     });
 
+    setRole('{{ $user->role }}')
+
     function setRole(role) {
         $('#registration_status').val(role === 'user' ? 'completed' : 'process');
         
@@ -444,34 +414,41 @@ Formulir Registrasi Akun
     }
 
     $('#userForm').on('submit', function(e) {
-            e.preventDefault();
-            var isValid = true;
+        e.preventDefault();
+        var isValid = true;
 
-            $(this).find('input, select, textarea').each(function() {
-                var $field = $(this);
-                var fieldName = $field.data('title') || 'Field';
+        $(this).find('input, select, textarea').each(function() {
+            var $field = $(this);
+            var fieldName = $field.data('title') || 'Field';
 
-                if ($field.prop('required') && !$field.val()) {
-                    isValid = false;
-                    toastr.warning(fieldName + ' harus diisi', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
-                }
+            if ($field.prop('required') && !$field.val()) {
+                isValid = false;
+                toastr.warning(fieldName + ' harus diisi', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
+            }
 
-                var maxLength = $field.attr('maxlength');
-                if (maxLength && $field.val().length > maxLength) {
-                    isValid = false;
-                    toastr.warning(fieldName + ' tidak boleh lebih dari ' + maxLength + ' karakter', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
-                }
+            var maxLength = $field.attr('maxlength');
+            if (maxLength && $field.val().length > maxLength) {
+                isValid = false;
+                toastr.warning(fieldName + ' tidak boleh lebih dari ' + maxLength + ' karakter', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
+            }
 
-                var minLength = $field.attr('minlength');
-                if (minLength && $field.val().length < minLength) {
-                    isValid = false;
-                    toastr.warning(fieldName + 'harus memiliki setidaknya ' + minLength + ' karakter', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
-                }
-            });
-
-            if (isValid) {
-                this.submit();
+            var minLength = $field.attr('minlength');
+            if (minLength && $field.val().length < minLength) {
+                isValid = false;
+                toastr.warning(fieldName + ' harus memiliki setidaknya ' + minLength + ' karakter', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
             }
         });
+
+        const password = $('#password').val();
+        const confirmPassword = $('#password_confirmation').val();
+        if (password && confirmPassword && password !== confirmPassword) {
+            isValid = false;
+            toastr.warning('Password dan Konfirmasi Password tidak cocok!', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
+        }
+
+        if (isValid) {
+            this.submit();
+        }
+    });
 </script>
 @endpush

@@ -336,7 +336,7 @@ Formulir Registrasi Akun
 
 
                         <!-- Submit Button -->
-                        <button class="btn btn-primary" type="submit">Tambah Akun</button>
+                        <button class="btn btn-primary float-end" type="submit">Tambah Akun</button>
                     </form>
                 </div>
             </div>
