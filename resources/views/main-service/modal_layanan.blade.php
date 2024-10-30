@@ -62,7 +62,17 @@
                 return;
             }
 
-            window.location.href = '{{ route("admin.pelayanan.create") }}' + 
+            const routes = {
+                admin: '{{ route("admin.pelayanan.create") }}',
+                user: '{{ route("user.pelayanan.create") }}',
+                instance: '{{ route("instance.pelayanan.create") }}',
+                operator: '{{ route("operator.pelayanan.create") }}'
+            };
+
+            const userRole = '{{ auth()->user()->role }}'; // Assuming you have a role field
+            const baseRoute = routes[userRole] || routes.user; // Default to user route if role not found
+
+            window.location.href = baseRoute + 
                                 '?pelayanan=' + encodeURIComponent(pelayanan) + 
                                 '&tipe_layanan=' + encodeURIComponent(tipeLayanan);
         };

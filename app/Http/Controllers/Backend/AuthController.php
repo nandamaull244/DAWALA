@@ -41,9 +41,9 @@ class AuthController extends Controller
                     case 'operator':
                         return redirect()->route('operator.dashboard')->with('success', 'Anda berhasil Login sebagai Operator');
                     case 'institute':
-                        return redirect()->route('institute.dashboard')->with('success', 'Anda berhasil Login sebagai Instansi');
+                        return redirect()->route('institute.dashboard')->with('success', 'Anda berhasil Login sebagai Instansi, ' . $user->instance->name);
                     case 'user':
-                        return redirect()->route('user.dashboard')->with('success', 'Selamat Datang di Sistem DAWALA, ' . $user->full_name);
+                        return redirect()->route('user.pelayanan.index')->with('success', 'Selamat Datang di Sistem DAWALA, ' . $user->full_name);
                 }
             } else {
                 return redirect()->back()->with('error', 'NIK atau Password tidak sesuai');

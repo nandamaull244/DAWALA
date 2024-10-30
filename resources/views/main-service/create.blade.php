@@ -15,7 +15,7 @@
 
 @section('content')
     <section class="section">
-        <form action="{{ route('admin.pelayanan.store') }}" id="pelayanan-form" method="POST" enctype="multipart/form-data" novalidate>
+        <form action="{{ route(auth()->user()->role . '.pelayanan.store') }}" id="pelayanan-form" method="POST" enctype="multipart/form-data" novalidate>
             <div class="card">
                 <div class="card-body">
                     @csrf
@@ -88,7 +88,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nik">NIK</label>
-                                <input type="text" class="form-control" id="nik" name="nik" value="@if (auth()->user()->role == 'user') {{ auth()->user()->nik }} @endif" maxlength="16" required>
+                                <input type="text" class="form-control" id="nik" name="nik" value="@if (auth()->user()->role == 'user') {{ str_replace(' ', '', auth()->user()->nik)     }} @endif" maxlength="16" required>
                             </div>
 
                             <div class="form-group">
@@ -283,6 +283,8 @@
                 var $field = $(this);
                 var fieldName = $field.closest('.form-group').find('label').text() || 'Field';
                 if(fieldName == 'F1.02') fieldName = 'Formulir F1.02';
+                if(fieldName == 'NIK') $field.val($field.val().replace(/\s+/g, ''));
+              
 
                 if ($field.prop('required') && !$field.val()) {
                     isValid = false;
