@@ -74,6 +74,12 @@ class MainServiceController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    public function cekNIK(Request $request) 
+    {
+        $user = User::findOrFail('nik', $request->nik);
+        return response()->json($user);
+    }
+
     public function getData(Request $request)
     {
         try {

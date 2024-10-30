@@ -88,7 +88,10 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nik">NIK</label>
-                                <input type="text" class="form-control" id="nik" name="nik" value="@if (auth()->user()->role == 'user') {{ str_replace(' ', '', auth()->user()->nik)     }} @endif" maxlength="16" required>
+                                <input type="text" class="form-control" id="nik" name="nik" 
+                                    value="@if (auth()->user()->role == 'user'){{ str_replace(' ', '', auth()->user()->nik) }}@endif" 
+                                    maxlength="16" required
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             </div>
 
                             <div class="form-group">
@@ -223,11 +226,31 @@
 
 @push('scripts')
     <script>
-        $('#reason').focus();
+        @if(auth()->user()->role == 'user')
+            $('#reason').focus();
+        @endif
 
         // @if ($pelayanan == null)
         //     window.location.href = "{{ route('admin.pelayanan.index') }}";
         // @endif
+
+        $('#nik').on('keyup change', function() {
+            if($('#nik').val().length == 16) {
+                $.ajax({
+                    url: "{{ route('admin.pelayanan.cekNIK') }}",
+                    method: 'GET',
+                    data: {
+                        nik: $('#nik').val()
+                    },
+                    success: function(response) {
+                        toastr.warning('NIK sudah terdaftar', 'Astagfirullah' ,{timeOut: 2000, "className": "custom-larger-toast"});
+                    }, 
+                    error: function(response) {
+                        toastr.success('NIK dapat digunakan', 'Alhamdulillah',{timeOut: 2000, "className": "custom-larger-toast"});
+                    }
+                });
+            }
+        });
 
         $(document).ready(function() {
             $('#service_category').change(function() {
@@ -247,7 +270,7 @@
                     $('#latitude').val(position.coords.latitude.toFixed(6));
                     $('#longitude').val(position.coords.longitude.toFixed(6));
                 }, function(error) {
-                    console.error("Error: " + error.message);
+                    // console.error("Error: " + error.message);
                     toastr.warning("Tidak dapat mengambil lokasi Anda. Silakan masukkan secara manual.", "Perhatian!");
                 });
             } else {
