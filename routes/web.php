@@ -102,9 +102,14 @@ Route::group(['prefix' => 'auth'], function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     });
 
-    // Admin-specific auth routes
-    Route::group(['middleware' => 'auth:admin'], function () {
+    // Shared auth routes for admin and operator
+    Route::middleware('auth')->group(function () {
         Route::post('/logout-admin', [AuthController::class, 'logoutAdmin'])->name('logout-admin');
+    });
+
+    // Admin-specific routes
+    Route::middleware('auth:admin')->group(function () {
+        // Route khusus admin lainnya
     });
 });
 
