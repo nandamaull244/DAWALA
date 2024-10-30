@@ -2,18 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Article;
+use App\Models\Service;
+use App\Models\ServiceForm;
+use App\Models\ServiceImage;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class PageController extends Controller
 {
     public function home()
     {
-        $articles = Article::with('user')
-                          ->orderBy('created_at', 'desc')
-                          ->get();
-        return view('pages.home', compact('articles'));
+        $articles = Article::with('user')->orderBy('created_at', 'desc')->get();
+
+        $service = Service::query();
+        $data['total_visit'] = $service->count();
+        $data['total_lansia'] = $service->where('service_category', 'LIKE', '%Lansia%')->count();
+        $data['total_disabilitas'] = $service->where('service_category', 'LIKE', '%Disabilitas%')->count();
+        $data['total_pengguna'] = User::where('role', '!=', 'Admin')->count();
+
+        $serviceImage = ServiceImage::count();
+        $serviceForm = ServiceForm::count();
+        $data['total_dokumen_masuk'] = $serviceImage + $serviceForm;
+       
+        return view('pages.home', compact('articles', 'data'));
     }
 
     public function service()

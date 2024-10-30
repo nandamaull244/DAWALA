@@ -16,11 +16,8 @@
                                     Kabupaten Cianjur pada tahun 2021.
                                 </p>
                                 <div class="d-flex justify-content-center justify-content-md-start flex-shrink-0 mb-4">
-                                    <a class="btn btn-success rounded-pill py-3 px-4 px-md-5 me-2"
-                                        href="{{ url('/auth/register') }}">Daftar
-                                        DAWALA</a>
-                                    <a class="btn btn-light rounded-pill py-3 px-4 px-md-5 ms-2" href="#"><i
-                                            class="fas fa-play-circle me-2"></i> Tutorial Video</a>
+                                    <a class="btn btn-success rounded-pill py-3 px-4 px-md-5 me-2" href="{{ url('/auth/register') }}">Daftar DAWALA</a>
+                                    <a class="btn btn-light rounded-pill py-3 px-4 px-md-5 ms-2" href="#"><i class="fas fa-play-circle me-2"></i> Tutorial Video</a>
                                 </div>
 
                                 {{-- <div class="d-flex justify-content-center justify-content-md-start flex-shrink-0 mb-2">
@@ -68,7 +65,7 @@
                             <div class="icon mb-3">
                                 <i class="fas fa-map-marker-alt fa-2x"></i> <!-- Ikon -->
                             </div>
-                            <h3 class="fw-bold">250+</h3>
+                            <h3 class="fw-bold increment-number" data-count="{{ $data['total_visit'] }}">0</h3>
                             <p class="text-muted">Total Kunjungan</p>
                         </div>
                     </div>
@@ -78,7 +75,7 @@
                             <div class="icon mb-3">
                                 <i class="fas fa-blind fa-2x"></i> <!-- Ikon -->
                             </div>
-                            <h3 class="fw-bold">600+</h3>
+                            <h3 class="fw-bold increment-number" data-count="{{ $data['total_lansia'] }}">0</h3>
                             <p class="text-muted">Total Lansia</p>
                         </div>
                     </div>
@@ -88,7 +85,7 @@
                             <div class="icon mb-3">
                                 <i class="fas fa-wheelchair fa-2x"></i> <!-- Ikon -->
                             </div>
-                            <h3 class="fw-bold">1.8K+</h3>
+                            <h3 class="fw-bold increment-number" data-count="{{ $data['total_disabilitas'] }}">0</h3>
                             <p class="text-muted">Total Disabilitas</p>
                         </div>
                     </div>
@@ -98,7 +95,7 @@
                             <div class="icon mb-3">
                                 <i class="fas fa-users fa-2x"></i> <!-- Ikon -->
                             </div>
-                            <h3 class="fw-bold">500+</h3>
+                            <h3 class="fw-bold increment-number" data-count="{{ $data['total_pengguna'] }}">0</h3>
                             <p class="text-muted">Total Pengguna</p>
                         </div>
                     </div>
@@ -118,7 +115,7 @@
                             <div class="icon mb-3">
                                 <i class="far fa-file-alt fa-2x"></i> <!-- Ikon -->
                             </div>
-                            <h3 class="fw-bold">300+</h3>
+                            <h3 class="fw-bold increment-number" data-count="{{ $data['total_dokumen_masuk'] }}">0</h3>
                             <p class="text-muted">Total Dokumen Masuk</p>
                         </div>
                     </div>
@@ -402,8 +399,6 @@
                                         data-bs-target="#collapseSeven" aria-expanded="false"
                                         aria-controls="collapseSeven">
                                         Q: Apa syarat untuk pengurusan e-KTP melalui DAWALA?
-
-
                                     </button>
                                 </h2>
                                 <div id="collapseSeven" class="accordion-collapse collapse"
@@ -413,31 +408,17 @@
                                         adalah:
 
                                         <ul>
-                                            <li>Fotokopi Kartu Keluarga (KK).
-
-                                            </li>
-                                            <li>Fotokopi Akta Kelahiran (jika diperlukan).
-
-                                            </li>
-                                            <li>Surat pengantar dari RT/RW (opsional, tergantung kebijakan daerah).
-
-
-                                            </li>
-
+                                            <li>Fotokopi Kartu Keluarga (KK).</li>
+                                            <li>Fotokopi Akta Kelahiran (jika diperlukan).</li>
+                                            <li>Surat pengantar dari RT/RW (opsional, tergantung kebijakan daerah).</li>
                                         </ul>
-
                                     </div>
                                 </div>
                             </div>
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingEight">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseEight" aria-expanded="false"
-                                        aria-controls="collapseEight">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
                                         Q: Bagaimana jika saya ingin mengurus Kartu Keluarga (KK)?
-
-
-
                                     </button>
                                 </h2>
                                 <div id="collapseEight" class="accordion-collapse collapse"
@@ -476,7 +457,9 @@
             </div>
         </div>
     </div>
-    <!-- FAQs End -->
+@endsection
+
+@push('scripts')
     <script>
         let images = [
             "{{ asset('assets') }}/img/1.png",
@@ -487,16 +470,42 @@
         let currentIndex = 0;
         const headerItem = document.querySelector('.header-carousel-item');
 
-        // Function to change background
         function changeBackground() {
             headerItem.style.backgroundImage = `url('${images[currentIndex]}')`;
             currentIndex = (currentIndex + 1) % images.length;
         }
 
-        // Change background every 5 seconds
         setInterval(changeBackground, 5000);
 
-        // Initial background load
         changeBackground();
+
+        $(document).ready(function () {
+            $('.increment-number').each(function () {
+                var $this = $(this);
+                var countTo = $this.data('count'); 
+
+                $({ countNum: 0 }).animate({ countNum: countTo }, {
+                    duration: 1500, 
+                    easing: 'swing',
+                    step: function () {
+                        $this.text(formatToK(Math.floor(this.countNum)) + '+');
+                    },
+                    complete: function () {
+                        $this.text(formatToK(this.countNum) + '+'); 
+                    }
+                });
+            });
+        });
+
+        function formatToK(num) {
+            if (num >= 1000000000) {
+                return (num / 1000000000).toFixed(1) + 'B';
+            } else if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
     </script>
-@endsection
+@endpush

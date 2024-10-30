@@ -101,3 +101,4 @@
 <script src="{{ asset('assets') }}/lib/owlcarousel/owl.carousel.min.js"></script>
 
 <script src="{{ asset('assets') }}/js/main.js"></script>
+@stack('scripts')
