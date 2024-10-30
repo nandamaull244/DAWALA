@@ -101,13 +101,13 @@
             <div class="card">
                 <div class="card-body px-3 py-4-5">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-4">Selesai
                             <div class="stats-icon green">
                                 <i class="iconly-boldTick-Square"></i>
                             </div>
                         </div>
                         <div class="col-md-8">
-                            <h6 class="text-muted font-semibold">Selesai</h6>
+                            <h6 class="text-muted font-semibold">Kunjungan Pelayanan Selesai</h6>
                             <h6 class="font-extrabold mb-0">112</h6>
                         </div>
                     </div>
