@@ -90,6 +90,12 @@ class MainServiceController extends Controller
                             END ASC") 
                         ->orderBy('created_at', 'desc'); 
 
+        if (auth()->user()->role == 'operator') {
+            $query->whereHas('user', function($q) {
+                $q->where('district_id', auth()->user()->district_id);
+            });
+        }
+
         if (auth()->user()->role == 'user') {
             $query->where('user_id', auth()->user()->id);
         }
@@ -332,7 +338,7 @@ class MainServiceController extends Controller
             
             $service_list = ServiceList::where('service_name', $request->service)->first();
             $service = new Service();  
-            $service->user_id = auth()->user()->id;
+            $service->user_id = $user->id;
             $service->service_list_id = $service_list->id;
             $service->service_type = $request->service_type;
             $service->service_category = $request->service_category;
