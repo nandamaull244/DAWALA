@@ -162,10 +162,10 @@
                                 <input type="text" class="form-control" id="reason" name="reason">
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group" hidden>
                                 <label for="service_type">Tipe Pelayanan</label>
                                 <div class="input-group">
-                                    <select id="service_type" class="form-control" name="service_type" required>
+                                    <select id="service_type" class="form-control" name="service_type" required hidden>
                                         <option value="" disabled>Pilih Tipe Pelayanan</option>
                                         <option value="Buat baru" @if ($tipe_layanan == 'Buat baru') selected @endif>Buat baru</option>
                                         <option value="Pembaruan KK barcode" @if ($tipe_layanan == 'Pembaruan KK barcode') selected @endif>Pembaruan KK barcode</option>
@@ -173,6 +173,9 @@
                                         <option value="Penambahan anggota keluarga" @if ($tipe_layanan == 'Penambahan anggota keluarga') selected @endif>Penambahan anggota keluarga</option>
                                         <option value="Hilang/rusak" @if ($tipe_layanan == 'Hilang/rusak') selected @endif>Hilang/rusak</option>
                                         <option value="Mutasi KK" @if ($tipe_layanan == 'Mutasi KK') selected @endif>Mutasi KK</option>
+                                        <option value="Perekaman KTP" @if ($tipe_layanan == 'Perekaman KTP') selected @endif>Perekaman KTP</option>
+                                        <option value="Perubahan data KTP" @if ($tipe_layanan == 'Perubahan data KTP') selected @endif>Perubahan data KTP</option>
+                                        <option value="Hilang/rusak" @if ($tipe_layanan == 'Hilang/rusak') selected @endif>Hilang/rusak</option>
                                     </select>
                                     <span class="input-group-text"><i class="bi bi-chevron-down"></i></span>
                                 </div>
