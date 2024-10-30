@@ -1,10 +1,4 @@
 @extends('layouts.main')
-
-@include('archive-data.modal_data')
-@include('archive-data.modal_edit')
-@include('archive-data.modal_reject')
-@include('archive-data.delete_modal')
-
 @push('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css">
     <style>
@@ -131,7 +125,7 @@ Data Seluruh Layanan Kependudukan Kecamatan
                             </div>
                             <div class="col-md-8">
                                 <h6 class="text-muted font-semibold">Pengajuan Masuk</h6>
-                                <h6 class="font-extrabold mb-0">1120</h6>
+                                <h6 class="increment-number font-extrabold mb-0" data-value="{{ $data['incoming_visit'] }}">0</h6>
                             </div>
                         </div>
                     </div>
@@ -147,8 +141,8 @@ Data Seluruh Layanan Kependudukan Kecamatan
                                 </div>
                             </div>
                             <div class="col-md-8">
-                                <h6 class="text-muted font-semibold">Proses Verifikasi</h6>
-                                <h6 class="font-extrabold mb-0">1830</h6>
+                                <h6 class="text-muted font-semibold">Pengajuan Proses</h6>
+                                <h6 class="increment-number font-extrabold mb-0" data-value="{{ $data['process_visit'] }}">0</h6>
                             </div>
                         </div>
                     </div>
@@ -165,7 +159,7 @@ Data Seluruh Layanan Kependudukan Kecamatan
                             </div>
                             <div class="col-md-8">
                                 <h6 class="text-muted font-semibold">Jadwal Kunjungan</h6>
-                                <h6 class="font-extrabold mb-0">800</h6>
+                                <h6 class="increment-number font-extrabold mb-0" data-value="{{ $data['visit_scheduled'] }}">0</h6>
                             </div>
                         </div>
                     </div>
@@ -182,7 +176,7 @@ Data Seluruh Layanan Kependudukan Kecamatan
                             </div>
                             <div class="col-md-8">
                                 <h6 class="text-muted font-semibold">Dokumen diterima</h6>
-                                <h6 class="font-extrabold mb-0">112</h6>
+                                <h6 class="increment-number font-extrabold mb-0" data-value="{{ $data['document_recieved_visit'] }}">0</h6>
                             </div>
                         </div>
                     </div>
@@ -200,174 +194,12 @@ Data Seluruh Layanan Kependudukan Kecamatan
                         </div>
                     </div>
                     <div class="col-md-8">
-                        <h6 class="text-muted font-semibold">Selesai</h6>
-                        <h6 class="font-extrabold mb-0">112</h6>
+                        <h6 class="text-muted font-semibold">Pengajuan Selesai</h6>
+                        <h6 class="increment-number font-extrabold mb-0" data-value="{{ $data['completed_visit'] }}">0</h6>
                     </div>
                 </div>
             </div>
         </div>
-
-
-    </div>
-    <div class="col-12">
-      
-        <section class="section">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="filter-container">
-                            <div class="filter-item">
-                                <label for="tanggal">Tanggal</label>
-                                <select id="tanggal" name="tanggal">
-                                    <option value="">Semua</option>
-                                    <!-- Add date options here -->
-                                </select>
-                            </div>
-                            <div class="filter-item">
-                                <label for="tipe_layanan">Tipe Layanan</label>
-                                <select id="tipe_layanan" name="tipe_layanan">
-                                    <option value="">Semua</option>
-                                    <option value="Persamaan KTP">Persamaan KTP</option>
-                                    <option value="Pembuatan KK">Pembuatan KK</option>
-                                    <!-- Add more service types as needed -->
-                                </select>
-                            </div>
-                            <div class="filter-item">
-                                <label for="status">Status</label>
-                                <select id="status" name="status">
-                                    <option value="">Semua</option>
-                                    <option value="completed">Completed</option>
-                                    <option value="processing">Processing</option>
-                                    <option value="rejected">Rejected</option>
-                                </select>
-                            </div>
-                            <button class="reset-filter" onclick="resetFilters()">Reset Filter</button>
-                            <button class="btn btn-primary add-new-btn" data-bs-toggle="modal"
-                                data-bs-target="#dataModal">
-                                <i class="bi bi-plus-circle"></i> Tambah Baru
-                            </button>
-
-                        </div>
-
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>NO. TIKET</th>
-                                        <th>NAMA</th>
-                                        <th>KATEGORI</th>
-                                        <th>TANGGAL</th>
-                                        <th>TIPE LAYANAN</th>
-                                        <th>TANGGAL LAHIR</th>
-                                        <th>ALAMAT</th>
-                                        <th>RT</th>
-                                        <th>RW</th>
-                                        <th>DESA/KELURAHAN</th>
-                                        <th>KECAMATAN</th>
-                                        <th>NO HP</th>
-                                        <th>ALASAN PENGJUAN</th>
-                                        <th>FOTO BUKTI KETERBATASAN</th>
-                                        <th>FOTO KTP</th>
-                                        <th>FOTO KK</th>
-                                        <th>FORMULIR</th>
-                                        <th class="sticky-column">STATUS Pengerjaan</th>
-                                        <th class="sticky-column">STATUS</th>
-                                        <th class="sticky-column">ACTION</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>00001</td>
-                                        <td>Christine Brooks</td>
-                                        <td>Disabilitas</td>
-                                        <td>04 Sep 2024</td>
-                                        <td>Persamaan KTP</td>
-                                        <td>01 Jan 1990</td>
-                                        <td>Jl. Contoh No. 123</td>
-                                        <td>001</td>
-                                        <td>002</td>
-                                        <td>Kelurahan Contoh</td>
-                                        <td>Kecamatan Contoh</td>
-                                        <td>081234567890</td>
-                                        <td>Perubahan Data</td>
-                                        <td><a href="#">Lihat Foto</a></td>
-                                        <td><a href="#">Lihat Foto</a></td>
-                                        <td><a href="#">Lihat Foto</a></td>
-                                        <td><a href="#">Lihat Formulir</a></td>
-                                        <td class="sticky-column"><span class="status rejected">Telat H+1</span></td>
-                                        <td class="sticky-column"><span class="status completed">Completed</span></td>
-                                        <td class="sticky-column action-icons">
-                                            <span data-bs-toggle="modal" data-bs-target="#dataModalEdit"
-                                                style="cursor: pointer;">✏️</span>
-                                            <span data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                                style="cursor: pointer;">🗑️</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>00002</td>
-                                        <td>Rosie Pearson</td>
-                                        <td>Disabilitas</td>
-                                        <td>28 May 2024</td>
-                                        <td>Persamaan KTP</td>
-                                        <td>01 Jan 1995</td>
-                                        <td>Jl. Contoh No. 456</td>
-                                        <td>003</td>
-                                        <td>004</td>
-                                        <td>Kelurahan Sample</td>
-                                        <td>Kecamatan Sample</td>
-                                        <td>087654321098</td>
-                                        <td>Pembaruan Data</td>
-                                        <td><a href="#">Lihat Foto</a></td>
-                                        <td><a href="#">Lihat Foto</a></td>
-                                        <td><a href="#">Lihat Foto</a></td>
-                                        <td><a href="#">Lihat Formulir</a></td>
-                                        <td class="sticky-column"><span class="status rejected">Telat H+1</span></td>
-                                        <td class="sticky-column"><span class="status completed">Completed</span></td>
-                                        <td class="sticky-column action-icons">
-                                            <span data-bs-toggle="modal" data-bs-target="#dataModalEdit"
-                                                style="cursor: pointer;">✏️</span>
-                                            <span data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                                style="cursor: pointer;">🗑️</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>00003</td>
-                                        <td>Darrell Caldwell</td>
-                                        <td>Tertantar</td>
-                                        <td>23 Nov 2024</td>
-                                        <td>Pembuatan KK</td>
-                                        <td>01 Jan 1985</td>
-                                        <td>Jl. Contoh No. 789</td>
-                                        <td>005</td>
-                                        <td>006</td>
-                                        <td>Kelurahan Test</td>
-                                        <td>Kecamatan Test</td>
-                                        <td>089876543210</td>
-                                        <td>Pembuatan Baru</td>
-                                        <td><a href="#">Lihat Foto</a></td>
-                                        <td><a href="#">Lihat Foto</a></td>
-                                        <td><a href="#">Lihat Foto</a></td>
-                                        <td><a href="#">Lihat Formulir</a></td>
-                                        <td class="sticky-column"><span class="status rejected">Telat H+1</span></td>
-                                        <td class="sticky-column"><span class="status completed">Completed</span></td>
-                                        <td class="sticky-column action-icons">
-                                            <span data-bs-toggle="modal" data-bs-target="#dataModalEdit"
-                                                style="cursor: pointer;">✏️</span>
-                                            <span data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                                style="cursor: pointer;">🗑️</span>
-                                        </td>
-                                    </tr>
-                                    <!-- Tambahkan baris lainnya sesuai dengan data pada gambar -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-       
     </div>
     <div class="col-12">
         <div class="card">
@@ -391,8 +223,6 @@ Data Seluruh Layanan Kependudukan Kecamatan
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 events: [
-                    // This is where you'll add your events
-                    // Example:
                     {
                         title: 'Kunjungan',
                         date: '2024-10-15'
@@ -408,5 +238,26 @@ Data Seluruh Layanan Kependudukan Kecamatan
             calendar.render();
         });
 
+        $(document).ready(function () {
+            $('.increment-number').each(function () {
+                var $this = $(this);
+                var countTo = $this.data('value'); 
+
+                $({ countNum: 0 }).animate({ countNum: countTo }, {
+                    duration: 1500, 
+                    easing: 'swing',
+                    step: function () {
+                        $this.text(formatNumber(Math.floor(this.countNum)));
+                    },
+                    complete: function () {
+                        $this.text(formatNumber(this.countNum)); 
+                    }
+                });
+            });
+        });
+
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
     </script>
 @endpush
