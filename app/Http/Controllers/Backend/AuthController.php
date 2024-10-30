@@ -101,10 +101,16 @@ class AuthController extends Controller
 
     public function logoutAdmin(Request $request)
     {
+        $role = Auth::user()->role;
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('login-admin.index')->with('success', 'Anda berhasil logout dari admin.');
+        
+        $message = $role === 'operator' 
+            ? 'Anda berhasil logout dari operator.'
+            : 'Anda berhasil logout dari admin.';
+        
+        return redirect()->route('login-admin.index')->with('success', $message);
     }
 
     public function register(Request $request)
