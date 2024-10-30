@@ -411,7 +411,7 @@ Data Seluruh Akun yang Membutuhkan Verifikasi
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: `/admin/verification/${userId}/approve`,
+                            url: "{{ route(auth()->user()->role . '.user.verification.approve', '') }}/" + userId,
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}'
@@ -454,7 +454,7 @@ Data Seluruh Akun yang Membutuhkan Verifikasi
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: `/admin/verification/${userId}/reject`,
+                            url: "{{ route(auth()->user()->role . '.user.verification.reject', '') }}/" + userId,
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}',

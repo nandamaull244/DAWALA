@@ -118,12 +118,11 @@
             $('#confirmationModal').on('show.bs.modal', function (event) {
                 const button = $(event.relatedTarget);
                 const id = button.data('id');
-                const url = `{{ route('admin.pelayanan.destroy', ':id') }}`.replace(':id', id);
+                const url = `{{ route(auth()->user()->role . '.pelayanan.destroy', ':id') }}`.replace(':id', id);
                 $('#confirmationForm').attr('action', url);
                 
                 const reason = button.data('reason');
                 const visitSchedule = button.data('visit_schedule');
-                // console.log(visitSchedule);
 
                 const approvalBy = button.data('approval_by');
                 if(approvalBy) {

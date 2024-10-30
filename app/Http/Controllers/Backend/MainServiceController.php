@@ -580,7 +580,8 @@ class MainServiceController extends Controller
                     'service_status' => 'Process',
                     'working_status' => 'Process',
                     'visit_schedule' => $request->visit_schedule,
-                    'rejected_reason' => null
+                    'rejected_reason' => null,
+                    'approval_by' => auth()->user()->id
                 ]);
                 return redirectByRole(auth()->user()->role, 'pelayanan.index', 
                     ['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' diterima!']);
@@ -589,7 +590,8 @@ class MainServiceController extends Controller
                     'service_status' => 'Rejected',
                     'working_status' => '-',
                     'visit_schedule' => null,
-                    'rejected_reason' => $request->rejected_reason
+                    'rejected_reason' => $request->rejected_reason,
+                    'approval_by' => auth()->user()->id
                 ]);
                 return redirectByRole(auth()->user()->role, 'pelayanan.index', 
                     ['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' ditolak!']);

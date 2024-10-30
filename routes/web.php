@@ -54,14 +54,19 @@ Route::group(['prefix' => 'operator', 'middleware' => 'auth:operator', 'as' => '
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/articles/data', [ArticleController::class, 'getData'])->name('article.data');
 
-    Route::get('/manajemen-akun/verification', [UserController::class, 'verification'])->name('manajemen-akun.verification');
-    Route::resource('/manajemen-akun', UserController::class);
-
     Route::resource('/pelayanan', MainServiceController::class);  
     Route::get('/service/data', [MainServiceController::class, 'getData'])->name('pelayanan.data');
     Route::get('/service/cekNIK', [MainServiceController::class, 'cekNIK'])->name('pelayanan.cekNIK');
     Route::post('/service/export/excel', [MainServiceController::class, 'exportExcel'])->name('pelayanan.export.excel');
     Route::post('/service/export/pdf', [MainServiceController::class, 'exportPDF'])->name('pelayanan.export.pdf');
+    
+    Route::get('/manajemen-akun/verification', [UserController::class, 'verification'])->name('manajemen-akun.verification');
+    Route::resource('/manajemen-akun', UserController::class);
+
+     Route::get('/verification', [UserController::class, 'verification'])->name('user.verification');
+    Route::get('/verification/data', [UserController::class, 'getVerificationData'])->name('user.verification.data');
+    Route::post('/verification/{user}/approve', [UserController::class, 'approveUser'])->name('user.verification.approve');
+    Route::post('/verification/{user}/reject', [UserController::class, 'rejectUser'])->name('user.verification.reject');
 });
 
 
