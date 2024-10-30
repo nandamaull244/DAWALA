@@ -36,7 +36,7 @@
     <li class="sidebar-item has-sub">
         <span href="#" class='sidebar-link disabled'>
             <i class="bi bi-people"></i>
-            <span>Akun Manajemen</span>
+            <span>Manajemen Akun</span>
         </span>
         <ul class="submenu ">
             <li class="submenu-item ">
@@ -46,20 +46,11 @@
                 </a>
             </li>
             <li class="submenu-item ">
-                <a href="{{ route('admin.manajemen-akun.create') }}" class='sidebar-link'>
-                    <i class="bi bi-file-earmark-text"></i>
-                    <span>Form Akun</span>
-                </a>
-            </li>
-            <li class="submenu-item ">
                 <a href="{{ route('admin.manajemen-akun.verification') }}" class='sidebar-link'>
                     <i class="bi bi-file-earmark-text"></i>
                     <span>Verifikasi Akun</span>
                 </a>
             </li>
-    
-           
-           
         </ul>
     </li>
 </li>

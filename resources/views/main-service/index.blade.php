@@ -208,6 +208,31 @@
             margin-top: -68px !important;
         }
     </style>
+    <style>
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .dropdown-item i {
+            font-size: 1.1em;
+        }
+        
+        /* Warna ikon spesifik */
+        .bi-file-earmark-excel {
+            color: #217346; /* Warna Excel */
+        }
+        
+        .bi-file-earmark-pdf {
+            color: #FF0000; /* Warna PDF */
+        }
+    </style>
 @endpush
 
 @section('page-heading')
@@ -533,6 +558,7 @@
                 table.ajax.reload();
                 $('#filterModal').modal('hide');
             });
+            
             $('.time-btn, .category-btn, .type-btn, .service-status-btn, .work-status-btn').on('click', function() {
                 table.ajax.reload();
             });
@@ -576,29 +602,3 @@
         };
     </script>
 @endpush
-
-<style>
-.dropdown-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-}
-
-.dropdown-item:hover {
-    background-color: #f8f9fa;
-}
-
-.dropdown-item i {
-    font-size: 1.1em;
-}
-
-/* Warna ikon spesifik */
-.bi-file-earmark-excel {
-    color: #217346; /* Warna Excel */
-}
-
-.bi-file-earmark-pdf {
-    color: #FF0000; /* Warna PDF */
-}
-</style>

@@ -237,7 +237,7 @@ class MainServiceController extends Controller
                     $q->where('address', 'like', "%{$keyword}%");
                 });
             })
-            ->filterColumn('village', function($query, $keyword) {
+            ->filterColumn('phone_number', function($query, $keyword) {
                 $query->whereHas('user.phone_number', function($q) use ($keyword) {
                     $q->where('phone_number', 'like', "%{$keyword}%");
                 });
@@ -286,12 +286,19 @@ class MainServiceController extends Controller
                 'rt' => $request->rt,
                 'rw' => $request->rw,
                 'registration_type' => 'User',
-                'registration_status' => 'Completed'
+                'registration_status' => 'Completed',
+                'role' => 'user'
             ];
 
             if(auth()->user()->role == 'user'){
                 $user = User::find(auth()->user()->id);
                 $user->update($userData);
+            } elseif(auth()->user()->role == 'instance') {
+                $instance = Instance::where('user_id', auth()->user()->id)->first();
+                InstanceUsers::create([
+                    'instance_id' => $instance->id,
+                    'user_id' => $userData['id']
+                ]);
             } else {
                 $user = User::create($userData);
             }
@@ -662,9 +669,15 @@ class MainServiceController extends Controller
         if ($request->filled('start_date')) {
             $query->whereDate('created_at', '>=', $request->start_date);
         }
+
         if ($request->filled('end_date')) {
             $query->whereDate('created_at', '<=', $request->end_date);
         }
+
+        if ($request->filled('time')) {
+            $order = $request->time == 'Terbaru' ? 'desc' : 'asc';
+            $query->orderBy('created_at', $order);
+        }        
 
         if ($request->filled('categories')) {
             $query->whereHas('service_list', function($q) use ($request) {

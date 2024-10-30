@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Backend;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 use App\Models\District;
 use App\Models\Village;
+use App\Models\User;
+use App\Models\Instance;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\User;
-// use App\Models\District;
-// use App\Models\Village;
 use Yajra\DataTables\Facades\DataTables;
 class UserController extends Controller
 {
@@ -36,7 +35,7 @@ class UserController extends Controller
     {
         $districts = District::with('villages')->get();
         $villages = Village::all();
-        return view('account-management.form_user', compact('districts', 'villages'));
+        return view('account-management.create', compact('districts', 'villages'));
     }
 
     /**
@@ -56,16 +55,21 @@ class UserController extends Controller
             'rw' => 'required|string',
             'address' => 'required|string',
             'no_kk' => 'required|string|digits:16',
-            'email' => 'required|email|unique:users,email',
             'phone_number' => 'required|string|digits_between:10,14',
+            'district_id'=> 'required|exists:districts,id',
+            'village_id'=> 'required|exists:villages,id',
             'role' => 'required|in:admin,operator,user,instance',
             'password' => 'required|min:8|confirmed',
             'password_confirmation' => 'required|same:password',
         ];
 
+        if($request->email != null) {
+            $rules['email'] = 'unique:users,email';
+        } 
+
         if ($request->input('role') === 'instance') {
             $rules['registration_type'] = 'required|string';
-            $rules['village_id'] = 'required|exists:villages,id';
+           
         }
 
         $validator = Validator::make($request->all(), $rules);
@@ -95,8 +99,8 @@ class UserController extends Controller
                 'address' => $request->address,
                 'no_kk' => $request->no_kk,
                 'email' => $request->email,
-                'district_id' => $request->role === 'instance' ? $request->district_id : null,
-                'village_id' => $request->role === 'instance' ? $request->village_id : null,
+                'district_id' => $request->district_id,
+                'village_id' =>  $request->village_id,
                 'phone_number' => $request->phone_number,
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
@@ -104,8 +108,19 @@ class UserController extends Controller
                 'registration_type' => $request->role === 'instance' ? $request->registration_type : 'User, Perorangan',
             ]);
 
-            return redirect()->route('admin.manajemen-akun.index')
-                           ->with('success', 'Akun berhasil dibuat');
+        
+
+            if($request->role === 'instance') {
+                $instance = Instance::where('user_id', $user->id)->first();
+                if(empty($instance)) {
+                    $instance = Instance::create([
+                        'name' => $request->instance_name,
+                        'user_id' => $user->id,
+                    ]);
+                } 
+            }
+
+            return redirect()->route('admin.manajemen-akun.index')->with('success', 'Akun berhasil dibuat');
         } catch (\Exception $e) {
             return redirect()->route('admin.manajemen-akun.create')->with('error', 'Pendaftaran gagal! Silakan coba lagi.')->withInput();
         }
@@ -129,12 +144,12 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($hashedId)
     {
         $districts = District::with('villages')->get();
         $villages = Village::all();
-        $user = User::findOrFail($id);
-        return view('manajemen-akun.modal_edit_akun', compact('user', 'districts', 'villages'));
+        $user = User::with('instance')->whereHash($hashedId)->first();
+        return view('account-management.edit', compact('user', 'districts', 'villages'));
     }
 
     /**
@@ -144,27 +159,47 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $hashedId)
     {
-        $user = User::findOrFail($id);
-        $validate = $request->validate([
-            'nik' => 'string|digits:16',
-            'full_name' => 'string|max:255',
-            'birth_date' => 'string',
-            'gender' => 'in:Laki-Laki,Perempuan',
-            'rt' => 'string',
-            'rw' => 'string',
-            'address' => 'string',
-            'district_id' => 'exists:districts,id',
-            'village_id' => 'exists:villages,id',
-            'no_kk' => 'string|digits:16',
-            'email' => 'email|unique:users,email,' . $id,
-            'phone_number' => 'string|digits_between:10,14',
-            'registration_type' => 'string',
-        ]);
+        $user = User::whereHash($hashedId)->first();
 
-        $user->update($validate);
-        return redirect()->route('admin.manajemen-akun.index')->with('success', 'Akun berhasil diubah');
+        if (!$user) {
+            return redirect()->route('admin.manajemen-akun.index')->with('error', 'User tidak ditemukan')->withInput();
+        }
+
+        try {
+            $user->update([
+                'nik' => $request->nik,
+                'full_name' => $request->full_name,
+                'birth_date' => $request->birth_date,
+                'gender' => $request->gender,
+                'rt' => $request->rt,
+                'rw' => $request->rw,
+                'address' => $request->address,
+                'no_kk' => $request->no_kk,
+                'email' => $request->email,
+                'district_id' => $request->role === 'instance' ? $request->district_id : null,
+                'village_id' => $request->role === 'instance' ? $request->village_id : null,
+                'phone_number' => $request->phone_number,
+                'role' => $request->role,
+                'registration_status' => $request->role === 'instance' ? 'Process' : 'Completed',
+                'registration_type' => $request->role === 'instance' ? $request->registration_type : 'User, Perorangan',
+            ]);
+
+            if ($request->role === 'instance') {
+                $instance = Instance::where('user_id', $user->id)->first();
+                if (!$instance) {
+                    Instance::create([
+                        'name' => $request->instance_name,
+                        'user_id' => $user->id,
+                    ]);
+                }
+            }
+
+            return redirect()->route('admin.manajemen-akun.index')->with('success', 'Data akun berhasil diperbarui');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.manajemen-akun.index')->with('error', 'Perbarui data gagal! Silakan coba lagi. Error: ' . $e->getMessage())->withInput();
+        }
     }
 
     /**
@@ -183,118 +218,91 @@ class UserController extends Controller
         $districts = District::with('villages')->get();
         $villages = Village::all();
         $users = User::whereIn('registration_status', ['Process'])->get();
-        return view('manajemen-akun.verification_table', compact('districts', 'villages', 'users'));
+        return view('account-management.verification', compact('districts', 'villages', 'users'));
     }
 
     public function getData(Request $request)
     {
         $query = User::with(['district', 'village'])
-            ->whereIn('registration_status', ['Completed', 'Rejected'])
             ->where('role', '!=', 'admin')
-            ->select([
-                'id',
-                'nik',
-                'no_kk',
-                'username',
-                'email',
-                'phone_number',
-                'full_name',
-                'birth_date',
-                'gender',
-                'address',
-                'rt',
-                'rw',
-                'district_id',
-                'village_id',
-                'role',
-                'registration_type',
-                'registration_status'
-            ]);
+            ->whereIn('registration_status', ['Completed', 'Rejected']);
 
-        // Apply filters
-        if ($request->has('role') && $request->role != '') {
-            $query->where('role', $request->role);
-        }
-
-        if ($request->has('registration_type') && $request->registration_type != '') {
-            $query->where('registration_type', $request->registration_type);
-        }
-
-        if ($request->has('status') && $request->status != '') {
-            $query->where('registration_status', $request->status);
-        }
-
-        if ($request->has('district_id') && $request->district_id != '') {
-            $query->where('district_id', $request->district_id);
-        }
-
-        if ($request->has('village_id') && $request->village_id != '') {
-            $query->where('village_id', $request->village_id);
-        }
+        $query = $this->applyFilters($query, $request);
 
         return DataTables::of($query)
             ->addIndexColumn()
-            ->addColumn('action', function ($row) {
-                $btn = '<button onclick=\'openEditModal('.json_encode($row).')\'
-                        style="cursor: pointer; border: none; background: none; padding: 0;">✏️</button> ';
-                return $btn;
-            })
+            ->addColumn('action', function($row) {
+                $hashedId = $row->getHashedId();
+                $actionBtn = '<div class="btn-group" role="group">';
+                $actionBtn .= '<a target="_blank" href="'.route('admin.manajemen-akun.edit', $hashedId).'" class="btn btn-outline-primary" style="cursor: pointer;"><i class="bi bi-pencil-square fs-5"></i></a>';
+                $actionBtn .= '</div>';
+                return $actionBtn;
+            })   
             ->addColumn('district_name', function($row) {
                 return $row->district ? $row->district->name : '-';
             })
             ->addColumn('village_name', function($row) {
                 return $row->village ? $row->village->name : '-';
             })
-            ->rawColumns(['action'])
+            ->editColumn('birth_date', function($row) {
+                return getFlatpickrDate($row->birth_date);
+            })
+            ->editColumn('registration_type', function($row) {
+                $instaceName = optional($row->instance)->name ?? '';
+                $html = '<div class="d-flex flex-column justify-content-center align-items-center text-center">';
+                if ($row->registration_type == 'Operator') {
+                    $html .= '<span class="badge bg-danger mb-1">'. strtoupper($row->registration_type) .'</span>';
+                } elseif (str_contains($row->registration_type, 'Intansi')) {
+                    $html .= '<a data-bs-toggle="modal" data-bs-target="#instanceModal" style="cursor: pointer;" class="badge bg-primary mb-1" data-instance_name="'. $instaceName .'">'. strtoupper($row->registration_type) .'</a>';
+                } elseif ($row->registration_type == 'User') {
+                    $html .= '<span class="badge bg-success mb-1">'. strtoupper($row->registration_type) .'</span>';
+                } else {
+                    $html .= '<span class="badge bg-secondary mb-1">-</span>';
+                }
+                $html .= '</div>';
+                return $html;
+            })
+            ->editColumn('registration_status', function($row) {
+                $html = '<div class="d-flex flex-column justify-content-center align-items-center text-center">';
+                if ($row->registration_status == 'Process') {
+                    $html .= '<span class="badge bg-warning mb-1">Proses Verifikasi</span>';
+                } elseif ($row->registration_status == 'Rejected') {
+                    $html .= '<span class="badge bg-danger mb-1">Ditolak</span>';
+                } elseif ($row->registration_status == 'Completed') {
+                    $html .= '<span class="badge bg-success mb-1">Terverifikasi</span>';
+                } else {
+                    $html .= '<span class="badge bg-secondary mb-1">-</span>';
+                }
+                $html .= '</div>';
+                return $html;
+            })
+            ->filterColumn('district', function($query, $keyword) {
+                $query->whereHas('district', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('village', function($query, $keyword) {
+                $query->whereHas('village', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
+                });
+            })
+            ->rawColumns(['action', 'registration_status', 'registration_type'])
             ->make(true);
     }
 
     public function getVerificationData(Request $request)
     {
         $query = User::with(['district', 'village'])
-            ->where('registration_status', 'Process')
-            ->where('role', '!=', 'admin')
-            ->select([
-                'id',
-                'nik',
-                'no_kk',
-                'username',
-                'email',
-                'phone_number',
-                'full_name',
-                'birth_date',
-                'gender',
-                'address',
-                'rt',
-                'rw',
-                'district_id',
-                'village_id',
-                'role',
-                'registration_type',
-                'registration_status'
-            ]);
+        ->where('role', '!=', 'admin')
+        ->where('registration_status', 'Process');
+        // ->where('registration_type', 'LIKE', '%Instansi%');
 
-        // Apply filters
-        if ($request->has('role') && $request->role != '') {
-            $query->where('role', $request->role);
-        }
-
-        if ($request->has('registration_type') && $request->registration_type != '') {
-            $query->where('registration_type', $request->registration_type);
-        }
-
-        if ($request->has('district_id') && $request->district_id != '') {
-            $query->where('district_id', $request->district_id);
-        }
-
-        if ($request->has('village_id') && $request->village_id != '') {
-            $query->where('village_id', $request->village_id);
-        }
+        $query = $this->applyFilters($query, $request);
 
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $btn = '<div class="btn-group" role="group">';
+                $btn = '<div class="btn-group" role="group">';    
                 $btn .= '<button onclick="approveUser('.$row->id.')" class="btn btn-success btn-sm">Approve</button>';
                 $btn .= '<button onclick="rejectUser('.$row->id.')" class="btn btn-danger btn-sm">Reject</button>';
                 $btn .= '</div>';
@@ -306,7 +314,46 @@ class UserController extends Controller
             ->addColumn('village_name', function($row) {
                 return $row->village ? $row->village->name : '-';
             })
-            ->rawColumns(['action'])
+            ->editColumn('registration_type', function($row) {
+                $instaceName = optional($row->instance)->name ?? '';
+                $html = '<div class="d-flex flex-column justify-content-center align-items-center text-center">';
+                if ($row->registration_type == 'Operator') {
+                    $html .= '<span class="badge bg-danger mb-1">'. strtoupper($row->registration_type) .'</span>';
+                } elseif (str_contains($row->registration_type, 'Intansi')) {
+                    $html .= '<a data-bs-toggle="modal" data-bs-target="#instanceModal" style="cursor: pointer;" class="badge bg-primary mb-1" data-instance_name="'. $instaceName .'">'. strtoupper($row->registration_type) .'</a>';
+                } elseif ($row->registration_type == 'User') {
+                    $html .= '<span class="badge bg-success mb-1">'. strtoupper($row->registration_type) .'</span>';
+                } else {
+                    $html .= '<span class="badge bg-secondary mb-1">-</span>';
+                }
+                $html .= '</div>';
+                return $html;
+            })
+            ->editColumn('registration_status', function($row) {
+                $html = '<div class="d-flex flex-column justify-content-center align-items-center text-center">';
+                if ($row->registration_status == 'Process') {
+                    $html .= '<span class="badge bg-warning mb-1">Proses Verifikasi</span>';
+                } elseif ($row->registration_status == 'Rejected') {
+                    $html .= '<span class="badge bg-danger mb-1">Ditolak</span>';
+                } elseif ($row->registration_status == 'Completed') {
+                    $html .= '<span class="badge bg-success mb-1">Terverifikasi</span>';
+                } else {
+                    $html .= '<span class="badge bg-secondary mb-1">-</span>';
+                }
+                $html .= '</div>';
+                return $html;
+            })
+            ->filterColumn('district', function($query, $keyword) {
+                $query->whereHas('district', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('village', function($query, $keyword) {
+                $query->whereHas('village', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
+                });
+            })
+            ->rawColumns(['action', 'registration_status', 'registration_type'])
             ->make(true);
     }
 
@@ -374,6 +421,45 @@ class UserController extends Controller
                 'message' => 'Terjadi kesalahan saat menolak user'
             ], 500);
         }
+    }
+
+    private function applyFilters($query, $request)
+    {
+        if ($request->filled('genders') || $request->filled('gender')) {
+            $genderFilter = $request->genders ?? $request->gender;
+            $query->whereIn('gender', explode(',', $genderFilter));
+        }
+
+        if ($request->filled('types')) {
+            $query->whereIn('registration_type', explode(',', $request->types));
+        }
+
+        if ($request->filled('kecamatan')) {
+            $query->whereHas('district', function($q) use ($request) {
+                $q->where('id', $request->kecamatan);
+            });
+        }
+
+        if ($request->filled('desa')) {
+            $query->whereHas('village', function($q) use ($request) {
+                $q->where('id', $request->desa);
+            });
+        }
+
+        if ($request->filled('time')) {
+            $order = $request->time == 'Terbaru' ? 'desc' : 'asc';
+            $query->orderBy('created_at', $order);
+        }
+
+        if ($request->filled('rt')) {
+            $query->where('rt', 'like', '%' . $request->rt . '%');
+        }
+        
+        if ($request->filled('rw')) {
+            $query->where('rw', 'like', '%' . $request->rw . '%');
+        }
+
+        return $query;
     }
 
 }

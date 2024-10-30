@@ -93,6 +93,12 @@
                                     <option value="Intansi, Instansi"
                                         {{ old('registration_type') == 'Intansi, Instansi' ? 'selected' : '' }}>
                                         Instansi</option>
+                                    <option value="Intansi, Desa"
+                                        {{ old('registration_type') == 'Intansi, Desa' ? 'selected' : '' }}>
+                                        Desa</option>
+                                    <option value="Intansi, Lembaga"
+                                        {{ old('registration_type') == 'Intansi, Lembaga' ? 'selected' : '' }}>
+                                        Lembaga</option>
                                 </select>
                                 @error('registration_type')
                                     <span>{{ $message }}</span>
@@ -103,6 +109,18 @@
                                         style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
                                 </div>
                             </div>
+                        </div>
+                        <div id="instansi-select-group" class="mb-4" style="display: none;">
+                            <div class="form-group position-relative has-icon-left mb-4"  >
+                                <input type="text" class="form-control form-control-xl" placeholder="Nama Instansi"
+                                    name="instansi" value="{{ old('instansi') }}" required>
+                                <div class="form-control-icon">
+                                    <i class="bi bi-building"></i>
+                                </div>
+                            </div>
+                            @error('instansi')
+                                <span>{{ $message }}</span>
+                            @enderror
                         </div>
                         <div id="district-select-group" class="form-group mb-4">
                             <label for="district-select">Pilih Kecamatan:</label>
@@ -434,33 +452,66 @@
         });
 
         function setRole(role) {
+            // Set registration status
             document.getElementById('registration_status').value = role === 'user' ? 'completed' : 'process';
+            
+            // Get DOM elements
             const subCategory = document.getElementById('sub-category');
-            // const districtSelect = document.getElementById('district-select').closest('.form-group');
-            // const villageSelect = document.getElementById('village-select').closest('.form-group');
-
-            if (role === 'instance') {
-                subCategory.style.display = 'block';
-                // districtSelect.style.display = 'block';
-                // villageSelect.style.display = 'block';
-            } else {
-                subCategory.style.display = 'none';
-                // districtSelect.style.display = 'none';
-                // villageSelect.style.display = 'none';
-            }
-
             const userInput = document.getElementById('perorangan');
             const operatorInput = document.getElementById('instance');
+            const instansiInput = document.getElementById('instansi-select-group');
+
+            // Handle display and requirements based on role
             if (role === 'user') {
-                operatorInput.required = false;
+                // User role settings
+                subCategory.style.display = 'none';
                 userInput.required = true;
+                operatorInput.required = false;
+                instansiInput.style.display = 'none';
+                
+                // Reset instansi input if it exists
+                const instansiInputField = instansiInput.querySelector('input[name="instansi"]');
+                if (instansiInputField) {
+                    instansiInputField.required = false;
+                    instansiInputField.value = '';
+                }
             } else {
+                // Instance role settings
+                subCategory.style.display = 'block';
                 userInput.required = false;
                 operatorInput.required = true;
             }
         }
 
+        document.getElementById('sub-category-select').addEventListener('change', function() {
+            const selectedValue = this.value;
+            const instansiGroup = document.getElementById('instansi-select-group');
+            const instansiInput = instansiGroup.querySelector('input[name="instansi"]');
+            
+            if (selectedValue === 'Intansi, Yayasan' || 
+                selectedValue === 'Intansi, Lembaga' || 
+                selectedValue === 'Intansi, Instansi') {
+                instansiGroup.style.display = 'block';
+                
+                // Set placeholder sesuai pilihan
+                switch(selectedValue) {
+                    case 'Intansi, Yayasan':
+                        instansiInput.placeholder = 'Nama Yayasan';
+                        break;
+                    case 'Intansi, Lembaga':
+                        instansiInput.placeholder = 'Nama Lembaga';
+                        break;
+                    case 'Intansi, Instansi':
+                        instansiInput.placeholder = 'Nama Instansi';
+                        break;
+                }
+            } else {
+                instansiGroup.style.display = 'none';
+                instansiInput.placeholder = 'Nama Instansi';
+            }
+        });
 
+        //pengecekan jika user memilih tipe registrasi yayasan, lembaga, atau instansi maka input instansi wajib diisi
         document.querySelector('form').addEventListener('submit', function (event) {
             const passwordInput = document.querySelector('input[name="password"]');
             const passwordConfirmationInput = document.querySelector('input[name="password_confirmation"]');
