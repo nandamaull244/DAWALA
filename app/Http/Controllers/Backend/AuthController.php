@@ -131,7 +131,6 @@ class AuthController extends Controller
 
         if ($request->input('role') === 'instance') {
             $rules['registration_type'] = 'required|string';
-            $rules['village_id'] = 'required|exists:villages,id';
             $rules['instansi'] = 'string';
         }
 
