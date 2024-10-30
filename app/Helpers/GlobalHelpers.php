@@ -15,3 +15,7 @@ function dashboardRedirect($role) {
         return route('user.dashboard');
     }
 }
+
+function formatNumber($number) {
+    return number_format($number, 0, ',', '.');
+}

@@ -18,7 +18,6 @@
             </a>
         </li>
     </ul>
-    
 </li>
 <li class="sidebar-item has-sub">
     <span href="#" class='sidebar-link disabled'>
