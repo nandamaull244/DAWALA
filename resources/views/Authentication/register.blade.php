@@ -93,6 +93,12 @@
                                     <option value="Intansi, Instansi"
                                         {{ old('registration_type') == 'Intansi, Instansi' ? 'selected' : '' }}>
                                         Instansi</option>
+                                    <option value="Intansi, Desa"
+                                        {{ old('registration_type') == 'Intansi, Desa' ? 'selected' : '' }}>
+                                        Desa</option>
+                                    <option value="Intansi, Lembaga"
+                                        {{ old('registration_type') == 'Intansi, Lembaga' ? 'selected' : '' }}>
+                                        Lembaga</option>
                                 </select>
                                 @error('registration_type')
                                     <span>{{ $message }}</span>
@@ -103,6 +109,18 @@
                                         style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
                                 </div>
                             </div>
+                        </div>
+                        <div id="instansi-select-group" class="mb-4" style="display: none;">
+                            <div class="form-group position-relative has-icon-left mb-4"  >
+                                <input type="text" class="form-control form-control-xl" placeholder="Nama Instansi"
+                                    name="instansi" value="{{ old('instansi') }}" required>
+                                <div class="form-control-icon">
+                                    <i class="bi bi-building"></i>
+                                </div>
+                            </div>
+                            @error('instansi')
+                                <span>{{ $message }}</span>
+                            @enderror
                         </div>
                         <div id="district-select-group" class="form-group mb-4">
                             <label for="district-select">Pilih Kecamatan:</label>
@@ -436,17 +454,16 @@
         function setRole(role) {
             document.getElementById('registration_status').value = role === 'user' ? 'completed' : 'process';
             const subCategory = document.getElementById('sub-category');
+        
             // const districtSelect = document.getElementById('district-select').closest('.form-group');
             // const villageSelect = document.getElementById('village-select').closest('.form-group');
 
             if (role === 'instance') {
                 subCategory.style.display = 'block';
-                // districtSelect.style.display = 'block';
-                // villageSelect.style.display = 'block';
+               
             } else {
                 subCategory.style.display = 'none';
-                // districtSelect.style.display = 'none';
-                // villageSelect.style.display = 'none';
+               
             }
 
             const userInput = document.getElementById('perorangan');
@@ -460,7 +477,20 @@
             }
         }
 
+        document.getElementById('sub-category-select').addEventListener('change', function() {
+            const selectedValue = this.value;
+            const instansiGroup = document.getElementById('instansi-select-group');
+            
+            if (selectedValue === 'Intansi, Yayasan' || 
+                selectedValue === 'Intansi, Lembaga' || 
+                selectedValue === 'Intansi, Instansi') {
+                instansiGroup.style.display = 'block';
+            } else {
+                instansiGroup.style.display = 'none';
+            }
+        });
 
+        //pengecekan jika user memilih tipe registrasi yayasan, lembaga, atau instansi maka input instansi wajib diisi
         document.querySelector('form').addEventListener('submit', function (event) {
             const passwordInput = document.querySelector('input[name="password"]');
             const passwordConfirmationInput = document.querySelector('input[name="password_confirmation"]');
