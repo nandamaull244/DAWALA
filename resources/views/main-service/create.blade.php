@@ -234,24 +234,6 @@
         //     window.location.href = "{{ route('admin.pelayanan.index') }}";
         // @endif
 
-        $('#nik').on('keyup change', function() {
-            if($('#nik').val().length == 16) {
-                $.ajax({
-                    url: "{{ route('admin.pelayanan.cekNIK') }}",
-                    method: 'GET',
-                    data: {
-                        nik: $('#nik').val()
-                    },
-                    success: function(response) {
-                        toastr.warning('NIK sudah terdaftar', 'Astagfirullah' ,{timeOut: 2000, "className": "custom-larger-toast"});
-                    }, 
-                    error: function(response) {
-                        toastr.success('NIK dapat digunakan', 'Alhamdulillah',{timeOut: 2000, "className": "custom-larger-toast"});
-                    }
-                });
-            }
-        });
-
         $(document).ready(function() {
             $('#service_category').change(function() {
                 var isODGJ = $(this).val() === 'ODGJ';
@@ -298,6 +280,31 @@
             }
         });
 
+        var nikCheck = false;
+        $('#nik').on('keyup change', function() {
+            if($('#nik').val().length == 16) {
+                $.ajax({
+                    url: "{{ route(auth()->user()->role . '.pelayanan.cekNIK') }}",
+                    method: 'GET',
+                    data: {
+                        nik: $('#nik').val()
+                    },
+                    success: function(response) {
+                        if(response) {
+                            toastr.error('NIK sudah terdaftar', 'Astagfirullah' ,{timeOut: 2000, "className": "custom-larger-toast"});
+                            nikCheck = true;
+                        } else {
+                            toastr.success('NIK dapat digunakan', 'Alhamdulillah',{timeOut: 2000, "className": "custom-larger-toast"});
+                            nikCheck = false;
+                        }
+                    }, 
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        });
+
         $('#pelayanan-form').on('submit', function(e) {
             e.preventDefault();
             var isValid = true;
@@ -307,7 +314,11 @@
                 var fieldName = $field.closest('.form-group').find('label').text() || 'Field';
                 if(fieldName == 'F1.02') fieldName = 'Formulir F1.02';
                 if(fieldName == 'NIK') $field.val($field.val().replace(/\s+/g, ''));
-              
+
+                if(fieldName == 'NIK' && nikCheck) {
+                    isValid = false;
+                    toastr.error('NIK sudah terdaftar', 'Astagfirullah' ,{timeOut: 2000, "className": "custom-larger-toast"});
+                }
 
                 if ($field.prop('required') && !$field.val()) {
                     isValid = false;

@@ -10,17 +10,18 @@ use App\Models\District;
 use App\Helpers\CRUDHelper;
 use App\Models\ServiceForm;
 use App\Models\ServiceList;
-use Illuminate\Support\Str;
+use App\Models\Instance;
+use App\Models\InstanceUsers;
 use App\Models\Notification;
 use App\Models\ServiceImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ServicesExport;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Models\Instance;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Exceptions\BadRequestHttpException;
 use Illuminate\Http\Exceptions\AccessDeniedHttpException;
@@ -76,251 +77,207 @@ class MainServiceController extends Controller
 
     public function cekNIK(Request $request) 
     {
-        $user = User::findOrFail('nik', $request->nik);
-        return response()->json($user);
+        $user = User::where('nik', $request->nik)->first();
+        return response()->json(!empty($user) ? true : false);
     }
 
     public function getData(Request $request)
     {
-        try {
-            // Cek autentikasi menggunakan guard default
-            if (!auth()->check()) {
-                throw new AccessDeniedHttpException('Silahkan login terlebih dahulu');
-            }
+        $query = Service::with(['user', 'user.district', 'user.village', 'user.instance', 'user.instance.instanceUsers'])
+                        ->orderByRaw("CASE 
+                            WHEN working_status = 'Late' THEN created_at 
+                            ELSE NULL 
+                            END ASC") 
+                        ->orderBy('created_at', 'desc'); 
 
-            $user = auth()->user();
-            
-            // Inisialisasi query dasar
-            $query = Service::with([
-                'user', 
-                'user.district', 
-                'user.village', 
-                'user.instance', 
-                'user.instance.instanceUsers',
-                'service_list'
-            ]);
-
-            // Filter berdasarkan role tanpa throw exception
-            if ($user->role === 'user') {
-                $query->where('user_id', $user->id);
-            } elseif ($user->role === 'instance') {
-                $instanceId = Instance::where('user_id', $user->id)->pluck('id');
-                $query->whereHas('user.instance.instanceUsers', function($q) use ($instanceId) {
-                    $q->whereIn('instance_id', $instanceId);
-                });
-            }
-            // Admin dan operator dapat melihat semua data
-
-            // Filter tambahan dari request
-            if ($request->filled('start_date') && $request->filled('end_date')) {
-                $query->whereBetween('created_at', [
-                    Carbon::parse($request->start_date)->startOfDay(),
-                    Carbon::parse($request->end_date)->endOfDay()
-                ]);
-            }
-
-
-             // Apply ordering
-             $query->orderByRaw("CASE WHEN working_status = 'Late' THEN created_at ELSE NULL END ASC")
-             ->orderBy('created_at', 'desc');
-            // Filter lainnya sesuai request
-            if ($request->filled('categories')) {
-                $query->whereIn('service_category', explode(',', $request->categories));
-            }
-
-            if ($request->filled('types')) {
-                $query->whereIn('service_type', explode(',', $request->types));
-            }
-
-            if ($request->filled('search') && $request->search['value']) {
-                $searchValue = $request->search['value'];
-                $query->where(function($q) use ($searchValue) {
-                    $q->where('services.service_category', 'like', "%{$searchValue}%")
-                        ->orWhere('services.service_type', 'like', "%{$searchValue}%")
-                        ->orWhere('services.reason', 'like', "%{$searchValue}%")
-                        ->orWhereHas('user', function($userQuery) use ($searchValue) {
-                            $userQuery->where('full_name', 'like', "%{$searchValue}%")
-                                        ->orWhere('address', 'like', "%{$searchValue}%")
-                                        ->orWhere('phone_number', 'like', "%{$searchValue}%");
-                        })
-                        ->orWhereHas('user.district', function($districtQuery) use ($searchValue) {
-                            $districtQuery->where('name', 'like', "%{$searchValue}%");
-                        })
-                        ->orWhereHas('user.village', function($villageQuery) use ($searchValue) {
-                            $villageQuery->where('name', 'like', "%{$searchValue}%");
-                        })
-                        ->orWhereHas('service_list', function($serviceListQuery) use ($searchValue) {
-                            $serviceListQuery->where('service_name', 'like', "%{$searchValue}%");
-                        });
-                });
-            }
-
-            $query = $this->applyFilters($query, $request);
-
-            // Return DataTables
-            return DataTables::of($query)
-                ->addIndexColumn()
-                ->addColumn('action', function($row) {
-                    $hashedId = $row->getHashedId();
-                    $approvalName = optional($row->approvalBy)->full_name ?? 'Data tidak ada';
-                    $actionBtn = '<div class="btn-group" role="group">';
-                    $actionBtn .= '<a target="_blank" href="'.route('admin.pelayanan.edit', $hashedId).'" class="btn btn-outline-primary" style="cursor: pointer;"><i class="bi bi-pencil-square fs-5"></i></a>';
-                    if(auth()->user()->role == 'admin' || auth()->user()->role == 'operator') {
-                         $actionBtn .= '<a class="btn btn-outline-success delete-btn" data-bs-toggle="modal" 
-                                                                                 data-bs-target="#confirmationModal" 
-                                                                                 data-id="'.$hashedId.'" 
-                                                                                 data-reason="'. $row->rejected_reason .'" 
-                                                                                 data-approval_by="'. $approvalName.'" 
-                                                                                 data-visit_schedule="'. $row->visit_schedule .'" style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></a>';
-                    }
-                    $actionBtn .= '</div>';
-                    return $actionBtn;
-                })            
-                ->addColumn('name', function($row) {
-                    return $row->user->full_name;
-                })
-                ->addColumn('service', function($row) {
-                    return $row->service_list->service_name;
-                })
-                ->addColumn('tanggal', function($row) {
-                    return getFlatpickrDate(date('Y-m-d', strtotime($row->created_at)));
-                })
-                ->addColumn('birth_date', function($row) {
-                    return getFlatpickrDate($row->user->birth_date);
-                })
-                ->addColumn('address', function($row) {
-                    return $row->user->address;
-                })
-                ->addColumn('rt', function($row) {
-                    return $row->user->rt;
-                })
-                ->addColumn('rw', function($row) {
-                    return $row->user->rw;
-                })
-                ->addColumn('district', function($row) {
-                    return $row->user->district->name;
-                })
-                ->addColumn('village', function($row) {
-                    return $row->user->village->name;
-                })
-                ->addColumn('phone_number', function($row) {
-                    return $row->user->phone_number;
-                })
-                ->addColumn('evidence_of_disability_image', function($row) {
-                    $evidence = $row->service_image()->where('image_type', 'Bukti Keterbatasan')->first();
-                    $evidence_odgj = $row->service_image()->where('image_type', 'Bukti Keterbatasan ODGJ')->first();
-                    return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal"  
-                            data-title="Foto Bukti Keterbatasan" 
-                            data-image="' . (isset($evidence->image_path) ? $evidence->image_path : '-') . '"
-                            data-odgj_image="' . (isset($evidence_odgj->image_path) ? $evidence_odgj->image_path : '-') . '">Lihat Foto</a>';
-                })
-                ->addColumn('ktp_image', function($row) {
-                    $ktp = $row->service_image()->where('image_type', 'KTP')->first();
-                    return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" 
-                            data-title="Foto KTP"  
-                            data-image="' . (isset($ktp->image_path) ? $ktp->image_path : '-') . '">Lihat Foto</a>';
-                })
-                ->addColumn('kk_image', function($row) {
-                    $kk = $row->service_image()->where('image_type', 'Kartu Keluarga')->first();
-                    return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" 
-                            data-title="Foto Kartu Keluarga"  
-                            data-image="' . (isset($kk->image_path) ? $kk->image_path : '-') . '">Lihat Foto</a>';
-                })
-                ->addColumn('formulir', function($row) {
-                    $f101 = $row->service_form()->where('form_type', 'F1.01')->first();
-                    $f102 = $row->service_form()->where('form_type', 'F1.02')->first();
-                    $f103 = $row->service_form()->where('form_type', 'F1.03')->first();
-                    $f104 = $row->service_form()->where('form_type', 'F1.04')->first();
-                    return '<a href="#" data-bs-toggle="modal" data-bs-target="#formulirDownloadModal"
-                            data-title="Formulir" 
-                            data-imagef101="' . (isset($f101->form_path) ? $f101->form_path : '-') . '"
-                            data-imagef102="' . (isset($f102->form_path) ? $f102->form_path : '-') . '"
-                            data-imagef103="' . (isset($f103->form_path) ? $f103->form_path : '-') . '"
-                            data-imagef104="' . (isset($f104->form_path) ? $f104->form_path : '-') . '">Lihat Form</a>';
-                })
-                ->addColumn('working_status', function($row) {
-                    switch($row->working_status) {
-                        case 'Not Yet':
-                            return '<div class="d-flex justify-content-center"><span class="badge bg-secondary">Menunggu</span></div>';
-                        case 'Late':
-                            $lateStatus = getLateWorkingStatus($row->created_at);
-                            if (isset($lateStatus['true'])) {
-                                return '<div class="d-flex justify-content-center"><span class="badge bg-danger">'. $lateStatus['true'] . '</span></div>';
-                            } else {
-                                return '<div class="d-flex justify-content-center"><span class="badge bg-danger">Terlambat</span></div>';
-                            }
-                        case 'Process':
-                            return '<div class="d-flex justify-content-center"><span class="badge bg-warning">Proses</span></div>';
-                        case 'Done':
-                            return '<div class="d-flex justify-content-center"><span class="badge bg-success">Selesai</span></div>';
-                        default:
-                            return '<div class="d-flex justify-content-center"><span class="badge bg-secondary">'. $row->working_status .'</span></div>';
-                    }
-                })
-                ->addColumn('service_status', function($row) {
-                    $html = '<div class="d-flex flex-column align-items-center">';
-                
-                    // Status untuk service_status
-                    if ($row->service_status == 'Not Yet') {
-                        $html .= '<span class="badge bg-secondary mb-1">Belum Dikerjakan</span>';
-                    } elseif ($row->service_status == 'Process') {
-                        $html .= '<span class="badge bg-warning mb-1">Proses</span>';
-                    } elseif ($row->service_status == 'Rejected') {
-                        $html .= '<span class="badge bg-danger mb-1">Ditolak</span>';
-                    } elseif ($row->service_status == 'Completed') {
-                        $html .= '<span class="badge bg-success mb-1">Selesai</span>';
-                    }
-                
-                    // Status untuk document_recieved_status
-                    if($row->rejected_reason == null) {
-                        if ($row->document_recieved_status == 'Not Yet Recieved') {
-                            $html .= '<span class="badge bg-danger">Belum diterima</span>';
-                        } else {
-                            $html .= '<span class="badge bg-success">Telah diterima</span>';
-                        }
-                    }
-                
-                    $html .= '</div>';
-                    return $html;
-                })
-                
-                ->filterColumn('name', function($query, $keyword) {
-                    $query->whereHas('user', function($q) use ($keyword) {
-                        $q->where('full_name', 'like', "%{$keyword}%");
-                    });
-                })
-                ->filterColumn('address', function($query, $keyword) {
-                    $query->whereHas('user', function($q) use ($keyword) {
-                        $q->where('address', 'like', "%{$keyword}%");
-                    });
-                })
-                ->filterColumn('phone_number', function($query, $keyword) {
-                    $query->whereHas('user.phone_number', function($q) use ($keyword) {
-                        $q->where('phone_number', 'like', "%{$keyword}%");
-                    });
-                })
-                ->filterColumn('district', function($query, $keyword) {
-                    $query->whereHas('user.district', function($q) use ($keyword) {
-                        $q->where('name', 'like', "%{$keyword}%");
-                    });
-                })
-                ->filterColumn('village', function($query, $keyword) {
-                    $query->whereHas('user.village', function($q) use ($keyword) {
-                        $q->where('name', 'like', "%{$keyword}%");
-                    });
-                })
-                ->rawColumns(['action', 'name', 'tanggal', 'birth_date', 'alamat', 'rt', 'rw', 'district', 'village', 'phone_number', 'evidence_of_disability_image', 'ktp_image', 'kk_image', 'formulir', 'working_status', 'service_status'])
-                ->make(true);
-
-        } catch (\Exception $e) {
-            \Log::error('DataTables Error: ' . $e->getMessage());
-            return response()->json([
-                'error' => true,
-                'message' => $e->getMessage()
-            ], 403);
+        if (auth()->user()->role == 'user') {
+            $query->where('user_id', auth()->user()->id);
         }
-    }
 
+        if (auth()->user()->role == 'instance') {
+            $instanceId = Instance::where('user_id', auth()->user()->id)->value('id');
+            $query->whereHas('user.instance.instanceUsers', function($q) use ($instanceId) {
+                $q->where('instance_id', $instanceId);
+            });
+        }
+
+        if ($request->filled('search') && $request->search['value']) {
+            $searchValue = $request->search['value'];
+            $query->where(function($q) use ($searchValue) {
+                $q->where('services.service_category', 'like', "%{$searchValue}%")
+                    ->orWhere('services.service_type', 'like', "%{$searchValue}%")
+                    ->orWhere('services.reason', 'like', "%{$searchValue}%")
+                    ->orWhereHas('user', function($userQuery) use ($searchValue) {
+                        $userQuery->where('full_name', 'like', "%{$searchValue}%")
+                                    ->orWhere('address', 'like', "%{$searchValue}%")
+                                    ->orWhere('phone_number', 'like', "%{$searchValue}%");
+                    })
+                    ->orWhereHas('user.district', function($districtQuery) use ($searchValue) {
+                        $districtQuery->where('name', 'like', "%{$searchValue}%");
+                    })
+                    ->orWhereHas('user.village', function($villageQuery) use ($searchValue) {
+                        $villageQuery->where('name', 'like', "%{$searchValue}%");
+                    })
+                    ->orWhereHas('service_list', function($serviceListQuery) use ($searchValue) {
+                        $serviceListQuery->where('service_name', 'like', "%{$searchValue}%");
+                    });
+            });
+        }
+
+        $query = $this->applyFilters($query, $request);
+
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('action', function($row) {
+                $hashedId = $row->getHashedId();
+                $approvalName = optional($row->approvalBy)->full_name ?? 'Data tidak ada';
+                $actionBtn = '<div class="btn-group" role="group">';
+                $actionBtn .= '<a target="_blank" href="'.route('admin.pelayanan.edit', $hashedId).'" class="btn btn-outline-primary" style="cursor: pointer;"><i class="bi bi-pencil-square fs-5"></i></a>';
+                $actionBtn .= '<a class="btn btn-outline-success delete-btn" data-bs-toggle="modal" 
+                                                                        data-bs-target="#confirmationModal" 
+                                                                        data-id="'.$hashedId.'" 
+                                                                        data-reason="'. $row->rejected_reason .'" 
+                                                                        data-approval_by="'. $approvalName.'" 
+                                                                        data-visit_schedule="'. $row->visit_schedule .'" style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></a>';
+                $actionBtn .= '</div>';
+                return $actionBtn;
+            })            
+            ->addColumn('name', function($row) {
+                return $row->user->full_name;
+            })
+            ->addColumn('service', function($row) {
+                return $row->service_list->service_name;
+            })
+            ->addColumn('tanggal', function($row) {
+                return getFlatpickrDate(date('Y-m-d', strtotime($row->created_at)));
+            })
+            ->addColumn('birth_date', function($row) {
+                return getFlatpickrDate($row->user->birth_date);
+            })
+            ->addColumn('address', function($row) {
+                return $row->user->address;
+            })
+            ->addColumn('rt', function($row) {
+                return $row->user->rt;
+            })
+            ->addColumn('rw', function($row) {
+                return $row->user->rw;
+            })
+            ->addColumn('district', function($row) {
+                return $row->user->district->name;
+            })
+            ->addColumn('village', function($row) {
+                return $row->user->village->name;
+            })
+            ->addColumn('phone_number', function($row) {
+                return $row->user->phone_number;
+            })
+            ->addColumn('evidence_of_disability_image', function($row) {
+                $evidence = $row->service_image()->where('image_type', 'Bukti Keterbatasan')->first();
+                $evidence_odgj = $row->service_image()->where('image_type', 'Bukti Keterbatasan ODGJ')->first();
+                return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal"  
+                        data-title="Foto Bukti Keterbatasan" 
+                        data-image="' . (isset($evidence->image_path) ? $evidence->image_path : '-') . '"
+                        data-odgj_image="' . (isset($evidence_odgj->image_path) ? $evidence_odgj->image_path : '-') . '">Lihat Foto</a>';
+            })
+            ->addColumn('ktp_image', function($row) {
+                $ktp = $row->service_image()->where('image_type', 'KTP')->first();
+                return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" 
+                        data-title="Foto KTP"  
+                        data-image="' . (isset($ktp->image_path) ? $ktp->image_path : '-') . '">Lihat Foto</a>';
+            })
+            ->addColumn('kk_image', function($row) {
+                $kk = $row->service_image()->where('image_type', 'Kartu Keluarga')->first();
+                return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" 
+                        data-title="Foto Kartu Keluarga"  
+                        data-image="' . (isset($kk->image_path) ? $kk->image_path : '-') . '">Lihat Foto</a>';
+            })
+            ->addColumn('formulir', function($row) {
+                $f101 = $row->service_form()->where('form_type', 'F1.01')->first();
+                $f102 = $row->service_form()->where('form_type', 'F1.02')->first();
+                $f103 = $row->service_form()->where('form_type', 'F1.03')->first();
+                $f104 = $row->service_form()->where('form_type', 'F1.04')->first();
+                return '<a href="#" data-bs-toggle="modal" data-bs-target="#formulirDownloadModal"
+                        data-title="Formulir" 
+                        data-imagef101="' . (isset($f101->form_path) ? $f101->form_path : '-') . '"
+                        data-imagef102="' . (isset($f102->form_path) ? $f102->form_path : '-') . '"
+                        data-imagef103="' . (isset($f103->form_path) ? $f103->form_path : '-') . '"
+                        data-imagef104="' . (isset($f104->form_path) ? $f104->form_path : '-') . '">Lihat Form</a>';
+            })
+            ->addColumn('working_status', function($row) {
+                switch($row->working_status) {
+                    case 'Not Yet':
+                        return '<div class="d-flex justify-content-center"><span class="badge bg-secondary">Menunggu</span></div>';
+                    case 'Late':
+                        $lateStatus = getLateWorkingStatus($row->created_at);
+                        if (isset($lateStatus['true'])) {
+                            return '<div class="d-flex justify-content-center"><span class="badge bg-danger">'. $lateStatus['true'] . '</span></div>';
+                        } else {
+                            return '<div class="d-flex justify-content-center"><span class="badge bg-danger">Terlambat</span></div>';
+                        }
+                    case 'Process':
+                        return '<div class="d-flex justify-content-center"><span class="badge bg-warning">Proses</span></div>';
+                    case 'Done':
+                        return '<div class="d-flex justify-content-center"><span class="badge bg-success">Selesai</span></div>';
+                    default:
+                        return '<div class="d-flex justify-content-center"><span class="badge bg-secondary">'. $row->working_status .'</span></div>';
+                }
+            })
+            ->addColumn('service_status', function($row) {
+                $html = '<div class="d-flex flex-column align-items-center">';
+            
+                // Status untuk service_status
+                if ($row->service_status == 'Not Yet') {
+                    $html .= '<span class="badge bg-secondary mb-1">Belum Dikerjakan</span>';
+                } elseif ($row->service_status == 'Process') {
+                    $html .= '<span class="badge bg-warning mb-1">Proses</span>';
+                } elseif ($row->service_status == 'Rejected') {
+                    $html .= '<span class="badge bg-danger mb-1">Ditolak</span>';
+                } elseif ($row->service_status == 'Completed') {
+                    $html .= '<span class="badge bg-success mb-1">Selesai</span>';
+                }
+            
+                // Status untuk document_recieved_status
+                if($row->rejected_reason == null) {
+                    if ($row->document_recieved_status == 'Not Yet Recieved') {
+                        $html .= '<span class="badge bg-danger">Belum diterima</span>';
+                    } else {
+                        $html .= '<span class="badge bg-success">Telah diterima</span>';
+                    }
+                }
+            
+                $html .= '</div>';
+                return $html;
+            })
+            
+            ->filterColumn('name', function($query, $keyword) {
+                $query->whereHas('user', function($q) use ($keyword) {
+                    $q->where('full_name', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('address', function($query, $keyword) {
+                $query->whereHas('user', function($q) use ($keyword) {
+                    $q->where('address', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('village', function($query, $keyword) {
+                $query->whereHas('user.phone_number', function($q) use ($keyword) {
+                    $q->where('phone_number', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('district', function($query, $keyword) {
+                $query->whereHas('user.district', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('village', function($query, $keyword) {
+                $query->whereHas('user.village', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
+                });
+            })
+            ->rawColumns(['action', 'name', 'tanggal', 'birth_date', 'alamat', 'rt', 'rw', 'district', 'village', 'phone_number', 'evidence_of_disability_image', 'ktp_image', 'kk_image', 'formulir', 'working_status', 'service_status'])
+            ->make(true);
+    }
 
     public function create(Request $request)
     {
@@ -360,10 +317,11 @@ class MainServiceController extends Controller
                 $user = User::find(auth()->user()->id);
                 $user->update($userData);
             } elseif(auth()->user()->role == 'instance') {
+                $user = User::create($userData);
                 $instance = Instance::where('user_id', auth()->user()->id)->first();
                 InstanceUsers::create([
                     'instance_id' => $instance->id,
-                    'user_id' => $userData['id']
+                    'user_id' => $user->id,
                 ]);
             } else {
                 $user = User::create($userData);
@@ -371,7 +329,7 @@ class MainServiceController extends Controller
             
             $service_list = ServiceList::where('service_name', $request->service)->first();
             $service = new Service();  
-            $service->user_id = $user->id;
+            $service->user_id = auth()->user()->id;
             $service->service_list_id = $service_list->id;
             $service->service_type = $request->service_type;
             $service->service_category = $request->service_category;

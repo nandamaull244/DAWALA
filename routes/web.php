@@ -57,6 +57,7 @@ Route::group(['prefix' => 'operator', 'middleware' => 'auth:operator', 'as' => '
 
     Route::resource('/pelayanan', MainServiceController::class);  
     Route::get('/service/data', [MainServiceController::class, 'getData'])->name('pelayanan.data');
+    Route::get('/service/cekNIK', [MainServiceController::class, 'cekNIK'])->name('pelayanan.cekNIK');
     Route::post('/service/export/excel', [MainServiceController::class, 'exportExcel'])->name('pelayanan.export.excel');
     Route::post('/service/export/pdf', [MainServiceController::class, 'exportPDF'])->name('pelayanan.export.pdf');
 });
@@ -68,6 +69,7 @@ Route::group(['prefix' => 'instance', 'middleware' => 'auth:instance', 'as' => '
 
     Route::resource('/pelayanan', MainServiceController::class);  
     Route::get('/service/data', [MainServiceController::class, 'getData'])->name('pelayanan.data');
+    Route::get('/service/cekNIK', [MainServiceController::class, 'cekNIK'])->name('pelayanan.cekNIK');
 });
 
 
@@ -77,6 +79,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:user', 'as' => 'user.'],
 
     Route::resource('/pelayanan', MainServiceController::class);  
     Route::get('/service/data', [MainServiceController::class, 'getData'])->name('pelayanan.data');
+    Route::get('/service/cekNIK', [MainServiceController::class, 'cekNIK'])->name('pelayanan.cekNIK');
 });
 
 
