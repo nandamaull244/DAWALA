@@ -107,8 +107,9 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         
         $message = $role === 'operator' 
-            ? 'Anda berhasil logout dari operator.'
-            : 'Anda berhasil logout dari admin.';
+            ? 'Anda berhasil Logout dari Operator.'
+            : 'Anda berhasil Logout dari Admin.';
+
         
         return redirect()->route('login-admin.index')->with('success', $message);
     }

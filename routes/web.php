@@ -59,7 +59,7 @@ Route::group(['prefix' => 'operator', 'middleware' => 'auth:operator', 'as' => '
     Route::get('/service/cekNIK', [MainServiceController::class, 'cekNIK'])->name('pelayanan.cekNIK');
     Route::post('/service/export/excel', [MainServiceController::class, 'exportExcel'])->name('pelayanan.export.excel');
     Route::post('/service/export/pdf', [MainServiceController::class, 'exportPDF'])->name('pelayanan.export.pdf');
-    
+
     Route::get('/manajemen-akun/verification', [UserController::class, 'verification'])->name('manajemen-akun.verification');
     Route::resource('/manajemen-akun', UserController::class);
 
@@ -109,19 +109,10 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
 
     // Protected auth routes
-    Route::group(['middleware' => 'auth'], function () {
-        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    });
-
-    // Shared auth routes for admin and operator
-    Route::middleware('auth')->group(function () {
-        Route::post('/logout-admin', [AuthController::class, 'logoutAdmin'])->name('logout-admin');
-    });
-
-    // Admin-specific routes
-    Route::middleware('auth:admin')->group(function () {
-        // Route khusus admin lainnya
-    });
+});
+Route::group(['middleware' => 'auth'], function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/logout-admin', [AuthController::class, 'logoutAdmin'])->name('logout-admin');
 });
 
 
