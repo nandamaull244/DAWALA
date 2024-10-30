@@ -12,6 +12,6 @@ function dashboardRedirect($role) {
     } elseif ($role == 'operator') {
         return route('operator.dashboard');
     } else {
-        return route('user.user.dashboard');
+        return route('user.dashboard');
     }
 }

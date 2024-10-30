@@ -4,13 +4,13 @@
 @endpush
 
 @section('page-heading')
-    Dashboard User
+    Data Pengajuan Pelayanan
 @endsection
 
 @section('content')
     <section class="row">
         <div class="col-12 col-lg-12">
-            @include('archive-data.index')
+            @include('main-service.index')
         </div>
     </section>
 @endsection

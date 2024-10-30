@@ -53,6 +53,77 @@
         color: #ffffff !important;
     }
 
+    .notification-panel {
+        position: fixed;
+        right: 20px;
+        top: 20px;
+        width: 300px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 9999;
+        overflow: hidden;
+    }
+
+    .notification-header {
+        padding: 12px 15px;
+        background: #f8f9fa;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .notification-body {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .notification-item {
+        padding: 12px 15px;
+        border-bottom: 1px solid #eee;
+        transition: background-color 0.2s;
+    }
+
+    .notification-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .notification-item:last-child {
+        border-bottom: none;
+    }
+
+    /* Animasi untuk panel notifikasi */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideOut {
+        from {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+    }
+
+    .notification-panel.show {
+        animation: slideIn 0.3s ease forwards;
+    }
+
+    .notification-panel.hide {
+        animation: slideOut 0.3s ease forwards;
+    }
+
 </style>
 <style>
     .custom-larger-toast {

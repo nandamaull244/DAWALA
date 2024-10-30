@@ -54,12 +54,4 @@
         </ul>
     </li>
 </li>
-<li class="sidebar-item has-sub">
-    <div class="text-center mb-3 mt-5">
-        <form action="{{ route('logout-admin') }}" method="POST" style="display: inline;">
-            @csrf
-            <button type="submit" class="btn btn-danger">Logout</button>
-        </form>
-    </div>
-</li>
 
