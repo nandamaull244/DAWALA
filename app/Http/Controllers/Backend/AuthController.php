@@ -36,12 +36,14 @@ class AuthController extends Controller
                 $user = Auth::user();
 
                 switch ($user->role) {
-                    case 'admin':
-                        return redirect()->route('admin.dashboard')->with('success', 'Anda berhasil Login sebagai Admin');
-                    case 'operator':
-                        return redirect()->route('operator.dashboard')->with('success', 'Anda berhasil Login sebagai Operator');
-                    case 'institute':
-                        return redirect()->route('institute.dashboard')->with('success', 'Anda berhasil Login sebagai Instansi, ' . $user->instance->name);
+
+                    case 'instance':
+                        if ($user->registration_status == 'Completed') {
+                           
+                            return redirect()->route('instance.pelayanan.index')->with('success', 'Anda berhasil Login sebagai Instansi, ' . $user->instance->name);
+                        } else {
+                            return redirect()->back()->with('error', 'Akun anda belum terdaftar sebagai instansi, silakan menunggu admin untuk melakukan verifikasi.');
+                        }
                     case 'user':
                         return redirect()->route('user.pelayanan.index')->with('success', 'Selamat Datang di Sistem DAWALA, ' . $user->full_name);
                 }
