@@ -13,13 +13,18 @@
                 </div>
                 <p class="text-start mb-2"><b>Pilih Tipe Pelayanan</b></p>
                 <p><small>Pilih Salah Satu Tipe Pelayanan</small></p>
-                <div class="d-flex flex-wrap justify-content-start gap-2">
+                <div class="d-flex flex-wrap justify-content-start gap-2 d-none" id="tipe-layanan-kk">
                     <button class="btn btn-outline-primary tipe-layanan-btn" data-tipe="Buat baru" onclick="selectPelayanan(this, 'tipe')">Buat baru</button>
                     <button class="btn btn-outline-primary tipe-layanan-btn" data-tipe="Pembaruan KK barcode" onclick="selectPelayanan(this, 'tipe')">Pembaruan KK barcode</button>
                     <button class="btn btn-outline-primary tipe-layanan-btn" data-tipe="Baru menikah" onclick="selectPelayanan(this, 'tipe')">Baru menikah</button>
                     <button class="btn btn-outline-primary tipe-layanan-btn" data-tipe="Penambahan anggota keluarga" onclick="selectPelayanan(this, 'tipe')">Penambahan anggota keluarga</button>
                     <button class="btn btn-outline-primary tipe-layanan-btn" data-tipe="Hilang/rusak" onclick="selectPelayanan(this, 'tipe')">Hilang/rusak</button>
                     <button class="btn btn-outline-primary tipe-layanan-btn" data-tipe="Mutasi KK" onclick="selectPelayanan(this, 'tipe')">Mutasi KK</button>
+                </div>
+                <div class="d-flex flex-wrap justify-content-start gap-2 d-none" id="tipe-layanan-ktp">
+                    <button class="btn btn-outline-primary tipe-layanan-btn" data-tipe="Perekaman KTP" onclick="selectPelayanan(this, 'tipe')">Perekaman KTP</button>
+                    <button class="btn btn-outline-primary tipe-layanan-btn" data-tipe="Perubahan data KTP" onclick="selectPelayanan(this, 'tipe')">Perubahan data KTP</button>
+                    <button class="btn btn-outline-primary tipe-layanan-btn" data-tipe="Hilang/rusak" onclick="selectPelayanan(this, 'tipe')">Hilang/rusak</button>
                 </div>
                 <input type="hidden" id="selectedPelayanan" name="pelayanan">
                 <input type="hidden" id="selectedTipeLayanan" name="tipe_layanan">
@@ -38,8 +43,22 @@
             if (type === 'pelayanan') {
                 $('.pelayanan-btn').removeClass('btn-primary');
                 $($button).addClass('btn-primary');
-
+                
                 $('#selectedPelayanan').val($button.data('pelayanan'));
+                
+                // Hide all tipe layanan divs first
+                $('#tipe-layanan-kk, #tipe-layanan-ktp').addClass('d-none');
+                
+                // Show the appropriate div based on selection
+                if ($button.data('pelayanan') === 'Kartu Keluarga') {
+                    $('#tipe-layanan-kk').removeClass('d-none');
+                } else if ($button.data('pelayanan') === 'KTP eL') {
+                    $('#tipe-layanan-ktp').removeClass('d-none');
+                }
+                
+                // Reset tipe layanan selection when switching pelayanan
+                $('.tipe-layanan-btn').removeClass('btn-primary');
+                $('#selectedTipeLayanan').val('');
             } else if (type === 'tipe') {
                 $('.tipe-layanan-btn').removeClass('btn-primary');
                 $($button).addClass('btn-primary');
