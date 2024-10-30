@@ -41,10 +41,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
     Route::get('/users/getData', [UserController::class, 'getData'])->name('user.data'); 
    
     // Verification routes
-    Route::get('/verification', [UserController::class, 'verificationTable'])->name('admin.user.verification');
-    Route::get('/verification/data', [UserController::class, 'getVerificationData'])->name('admin.user.verification.data');
-    Route::post('/verification/{user}/approve', [UserController::class, 'approveUser'])->name('admin.user.verification.approve');
-    Route::post('/verification/{user}/reject', [UserController::class, 'rejectUser'])->name('admin.user.verification.reject');
+    Route::get('/verification', [UserController::class, 'verification'])->name('user.verification');
+    Route::get('/verification/data', [UserController::class, 'getVerificationData'])->name('user.verification.data');
+    Route::post('/verification/{user}/approve', [UserController::class, 'approveUser'])->name('user.verification.approve');
+    Route::post('/verification/{user}/reject', [UserController::class, 'rejectUser'])->name('user.verification.reject');
 });
 
 
