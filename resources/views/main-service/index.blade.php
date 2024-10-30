@@ -325,9 +325,7 @@
                                     <th nowrap>FORMULIR</th>
                                     <th nowrap>STATUS PENGERJAAN</th>
                                     <th nowrap>STATUS PELAYANAN</th>
-                                    @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
-                                        <th nowrap>ACTION</th>
-                                    @endif
+                                    <th nowrap>ACTION</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -528,9 +526,7 @@
                     {data: 'formulir', name: 'formulir', orderable: false, searchable: false},
                     {data: 'working_status', name: 'working_status', orderable: false, searchable: false},
                     {data: 'service_status', name: 'service_status', orderable: false, searchable: false},
-                    @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
-                        {data: 'action', name: 'action', orderable: false, searchable: false, width: '25%'},
-                    @endif
+                    {data: 'action', name: 'action', orderable: false, searchable: false, width: '25%'},
                 ],
                 order: [[1, 'asc']],
                 drawCallback: function(settings) {

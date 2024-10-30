@@ -1,3 +1,25 @@
+@push('scripts')
+    <style>
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .btn:disabled:hover::after {
+            content: "Anda tidak memiliki akses";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 5px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+    </style>
+@endpush
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -9,31 +31,30 @@
                 @csrf
                 @method('DELETE')
                 <div class="modal-body">
-                    <div id="approvalByContainer" style="display: none;">
-                        <div class="form-group">
-                            <label for="approval_by" class="form-label" id="approvalByLabel">Disetujui Oleh</label>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="d-flex gap-2 mb-3 justify-content-center">
-                            <button type="button" class="btn btn-outline-danger w-50" style="margin:0 !important;" id="btnTolak">Tolak</button>
-                            <button type="button" class="btn btn-outline-success w-50" id="btnTerima">Terima</button>
-                        </div>
-                    </div>
+                    @php
+                        $isAdminOrOperator = in_array(auth()->user()->role, ['admin', 'operator']);
+                    @endphp
 
-                    <div class="mb-3" id="visitScheduleContainer" style="display: none;">
-                        <label for="visit_schedule" class="form-label">Tanggal Kunjungan</label>
-                        <input type="date" class="form-control flatpickr-date" id="visit_schedule" name="visit_schedule" required readonly>
-                    </div>
-                    
-                    <div id="alasanTolakContainer" style="display: none;">
-                        <div class="form-group">
-                            <label for="alasan_tolak" class="form-label">Alasan Penolakan</label>
-                            <textarea class="form-control" id="alasan_tolak" name="rejected_reason" rows="3" placeholder="Masukkan alasan penolakan"></textarea>
+                        <div class="row">
+                            <div class="d-flex gap-2 mb-3 justify-content-center">
+                                <button type="button" class="btn btn-outline-danger w-50" style="margin:0 !important;" id="btnTolak" @if(!$isAdminOrOperator) style="cursor: default;" @endif>Tolak</button>
+                                <button type="button" class="btn btn-outline-success w-50" id="btnTerima" @if(!$isAdminOrOperator) style="cursor: default;" @endif>Terima</button>
+                            </div>
                         </div>
-                    </div>
 
+                        <div class="mb-3" id="visitScheduleContainer" style="display: none;">
+                            <label for="visit_schedule" class="form-label">Tanggal Kunjungan</label>
+                            <input type="date" class="form-control flatpickr-date" id="visit_schedule" name="visit_schedule" required readonly @if(!$isAdminOrOperator) disabled @endif>
+                        </div>
+
+                        <div id="alasanTolakContainer" style="display: none;">
+                            <div class="form-group">
+                                <label for="alasan_tolak" class="form-label">Alasan Penolakan</label>
+                                <textarea class="form-control" id="alasan_tolak" name="rejected_reason" rows="3"
+                                    placeholder="Masukkan alasan penolakan"
+                                    {{ !$isAdminOrOperator ? 'readonly' : '' }}></textarea>
+                            </div>
+                        </div>
                     <input type="hidden" name="status" id="confirmationStatus">
                 </div>
                 <div class="modal-footer">
@@ -57,7 +78,9 @@
                 $('#alasanTolakContainer').hide();
 
                 $('#confirmationStatus').val('approved');
-                $('#btnSubmit').show();
+                @if($isAdminOrOperator)
+                    $('#btnSubmit').show();
+                @endif
 
                 $('#visit_schedule').prop('required', true);
                 $('#alasan_tolak').prop('required', false);
@@ -70,7 +93,9 @@
                 $('#alasanTolakContainer').show();
 
                 $('#confirmationStatus').val('rejected');
-                $('#btnSubmit').show();
+                @if($isAdminOrOperator)
+                    $('#btnSubmit').show();
+                @endif
 
                 $('#visit_schedule').prop('required', false);
                 $('#alasan_tolak').prop('required', true);
@@ -162,3 +187,5 @@
         });
     </script>
 @endpush
+
+

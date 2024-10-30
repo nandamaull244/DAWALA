@@ -100,7 +100,7 @@ class MainServiceController extends Controller
                 $q->where('instance_id', $instanceId);
             });
         }
-
+        
         if ($request->filled('search') && $request->search['value']) {
             $searchValue = $request->search['value'];
             $query->where(function($q) use ($searchValue) {
@@ -132,7 +132,10 @@ class MainServiceController extends Controller
                 $hashedId = $row->getHashedId();
                 $approvalName = optional($row->approvalBy)->full_name ?? 'Data tidak ada';
                 $actionBtn = '<div class="btn-group" role="group">';
-                $actionBtn .= '<a target="_blank" href="'.route('admin.pelayanan.edit', $hashedId).'" class="btn btn-outline-primary" style="cursor: pointer;"><i class="bi bi-pencil-square fs-5"></i></a>';
+
+                if(auth()->user()->role == 'admin' || auth()->user()->role == 'operator') {
+                    $actionBtn .= '<a target="_blank" href="'.route(auth()->user()->role .'.pelayanan.edit', $hashedId).'" class="btn btn-outline-primary" style="cursor: pointer;"><i class="bi bi-pencil-square fs-5"></i></a>';
+                }
                 $actionBtn .= '<a class="btn btn-outline-success delete-btn" data-bs-toggle="modal" 
                                                                         data-bs-target="#confirmationModal" 
                                                                         data-id="'.$hashedId.'" 
