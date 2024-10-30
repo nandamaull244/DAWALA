@@ -488,11 +488,16 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('admin.pelayanan.data') }}",
+                    url: "{{ match(auth()->user()->role) {
+                        'admin' => route('admin.pelayanan.data'),
+                        'operator' => route('operator.pelayanan.data'), 
+                        'instance' => route('instance.pelayanan.data'),
+                        default => route('user.pelayanan.data'),
+                    } }}",
                     method: 'GET',
-                    data: function (d) {
+                    data: function(d) {
                         d.start_date = $('#startDate').val();
-                        d.end_date = $('#endDate').val();
+                        d.end_date = $('#endDate').val(); 
                         d.time = $('#selectedTime').val();
                         d.categories = $('#selectedCategories').val();
                         d.types = $('#selectedTypes').val();
