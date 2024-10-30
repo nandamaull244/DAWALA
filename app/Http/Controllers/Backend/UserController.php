@@ -56,6 +56,8 @@ class UserController extends Controller
             'address' => 'required|string',
             'no_kk' => 'required|string|digits:16',
             'phone_number' => 'required|string|digits_between:10,14',
+            'district_id'=> 'required|exists:districts,id',
+            'village_id'=> 'required|exists:villages,id',
             'role' => 'required|in:admin,operator,user,instance',
             'password' => 'required|min:8|confirmed',
             'password_confirmation' => 'required|same:password',
@@ -67,7 +69,7 @@ class UserController extends Controller
 
         if ($request->input('role') === 'instance') {
             $rules['registration_type'] = 'required|string';
-            $rules['village_id'] = 'required|exists:villages,id';
+           
         }
 
         $validator = Validator::make($request->all(), $rules);
@@ -97,8 +99,8 @@ class UserController extends Controller
                 'address' => $request->address,
                 'no_kk' => $request->no_kk,
                 'email' => $request->email,
-                'district_id' => $request->role === 'instance' ? $request->district_id : null,
-                'village_id' => $request->role === 'instance' ? $request->village_id : null,
+                'district_id' => $request->district_id,
+                'village_id' =>  $request->village_id,
                 'phone_number' => $request->phone_number,
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
@@ -106,8 +108,10 @@ class UserController extends Controller
                 'registration_type' => $request->role === 'instance' ? $request->registration_type : 'User, Perorangan',
             ]);
 
+        
+
             if($request->role === 'instance') {
-                $instance = Instance::find('user_id', $user->id)->first();
+                $instance = Instance::where('user_id', $user->id)->first();
                 if(empty($instance)) {
                     $instance = Instance::create([
                         'name' => $request->instance_name,
@@ -219,7 +223,9 @@ class UserController extends Controller
 
     public function getData(Request $request)
     {
-        $query = User::with(['district', 'village'])->where('role', '!=', 'admin');
+        $query = User::with(['district', 'village'])
+            ->where('role', '!=', 'admin')
+            ->whereIn('registration_status', ['Completed', 'Rejected']);
 
         $query = $this->applyFilters($query, $request);
 

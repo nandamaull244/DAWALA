@@ -64,6 +64,8 @@ Formulir Registrasi Akun
                                             <option value="Intansi, RW" {{ old('registration_type') == 'Intansi, RW' ? 'selected' : '' }}>RW</option>
                                             <option value="Intansi, Yayasan" {{ old('registration_type') == 'Intansi, Yayasan' ? 'selected' : '' }}>Yayasan</option>
                                             <option value="Intansi, Instansi" {{ old('registration_type') == 'Intansi, Instansi' ? 'selected' : '' }}>Instansi</option>
+                                            <option value="Intansi, Lembaga" {{ old('registration_type') == 'Intansi, Lembaga' ? 'selected' : '' }}>Lembaga</option>
+                                            <option value="Intansi, Desa" {{ old('registration_type') == 'Intansi, Desa' ? 'selected' : '' }}>Desa</option>
                                         </select>
                                         @error('registration_type')
                                             <span>{{ $message }}</span>
@@ -79,7 +81,7 @@ Formulir Registrasi Akun
                         <div class="row mb-1 mt-1">
                             <!-- District selection (hidden by default) -->
                             <div class="col-md-6">
-                                <div id="district-select-group" class="form-group mb-4" style="display: none;">
+                                <div id="district-select-group" class="form-group mb-4">
                                     <label for="district-select">Pilih Kecamatan</label>
                                     <div class="position-relative">
                                         <select class="form-control form-control-md" data-title="Kecamatan" id="district-select" name="district_id">
@@ -102,7 +104,7 @@ Formulir Registrasi Akun
 
                             <!-- Village selection (hidden by default) -->
                             <div class="col-md-6">
-                                <div id="village-select-group" class="form-group mb-4" style="display: none;">
+                                <div id="village-select-group" class="form-group mb-4">
                                     <label for="village-select">Pilih Desa</label>
                                     <div class="position-relative">
                                         <select class="form-control form-control-md" data-title="Desa" id="village-select" name="village_id">
@@ -394,44 +396,87 @@ Formulir Registrasi Akun
             const $passwordInput = $('#password');
             $passwordInput.attr('type', $(this).prop('checked') ? 'text' : 'password');
         });
+
+        // Show instance name field for specific types
+        $('#registration_type').on('change', function() {
+            const selectedType = $(this).val();
+            const $instanceNameGroup = $('#instance_name_group');
+            const $instanceNameInput = $('#instance_name');
+            
+            // Show instance name field for specific types
+            const showInstanceTypes = ['Intansi, Yayasan', 'Intansi, Instansi', 'Intansi, Lembaga'];
+            const isShowInstance = showInstanceTypes.includes(selectedType);
+            
+            if (isShowInstance) {
+                $instanceNameGroup.show();
+                $instanceNameInput.prop('required', true);
+                
+                // Set placeholder based on selection
+                const placeholders = {
+                    'Intansi, Yayasan': 'Masukkan nama yayasan',
+                    'Intansi, Instansi': 'Masukkan nama instansi',
+                    'Intansi, Lembaga': 'Masukkan nama lembaga'
+                };
+                
+                $instanceNameInput.attr('placeholder', placeholders[selectedType] || '');
+            } else {
+                $instanceNameGroup.hide();
+                $instanceNameInput.prop('required', false);
+                $instanceNameInput.val('').attr('placeholder', '');
+            }
+        });
+
+        // Trigger change event on page load
+        $('#registration_type').trigger('change');
     });
 
     function setRole(role) {
-        $('#registration_status').val(role === 'user' ? 'completed' : 'process');
+        const isInstance = role === 'instance';
+        const elements = {
+            status: $('#registration_status'),
+            subCategory: $('#sub-category'),
+            userInput: $('#perorangan'),
+            operatorInput: $('#instance'),
+            instanceName: $('#instance_name_group')
+        };
         
-        const $subCategory = $('#sub-category');
-        const $districtSelect = $('#district-select-group');
-        const $villageSelect = $('#village-select-group');
-        const $userInput = $('#perorangan');
-        const $operatorInput = $('#instance');
-        const $instance_name = $('#instance_name_group')
+        // Set registration status
+        elements.status.val(isInstance ? 'process' : 'completed');
         
-        if (role === 'instance') {
-            $subCategory.show();
-            $districtSelect.show();
-            $villageSelect.show();
-            $instance_name.show()
-        } else {
-            $subCategory.hide();
-            $districtSelect.hide();
-            $villageSelect.hide();
-            $instance_name.hide()
-        }
+        // Toggle visibility hanya untuk sub-category
+        elements.subCategory[isInstance ? 'show' : 'hide']();
         
-        if (role === 'user') {
-            $operatorInput.prop('required', false);
-            $userInput.prop('required', true);
-            $('#instance_name').prop('required', false);
-            $('#registration_type').prop('required', false);
-            $('#district-select').prop('required', false);
-            $('#village-select').prop('required', false);
-        } else {
-            $userInput.prop('required', false);
-            $operatorInput.prop('required', true);
-            $('#instance_name').prop('required', true);
-            $('#registration_type').prop('required', true);
-            $('#district-select').prop('required', true);
-            $('#village-select').prop('required', true);
+        
+        
+        // Selalu sembunyikan instance name saat pergantian role
+        elements.instanceName.hide();
+        
+        // Set required fields
+        const requiredFields = {
+            user: {
+                '#perorangan': true,
+                '#instance': false,
+                '#instance_name': false,
+                '#registration_type': false,
+               
+            },
+            instance: {
+                '#perorangan': false,
+                '#instance': true,
+                '#registration_type': true,
+                
+            }
+        };
+        
+        const fields = requiredFields[isInstance ? 'instance' : 'user'];
+        Object.entries(fields).forEach(([selector, required]) => {
+            $(selector).prop('required', required);
+        });
+
+        // Reset registration type dan instance name saat pergantian role
+        if (!isInstance) {
+            $('#registration_type').val('');
+            $('#instance_name').val('').prop('required', false);
         }
     }
 
