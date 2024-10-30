@@ -1,5 +1,13 @@
 <?php
 function getFlatpickrDate($date) {
+    if (strpos($date, ':') !== false) {
+        $datetime = explode(' ', $date);
+        $date = explode('-', $datetime[0]);
+        $time = $datetime[1];
+        
+        return $date[2] . ' ' . getMonth($date[1]) . ' ' . $date[0] . ' Jam : ' . substr($time, 0, 5);
+    }
+    
     $date = explode('-', $date);
     return $date[2] . ' ' . getMonth($date[1]) . ' ' . $date[0];
 }

@@ -187,19 +187,27 @@ class MainServiceController extends Controller
                 return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal"  
                         data-title="Foto Bukti Keterbatasan" 
                         data-image="' . (isset($evidence->image_path) ? $evidence->image_path : '-') . '"
-                        data-odgj_image="' . (isset($evidence_odgj->image_path) ? $evidence_odgj->image_path : '-') . '">Lihat Foto</a>';
+                        data-image_name="' . (isset($evidence->original_name) ? $evidence->original_name : '-') . '"
+                        data-image_created_at="' . (isset($evidence->created_at) ? getFlatpickrDate($evidence->created_at) : '-') . '"
+                        data-odgj_image="' . (isset($evidence_odgj->image_path) ? $evidence_odgj->image_path : '-') . '"
+                        data-odgj_image_name="' . (isset($evidence_odgj->original_name) ? $evidence_odgj->original_name : '-') . '"
+                        data-odgj_image_created_at="' . (isset($evidence_odgj->created_at) ? getFlatpickrDate($evidence_odgj->created_at) : '-') . '">Lihat Foto</a>';
             })
             ->addColumn('ktp_image', function($row) {
                 $ktp = $row->service_image()->where('image_type', 'KTP')->first();
                 return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" 
                         data-title="Foto KTP"  
-                        data-image="' . (isset($ktp->image_path) ? $ktp->image_path : '-') . '">Lihat Foto</a>';
+                        data-image="' . (isset($ktp->image_path) ? $ktp->image_path : '-') . '"
+                        data-image_name="' . (isset($ktp->original_name) ? $ktp->original_name : '-') . '"
+                        data-image_created_at="' . (isset($ktp->created_at) ? getFlatpickrDate($ktp->created_at) : '-') . '">Lihat Foto</a>';
             })
             ->addColumn('kk_image', function($row) {
                 $kk = $row->service_image()->where('image_type', 'Kartu Keluarga')->first();
                 return '<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" 
                         data-title="Foto Kartu Keluarga"  
-                        data-image="' . (isset($kk->image_path) ? $kk->image_path : '-') . '">Lihat Foto</a>';
+                        data-image="' . (isset($kk->image_path) ? $kk->image_path : '-') . '"
+                        data-image_name="' . (isset($kk->original_name) ? $kk->original_name : '-') . '"
+                        data-image_created_at="' . (isset($kk->created_at) ? getFlatpickrDate($kk->created_at) : '-') . '">Lihat Foto</a>';
             })
             ->addColumn('formulir', function($row) {
                 $f101 = $row->service_form()->where('form_type', 'F1.01')->first();
