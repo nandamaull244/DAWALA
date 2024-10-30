@@ -38,31 +38,31 @@
             </div>
         </div>
         <div class="notif px-4 py-3">
-            <div class="dropdown">
-                <button class="btn btn-light dropdown-toggle w-100 d-flex align-items-center justify-content-between" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="position-relative">
+                <button class="btn btn-light w-100 d-flex align-items-center justify-content-between" type="button" id="notificationButton" onclick="toggleNotifications()">
                     <h6 class="mb-0">Notifications</h6>
                     <span class="badge bg-danger">3</span>
                 </button>
-                <ul class="dropdown-menu w-100" aria-labelledby="notificationDropdown">
-                    <li>
-                        <div class="dropdown-item notification-item">
-                            <small class="text-muted">2 minutes ago</small>
-                            <p class="mb-0 small">Your service request has been processed</p>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="dropdown-item notification-item">
-                            <small class="text-muted">1 hour ago</small>
-                            <p class="mb-0 small">Document verification completed</p>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="dropdown-item notification-item">
-                            <small class="text-muted">Yesterday</small>
-                            <p class="mb-0 small">New service status update available</p>
-                        </div>
-                    </li>
-                </ul>
+            </div>
+        </div>
+        <div id="notificationPanel" class="notification-panel" style="display: none;">
+            <div class="notification-header">
+                <h6 class="mb-0">Notifications</h6>
+                <button type="button" class="btn-close" onclick="toggleNotifications()"></button>
+            </div>
+            <div class="notification-body">
+                <div class="notification-item">
+                    <small class="text-muted">2 minutes ago</small>
+                    <p class="mb-0 small">Your service request has been processed</p>
+                </div>
+                <div class="notification-item">
+                    <small class="text-muted">1 hour ago</small>
+                    <p class="mb-0 small">Document verification completed</p>
+                </div>
+                <div class="notification-item">
+                    <small class="text-muted">Yesterday</small>
+                    <p class="mb-0 small">New service status update available</p>
+                </div>
             </div>
         </div>
         <div class="sidebar-menu">

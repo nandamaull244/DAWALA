@@ -112,5 +112,31 @@
             toastr.info("{{ session('info') }}", "Informasi");
         @endif
     });
+    
+    function toggleNotifications() {
+        const panel = document.getElementById('notificationPanel');
+        if (panel.style.display === 'none') {
+            panel.style.display = 'block';
+            panel.classList.remove('hide');
+            panel.classList.add('show');
+        } else {
+            panel.classList.remove('show');
+            panel.classList.add('hide');
+            setTimeout(() => {
+                panel.style.display = 'none';
+            }, 300);
+        }
+    }
+
+    // Menutup panel ketika mengklik di luar
+    document.addEventListener('click', function(event) {
+        const panel = document.getElementById('notificationPanel');
+        const button = document.getElementById('notificationButton');
+        if (!panel.contains(event.target) && !button.contains(event.target) && panel.style.display !== 'none') {
+            toggleNotifications();
+        }
+    });
 </script>
 @stack('scripts')
+
+
