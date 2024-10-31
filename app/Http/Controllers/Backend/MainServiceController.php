@@ -348,10 +348,17 @@ class MainServiceController extends Controller
             } elseif(auth()->user()->role == 'instance') {
                 $user = User::create($userData);
                 $instance = Instance::where('user_id', auth()->user()->id)->first();
-                InstanceUsers::create([
-                    'instance_id' => $instance->id,
-                    'user_id' => $user->id,
-                ]);
+                if(!$instance) { 
+                    $instance = new Instance();
+                    $instance->name = 'Yayasan ' . auth()->user()->full_name;
+                    $instance->user_id = auth()->user()->id;
+                    $instance->save();
+                } else {
+                    InstanceUsers::create([
+                        'instance_id' => $instance->id,
+                        'user_id' => $user->id,
+                    ]);
+                }
             } else {
                 $user = User::create($userData);
             }
