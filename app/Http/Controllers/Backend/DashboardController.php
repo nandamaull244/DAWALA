@@ -12,7 +12,6 @@ class DashboardController extends Controller
     public function index() {
         if (auth()->user()->role == 'admin') {
             $data = $this->dashboardAdmin();
-            return $data;
             return view("Dashboard.dashboard_admin")->with([
                 'data' => $data
             ]);

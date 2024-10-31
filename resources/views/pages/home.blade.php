@@ -461,23 +461,36 @@
 
 @push('scripts')
     <script>
-        let images = [
-            "{{ asset('assets') }}/img/1.png",
-            "{{ asset('assets') }}/img/2.png",
-            "{{ asset('assets') }}/img/3.png"
-        ];
+        $(document).ready(function() {
+            const images = [
+                "{{ asset('assets') }}/img/1.png",
+                "{{ asset('assets') }}/img/2.png",
+                "{{ asset('assets') }}/img/3.png"
+            ];
 
-        let currentIndex = 0;
-        const headerItem = document.querySelector('.header-carousel-item');
+            let currentIndex = 0;
+            const $headerItem = $('.header-carousel-item');
 
-        function changeBackground() {
-            headerItem.style.backgroundImage = `url('${images[currentIndex]}')`;
-            currentIndex = (currentIndex + 1) % images.length;
-        }
+            // Tambahkan CSS transition
+            $headerItem.css({
+                'transition': 'opacity 2.5s ease-in-out',
+            });
 
-        setInterval(changeBackground, 5000);
+            function changeBackground() {
+                $headerItem.css('opacity', '0');
+                
+                setTimeout(() => {
+                    $headerItem.css({
+                        'background-image': `url('${images[currentIndex]}')`
+                    });
+                    $headerItem.css('opacity', '1');
+                    currentIndex = (currentIndex + 1) % images.length;
+                }, 300);
+            }
 
-        changeBackground();
+            setInterval(changeBackground, 5000);
+            changeBackground();
+        });
 
         $(document).ready(function () {
             $('.increment-number').each(function () {
