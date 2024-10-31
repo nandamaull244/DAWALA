@@ -215,9 +215,9 @@
                             <div class="dokumentasi-item">
                                 <div class="dokumentasi-img">
                                     @if($article->image_name)
-                                        <img src="{{ asset('storage/' . $article->image_name) }}" class="img-fluid rounded-top w-100" alt="{{ $article->title }}">
+                                        <img src="{{ asset('storage/' . $article->image_name) }}" class="img-fluid rounded-top" alt="{{ $article->title }}" style="width: 100%; height: 350px; object-fit: cover;">
                                     @else
-                                        <img src="{{ asset('assets/img/logo.png') }}" class="img-fluid rounded-top w-75" alt="No Image">
+                                        <img src="{{ asset('assets/img/logo.png') }}" class="img-fluid rounded-top" alt="No Image" style="width: 100%; height: 350px; object-fit: cover;">
                                     @endif
                                 </div>
                                 <div class="dokumentasi-content p-4">
