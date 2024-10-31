@@ -173,10 +173,10 @@ class MainServiceController extends Controller
                 return $row->user->rw;
             })
             ->addColumn('district', function($row) {
-                return $row->user->district->name;
+                return optional($row->user->district)->name ?? '-';
             })
             ->addColumn('village', function($row) {
-                return $row->user->village->name;
+                return optional($row->user->village)->name ?? '-';
             })
             ->addColumn('phone_number', function($row) {
                 return $row->user->phone_number;
