@@ -243,7 +243,9 @@
                 $('#evidence_of_disability_odgj_image').toggle(isODGJ);
                 if(isODGJ) {
                     $('[name="evidence_of_disability_odgj_image"]').attr('required', true);
-                } 
+                } else {
+                    $('[name="evidence_of_disability_odgj_image"]').attr('required', false);
+                }
             });
 
             $('#formFile').click(function(e) {
