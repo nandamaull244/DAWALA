@@ -139,7 +139,7 @@
                                     <th class="text-center" nowrap>No</th>
                                     <th class="text-center" nowrap>Judul</th>
                                     <th class="text-center" nowrap>Isi Artikel</th>
-                                    <th class="text-center" nowrap>Foto</th>
+                                    {{-- <th class="text-center" nowrap>Foto</th> --}}
                                     <th class="text-center" nowrap>Penulis</th>
                                     <th class="text-center" nowrap>Aksi</th>
                                 </tr>
@@ -172,7 +172,7 @@
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, className: 'text-center', width: '5%'},
                     {data: 'title', name: 'title', width: '30%'},
                     {data: 'body', name: 'body', width: '40%'},
-                    {data: 'image', name: 'image', width: '15%'},
+                    // {data: 'image', name: 'image', width: '15%'},
                     {data: 'author', name: 'author', width: '15%'},
                     {data: 'action', name: 'action', orderable: false, searchable: false, width: '25%'},
                 ],

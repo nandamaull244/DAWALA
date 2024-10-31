@@ -56,11 +56,11 @@ class ArticleController extends Controller
             ->editColumn('title', function($row) {
                 return '<p>' . $row->title . '</p>';
             })
-            ->editColumn('image', function($row) {
-                return $row->image_name 
-                    ? '<img src="' . asset('storage/' . $row->image_name) . '" alt="' . $row->title . '" width="300" height="auto">' 
-                    : 'No Image';
-            })
+            // ->editColumn('image', function($row) {
+            //     return $row->image_name 
+            //         ? '<img src="' . asset('storage/' . $row->image_name) . '" alt="' . $row->title . '" width="300" height="auto">' 
+            //         : 'No Image';
+            // })
             ->editColumn('body', function($row) {
                 return Str::limit(strip_tags(htmlspecialchars_decode($row->body)), 30);
             })
