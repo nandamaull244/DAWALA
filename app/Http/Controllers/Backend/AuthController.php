@@ -138,10 +138,6 @@ class AuthController extends Controller
             'password' => 'required|min:8|confirmed',
         ];
 
-        if ($request->input('role') === 'instance') {
-            $rules['registration_type'] = 'required|string';
-            $rules['instansi'] = 'string';
-        }
 
         $validator = Validator::make($request->all(), $rules);
         

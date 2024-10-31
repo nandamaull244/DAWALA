@@ -320,6 +320,40 @@ Edit Akun {{ $user->user }}
                                </div>
                             </div>
                         </div>
+                        <div class="row mb-1 mt-1" @if($user->role !== 'operator') hidden @endif>
+                            <!-- Password -->
+                            <div class="col-md-6">
+                                <div class="mb-4 form-group">
+                                        <label for="password" class="mb-2">Password (Minimal 8 karakter)</label>
+                                    <div class="form-group position-relative has-icon-left ">
+                                        <input type="password" class="form-control form-control-md" data-title="Password" placeholder="Password" name="password" id="password" minlength="8" required>
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-shield-lock"></i>
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-muted mb-2">Centang kotak di bawah untuk melihat password sebelum disubmit.</small>
+                                    <div class="form-check mb-4">
+                                        <input type="checkbox" class="form-check-input" onclick="togglePassword()"
+                                            id="showPassword">
+                                        <label class="form-check-label" for="showPassword">Lihat Password</label>
+                                    </div>
+                                    @error('password')
+                                        <span>{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- Password Confirmation -->
+                            <div class="col-md-6 form-group">
+                                <label for="password_confirmation" class="mb-2">Konfirmasi Password</label>
+                                <div class="form-group position-relative has-icon-left mb-4 form-group">
+                                    <input type="password" class="form-control form-control-md" data-title="Konfirmasi Password" id="password_confirmation" placeholder="Ulangi Password" minlength="8" name="password_confirmation" required>
+                                    <div class="form-control-icon">
+                                        <i class="bi bi-shield-lock"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
                         <input type="hidden" name="registration_status" id="registration_status" value="completed">

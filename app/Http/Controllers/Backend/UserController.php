@@ -210,7 +210,7 @@ class UserController extends Controller
         }
 
         try {
-            $user->update([
+            $userData = [
                 'nik' => $request->nik,
                 'full_name' => $request->full_name,
                 'username' => $request->username,
@@ -227,7 +227,14 @@ class UserController extends Controller
                 'role' => $request->role,
                 'registration_status' => $request->role === 'instance' ? 'Process' : 'Completed',
                 'registration_type' => $request->role === 'operator' ? 'Operator' : ($request->role === 'instance' ? $request->registration_type : 'User, Perorangan'),
-            ]);
+            ];
+
+            if($request->role === 'operator') {
+                $userData['password'] = Hash::make($request->password);
+            }
+            
+            $user->update($userData);
+
 
             if ($request->role === 'instance') {
                 $instance = Instance::where('user_id', $user->id)->first();

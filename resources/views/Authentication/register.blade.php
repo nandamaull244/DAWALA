@@ -112,8 +112,8 @@
                         </div>
                         <div id="instansi-select-group" class="mb-4" style="display: none;">
                             <div class="form-group position-relative has-icon-left mb-4"  >
-                                <input type="text" class="form-control form-control-xl" placeholder="Nama Instansi"
-                                    name="instansi" value="{{ old('instansi') }}" required>
+                                <input type="text" class="form-control " placeholder="Nama Instansi"
+                                    name="instansi" value="{{ old('instansi') }}">
                                 <div class="form-control-icon">
                                     <i class="bi bi-building"></i>
                                 </div>
