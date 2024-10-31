@@ -1,4 +1,4 @@
-@push('scripts')
+@push('css')
     <style>
         .btn:disabled {
             cursor: not-allowed;
@@ -42,11 +42,8 @@
 
                         <div class="row">
                             <div class="d-flex gap-2 mb-3 justify-content-center">
-                                <button type="button" class="btn btn-outline-danger w-50 {{ !$isAdminOrOperator ? 'no-click' : '' }}" 
-                                        style="margin:0 !important;" 
-                                        id="btnTolak">Tolak</button>
-                                <button type="button" class="btn btn-outline-success w-50 {{ !$isAdminOrOperator ? 'no-click' : '' }}" 
-                                        id="btnTerima">Terima</button>
+                                <button type="button" class="btn btn-outline-danger w-50" style="margin:0 !important;" id="btnTolak">Tolak</button>
+                                <button type="button" class="btn btn-outline-success w-50" id="btnTerima">Terima</button>
                             </div>
                         </div>
 
@@ -85,6 +82,17 @@
                     return false;
                 });
             @endif
+
+            $('#confirmationModal').on('show.bs.modal', function (event) {
+                const button = $(event.relatedTarget);
+                const serviceStatus = button.data('service_status');
+                
+                if (serviceStatus === 'Rejected' || serviceStatus === 'Done') {
+                    $('#btnTolak, #btnTerima').hide();
+                } else {
+                    $('#btnTolak, #btnTerima').show();
+                }
+            });
 
             $('#btnTerima').click(function() {
                 $(this).removeClass('btn-outline-success').addClass('btn-success active');
