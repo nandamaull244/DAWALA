@@ -8,20 +8,16 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <div class="row">
-                        <div class="col-12">
+                        {{-- <div class="col-12">
                             <p class="text-start mb-2"><b>Tanggal Pengajuan</b></p>
-                        </div>
+                        </div> --}}
                         <div class="col-md-6 mb-2 mb-md-0">
-                            <div class="input-group">
-                                <span class="input-group-text">Dari</span>
-                                <input type="date" class="form-control flatpickr" id="startDate" readonly>
-                            </div>
+                            <label for="startDate" class="form-label text-start"><b>Tanggal Awal</b></label>
+                            <input type="date" class="form-control flatpickr" id="startDate" readonly value="{{ date('Y-m-d') }}">
                         </div>
                         <div class="col-md-6">
-                            <div class="input-group">
-                                <span class="input-group-text">Sampai</span>
-                                <input type="date" class="form-control flatpickr" id="endDate" readonly>
-                            </div>
+                            <label for="endDate" class="form-label text-start"><b>Tanggal Akhir</b></label>
+                            <input type="date" class="form-control flatpickr" id="endDate" readonly>
                         </div>
                     </div>
                 </div>
@@ -53,8 +49,10 @@
                     <div class="col-md-6">
                         <p class="text-start mb-2"><b>Waktu</b></p>
                         <div class="d-flex gap-2">
-                            <button class="time btn btn-primary time-btn" data-value="Terbaru" onclick="selectFilter(this, 'Time')">Terbaru</button>
-                            <button class="time btn btn-outline-primary time-btn" data-value="Terlama" onclick="selectFilter(this, 'Time')">Terlama</button>
+                            <select name="time" id="time" class="form-select time-select">
+                                <option value="ASC">Terbaru</option>
+                                <option value="DESC">Terlama</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -125,6 +123,12 @@
             const $input = $(input);
             const value = $input.val();
             $('#selectedDistricts').val(value);
+        }
+
+        function selectTime(input) {
+            const $input = $(input);
+            const value = $input.val();
+            $('#selectedTime').val(value);
         }
 
         function selectFilter(button, type, multiple = false) {

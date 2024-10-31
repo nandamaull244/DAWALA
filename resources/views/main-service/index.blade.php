@@ -556,12 +556,17 @@
                 $('#filterModal').modal('hide');
             });
             
-            $('.time-btn, .category-btn, .type-btn, .service-status-btn, .work-status-btn').on('click', function() {
+            $('.category-btn, .type-btn, .service-status-btn, .work-status-btn').on('click', function() {
                 table.ajax.reload();
             });
 
             $(document).on('change', '#kecamatan', function() {
                 selectDistricts(this);
+                table.ajax.reload();
+            });
+
+            $(document).on('change', '.time-select', function() {
+                selectTime(this);
                 table.ajax.reload();
             });
 

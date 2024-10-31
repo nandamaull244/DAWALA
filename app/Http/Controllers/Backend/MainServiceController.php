@@ -69,6 +69,54 @@ class MainServiceController extends Controller
         return view('main-service.index', compact('services', 'districts', 'villages'));
     }
 
+    private function applyFilters($query, $request)
+    {
+        if ($request->filled('start_date')) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+
+        if ($request->filled('time')) {
+            $order = $request->time;
+            $query->orderBy('id', $order);
+        }        
+
+        if ($request->filled('categories')) {
+            $query->whereHas('service_list', function($q) use ($request) {
+                $q->whereIn('service_name', explode(',', $request->categories));
+            });
+        }
+
+        if ($request->filled('types')) {
+            $query->whereIn('service_type', explode(',', $request->types));
+        }
+
+        if ($request->filled('kecamatan')) {
+            $query->whereHas('user.district', function($q) use ($request) {
+                $q->where('id', $request->kecamatan);
+            });
+        }
+
+        if ($request->filled('desa')) {
+            $query->whereHas('user.village', function($q) use ($request) {
+                $q->where('id', $request->desa);
+            });
+        }
+
+        if ($request->filled('service_statuses')) {
+            $query->whereIn('service_status', explode(',', $request->service_statuses));
+        }
+
+        if ($request->filled('work_statuses')) {
+            $query->whereIn('working_status', explode(',', $request->work_statuses));
+        }
+
+        return $query;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -87,8 +135,7 @@ class MainServiceController extends Controller
                         ->orderByRaw("CASE 
                             WHEN working_status = 'Late' THEN created_at 
                             ELSE NULL 
-                            END ASC") 
-                        ->orderBy('created_at', 'desc'); 
+                            END ASC"); 
 
         if (auth()->user()->role == 'operator') {
             $query->whereHas('user', function($q) {
@@ -129,7 +176,6 @@ class MainServiceController extends Controller
                     });
             });
         }
-
         $query = $this->applyFilters($query, $request);
 
         return DataTables::of($query)
@@ -737,53 +783,5 @@ class MainServiceController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-    }
-
-    private function applyFilters($query, $request)
-    {
-        if ($request->filled('start_date')) {
-            $query->whereDate('created_at', '>=', $request->start_date);
-        }
-
-        if ($request->filled('end_date')) {
-            $query->whereDate('created_at', '<=', $request->end_date);
-        }
-
-        if ($request->filled('time')) {
-            $order = $request->time == 'Terbaru' ? 'desc' : 'asc';
-            $query->orderBy('created_at', $order);
-        }        
-
-        if ($request->filled('categories')) {
-            $query->whereHas('service_list', function($q) use ($request) {
-                $q->whereIn('service_name', explode(',', $request->categories));
-            });
-        }
-
-        if ($request->filled('types')) {
-            $query->whereIn('service_type', explode(',', $request->types));
-        }
-
-        if ($request->filled('kecamatan')) {
-            $query->whereHas('user.district', function($q) use ($request) {
-                $q->where('id', $request->kecamatan);
-            });
-        }
-
-        if ($request->filled('desa')) {
-            $query->whereHas('user.village', function($q) use ($request) {
-                $q->where('id', $request->desa);
-            });
-        }
-
-        if ($request->filled('service_statuses')) {
-            $query->whereIn('service_status', explode(',', $request->service_statuses));
-        }
-
-        if ($request->filled('work_statuses')) {
-            $query->whereIn('working_status', explode(',', $request->work_statuses));
-        }
-
-        return $query;
     }
 }
