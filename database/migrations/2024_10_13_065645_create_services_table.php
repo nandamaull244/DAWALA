@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->string('ticket')->unique();
             $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('service_list_id')->constrained('service_list')->onUpdate('cascade')->onDelete('cascade');
             $table->string('reason')->nullable();
@@ -28,6 +29,7 @@ return new class extends Migration
             $table->date('visit_schedule')->nullable();
             $table->foreignId('approval_by')->nullable()->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
+            $table->string('message_for_user')->nullable();
             $table->string('rejected_reason')->nullable();
             $table->softDeletes();
         });

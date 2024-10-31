@@ -305,27 +305,27 @@
                         <table id="serviceTable" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th nowrap>NO</th>
-                                    <th nowrap>NAMA</th>
-                                    <th nowrap>TANGGAL PENGAJUAN</th>
-                                    <th nowrap>JENIS PELAYANAN</th>
-                                    <th nowrap>KATEGORI LAYANAN</th>
-                                    <th nowrap>TIPE LAYANAN</th>
-                                    <th nowrap>TANGGAL LAHIR</th>
-                                    <th nowrap>ALAMAT</th>
-                                    <th nowrap>RT</th>
-                                    <th nowrap>RW</th>
-                                    <th nowrap>KECAMATAN</th>
-                                    <th nowrap>DESA/KELURAHAN</th>
-                                    <th nowrap>NO HP</th>
-                                    <th nowrap>ALASAN PENGAJUAN</th>
-                                    <th nowrap>FOTO BUKTI KETERBATASAN</th>
-                                    <th nowrap>FOTO KTP</th>
-                                    <th nowrap>FOTO KK</th>
-                                    <th nowrap>FORMULIR</th>
-                                    <th nowrap>STATUS PENGERJAAN</th>
-                                    <th nowrap>STATUS PELAYANAN</th>
-                                    <th nowrap>ACTION</th>
+                                    <th class="text-center" nowrap>NO</th>
+                                    <th class="text-center" nowrap>NAMA</th>
+                                    <th class="text-center" nowrap>TANGGAL PENGAJUAN</th>
+                                    <th class="text-center" nowrap>JENIS PELAYANAN</th>
+                                    <th class="text-center" nowrap>KATEGORI LAYANAN</th>
+                                    <th class="text-center" nowrap>TIPE LAYANAN</th>
+                                    <th class="text-center" nowrap>TANGGAL LAHIR</th>
+                                    <th class="text-center" nowrap>ALAMAT</th>
+                                    <th class="text-center" nowrap>RT</th>
+                                    <th class="text-center" nowrap>RW</th>
+                                    <th class="text-center" nowrap>KECAMATAN</th>
+                                    <th class="text-center" nowrap>DESA/KELURAHAN</th>
+                                    <th class="text-center" nowrap>NO HP</th>
+                                    <th class="text-center" nowrap>ALASAN PENGAJUAN</th>
+                                    <th class="text-center" nowrap>FOTO BUKTI KETERBATASAN</th>
+                                    <th class="text-center" nowrap>FOTO KTP</th>
+                                    <th class="text-center" nowrap>FOTO KK</th>
+                                    <th class="text-center" nowrap>FORMULIR</th>
+                                    <th class="text-center" nowrap>STATUS PENGERJAAN</th>
+                                    <th class="text-center" nowrap>STATUS PELAYANAN</th>
+                                    <th class="text-center" nowrap>AKSI</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -352,6 +352,7 @@
     @include('main-service.modal_image')
     @include('main-service.modal_download_formulir')
     @include('main-service.modal_select_paper')
+    @include('main-service.modal_working_status')
 @endsection
 
 @push('scripts')

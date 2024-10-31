@@ -148,6 +148,14 @@ class MainServiceController extends Controller
                                                                         data-reason="'. $row->rejected_reason .'" 
                                                                         data-approval_by="'. $approvalName.'" 
                                                                         data-visit_schedule="'. $row->visit_schedule .'" style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></a>';
+                if(auth()->user()->role == 'admin' && $row->service_status != 'Rejected' && ($row->working_status != 'Not Yet')) {
+                    $actionBtn .= '<a class="btn btn-outline-primary" data-bs-toggle="modal" 
+                                                                        data-bs-target="#workingStatusModal" 
+                                                                        data-id="'.$hashedId.'" 
+                                                                        data-working_status="'. $row->working_status .'"
+                                                                        data-message="'. $row->message_for_user .'"
+                                                                        style="cursor: pointer;"><i class="bi bi-clipboard-check fs-5"></i></i></a>';
+                }                                                                   
                 $actionBtn .= '</div>';
                 return $actionBtn;
             })            
@@ -243,7 +251,6 @@ class MainServiceController extends Controller
             ->addColumn('service_status', function($row) {
                 $html = '<div class="d-flex flex-column align-items-center">';
             
-                // Status untuk service_status
                 if ($row->service_status == 'Not Yet') {
                     $html .= '<span class="badge bg-secondary mb-1">Belum Dikerjakan</span>';
                 } elseif ($row->service_status == 'Process') {
@@ -254,7 +261,6 @@ class MainServiceController extends Controller
                     $html .= '<span class="badge bg-success mb-1">Selesai</span>';
                 }
             
-                // Status untuk document_recieved_status
                 if($row->rejected_reason == null) {
                     if ($row->document_recieved_status == 'Not Yet Recieved') {
                         $html .= '<span class="badge bg-danger">Belum diterima</span>';
@@ -266,7 +272,6 @@ class MainServiceController extends Controller
                 $html .= '</div>';
                 return $html;
             })
-            
             ->filterColumn('name', function($query, $keyword) {
                 $query->whereHas('user', function($q) use ($keyword) {
                     $q->where('full_name', 'like', "%{$keyword}%");
@@ -597,8 +602,7 @@ class MainServiceController extends Controller
                     'rejected_reason' => null,
                     'approval_by' => auth()->user()->id
                 ]);
-                return redirectByRole(auth()->user()->role, 'pelayanan.index', 
-                    ['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' diterima!']);
+                return redirectByRole(auth()->user()->role, 'pelayanan.index', ['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' diterima!']);
             } else {
                 $service->update([
                     'service_status' => 'Rejected',
@@ -607,12 +611,26 @@ class MainServiceController extends Controller
                     'rejected_reason' => $request->rejected_reason,
                     'approval_by' => auth()->user()->id
                 ]);
-                return redirectByRole(auth()->user()->role, 'pelayanan.index', 
-                    ['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' ditolak!']);
+                return redirectByRole(auth()->user()->role, 'pelayanan.index', ['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' ditolak!']);
             }
         } else {
-            return redirectByRole(auth()->user()->role, 'pelayanan.index', 
-                ['error' => 'Data Pelayanan Tidak Ditemukan']);
+            return redirectByRole(auth()->user()->role, 'pelayanan.index', ['error' => 'Data Pelayanan Tidak Ditemukan']);
+        }
+    }
+
+    public function workingStatus(Request $request, $hashedId) 
+    {
+        $service = Service::whereHash($hashedId)->firstOrFail();
+        if($service) {
+            $service->update([
+                'working_status' => 'Done',
+                'service_status' => 'Completed',
+                'message_for_user' => $request->message_for_user
+            ]);
+
+            return redirectByRole(auth()->user()->role, 'pelayanan.index', ['success' => 'Informasi Status Pengerjaan berhasil diperbarui!']);
+        }  else {
+            return redirectByRole(auth()->user()->role, 'pelayanan.index', ['error' => 'Data Pelayanan Tidak Ditemukan']);
         }
     }
 
