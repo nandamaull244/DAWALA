@@ -5,13 +5,13 @@
     </a>
 </li>
 
-<li class="sidebar-item  has-sub">
-    <span href="#" class='sidebar-link disabled'>
+<li class="sidebar-item has-sub">
+    <span href="#" class='sidebar-link'>
         <i class="bi bi-people"></i>
         <span>Pelayanan</span>
     </span>
-    <ul class="submenu ">
-        <li class="submenu-item ">
+    <ul class="submenu {{ request()->routeIs('operator.pelayanan.*') ? 'active' : '' }}">
+        <li class="sidebar-item {{ request()->routeIs('operator.pelayanan.index') ? 'active' : '' }}">
             <a href="{{ route('operator.pelayanan.index') }}" class='sidebar-link'>
                 <i class="bi bi-archive-fill"></i>
                 <span>Arsip Layanan</span>
