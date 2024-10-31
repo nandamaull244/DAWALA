@@ -58,8 +58,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="role" id="perorangan"
                                         value="user" onclick="setRole('user')" required>
-                                    <label class="form-check-label" for="perorangan">Perorangan/Untuk Diri Sendiri
-                                        sendiri</label>
+                                    <label class="form-check-label" for="perorangan">Perorangan/Untuk Diri Sendiri</label>
                                     @error('role')
                                         <span>{{ $message }}</span>
                                     @enderror

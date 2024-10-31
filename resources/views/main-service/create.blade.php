@@ -158,7 +158,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="reason">Alasan Pengajuan (Opsional)</label>
+                                <label for="reason">Alasan tidak bisa datang ke kantor (Opsional)</label>
                                 <input type="text" class="form-control" id="reason" name="reason">
                             </div>
 

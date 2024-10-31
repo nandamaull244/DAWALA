@@ -1,11 +1,10 @@
 <footer>
     <div class="footer clearfix mt-5 mb-0 text-muted">
         <div class="float-start">
-            <p>2021 &copy; Mazer</p>
+            <p>2024 &copy; DAWALA PEDULI</p>
         </div>
         <div class="float-end">
-            <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
-                    href="http://ahmadsaugi.com">A. Saugi</a></p>
+           <p>by <a href="https://agenzycreative.com">Agenzy Creative</a></p>
         </div>
     </div>
 </footer>
