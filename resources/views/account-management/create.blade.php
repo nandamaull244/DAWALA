@@ -39,20 +39,6 @@ Formulir Registrasi Akun
                         </div>
 
                         <div class="row mb-1 mt-1">
-                            <div class="col-md-6">
-                                <div class="form-group" id="instance_name_group" style="display: none;">
-                                    <label for="instance_name">Nama Intansi</label>
-                                    <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="Nama Intansi" id="instance_name" name="instance_name" value="{{ old('nama_intansi') }}">
-                                        <div class="form-control-icon">
-                                            <i class="bi bi-card-text"></i>
-                                        </div>
-                                    </div>
-                                    @error('no_kk')
-                                        <span>{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
                             <!-- Sub-category selection (hidden by default) -->
                             <div class="col-md-6">
                                 <div id="sub-category" class="form-group mb-4" style="display: none;">
@@ -74,6 +60,21 @@ Formulir Registrasi Akun
                                             <i class="bi bi-chevron-down" style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group" id="instance_name_group" style="display: none;">
+                                    <label for="instance_name">Nama Intansi</label>
+                                    <div class="form-group position-relative has-icon-left">
+                                        <input type="text" class="form-control form-control-md" data-title="Nama Intansi" id="instance_name" name="instance_name" value="{{ old('nama_intansi') }}">
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-card-text"></i>
+                                        </div>
+                                    </div>
+                                    @error('no_kk')
+                                        <span>{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -130,7 +131,7 @@ Formulir Registrasi Akun
                                 <div class="mb-4 form-group">
                                     <label for="nik">NIK</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" value="{{ old('nik') }}" minlength="16" required>
+                                        <input type="text" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" value="{{ old('nik') }}" maxlength="16" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                         <div class="form-control-icon">
                                             <i class="bi bi-card-text"></i>
                                         </div>
@@ -146,7 +147,7 @@ Formulir Registrasi Akun
                                 <div class="mb-4 form-group">
                                     <label for="no_kk">No KK</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="No Kartu Keluarga" id="no_kk" name="no_kk" value="{{ old('no_kk') }}" minlength="16" required>
+                                        <input type="text" class="form-control form-control-md" data-title="No Kartu Keluarga" id="no_kk" name="no_kk" value="{{ old('no_kk') }}" maxlength="16" required>
                                         <div class="form-control-icon">
                                             <i class="bi bi-card-text"></i>
                                         </div>
@@ -488,6 +489,31 @@ Formulir Registrasi Akun
         );
     }
 
+    var nikCheck = false;
+    $('#nik').on('keyup change', function() {
+        if($('#nik').val().length == 16) {
+            $.ajax({
+                url: "{{ route(auth()->user()->role . '.pelayanan.cekNIK') }}",
+                method: 'GET',
+                data: {
+                    nik: $('#nik').val()
+                },
+                success: function(response) {
+                    if(response) {
+                        toastr.error('NIK sudah terdaftar', 'Astagfirullah' ,{timeOut: 2000, "className": "custom-larger-toast"});
+                        nikCheck = true;
+                    } else {
+                        toastr.success('NIK dapat digunakan', 'Alhamdulillah',{timeOut: 2000, "className": "custom-larger-toast"});
+                        nikCheck = false;
+                    }
+                }, 
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    });
+
     $('#userForm').on('submit', function(e) {
         e.preventDefault();
         var isValid = true;
@@ -525,5 +551,6 @@ Formulir Registrasi Akun
             this.submit();
         }
     });
+    
 </script>
 @endpush

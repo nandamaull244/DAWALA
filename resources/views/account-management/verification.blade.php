@@ -297,7 +297,7 @@ Data Seluruh Akun yang Membutuhkan Verifikasi
                 serverSide: true,
                 responsive: true,
                 ajax: {
-                    url: '{{ route("admin.user.verification.data") }}',
+                    url: '{{ route("admin.verification.data") }}',
                     type: 'GET',
                     data: function (d) {
                         d.time = $('#selectedTime').val();
@@ -411,7 +411,7 @@ Data Seluruh Akun yang Membutuhkan Verifikasi
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "{{ route(auth()->user()->role . '.user.verification.approve', '') }}/" + userId,
+                            url: "{{ route('admin.verification.approve', '') }}/" + userId,
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}'
@@ -454,7 +454,7 @@ Data Seluruh Akun yang Membutuhkan Verifikasi
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "{{ route(auth()->user()->role . '.user.verification.reject', '') }}/" + userId,
+                            url: "{{ route('admin.verification.reject', '') }}/" + userId,
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}',

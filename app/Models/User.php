@@ -26,7 +26,6 @@ class User extends Authenticatable
         'birth_date',
         'gender', // Enum: ['Laki-Laki', 'Perempuan']
         'no_kk',
-        'username',
         'email',
         'phone_number',
         'district_id',
@@ -37,6 +36,8 @@ class User extends Authenticatable
         'role', // Enum: ['admin', 'operator', 'user', 'instantiation']
         'registration_type',
         'registration_status', // Enum: ['Process', 'Rejected', 'Completed']
+        'created_at',
+        'updated_at',
     ];
 
     /**

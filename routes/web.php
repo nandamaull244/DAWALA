@@ -45,9 +45,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
    
     // Verification routes
     Route::get('/verification', [UserController::class, 'verification'])->name('user.verification');
-    Route::get('/verification/data', [UserController::class, 'getVerificationData'])->name('user.verification.data');
-    Route::post('/verification/{user}/approve', [UserController::class, 'approveUser'])->name('user.verification.approve');
-    Route::post('/verification/{user}/reject', [UserController::class, 'rejectUser'])->name('user.verification.reject');
+    Route::get('/verification/data', [UserController::class, 'getVerificationData'])->name('verification.data');
+    Route::post('/verification/approve/{id}', [UserController::class, 'approveUser'])->name('verification.approve');
+    Route::post('/verification/reject/{id}', [UserController::class, 'rejectUser'])->name('verification.reject');
 
     // Ubah route untuk mengarah ke UserController
     Route::post('/check-district-availability', [UserController::class, 'checkDistrictAvailability'])
