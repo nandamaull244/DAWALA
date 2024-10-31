@@ -257,7 +257,6 @@
                     $('#latitude').val(position.coords.latitude.toFixed(6));
                     $('#longitude').val(position.coords.longitude.toFixed(6));
                 }, function(error) {
-                    // console.error("Error: " + error.message);
                     toastr.warning("Tidak dapat mengambil lokasi Anda. Silakan masukkan secara manual.", "Perhatian!");
                 });
             } else {
