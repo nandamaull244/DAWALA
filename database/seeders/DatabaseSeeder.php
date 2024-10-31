@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
 
         // Operator user
         DB::table('users')->insert([
-            'nik' => $this->generateNIK(),
+            'nik' => 1234567890123456,
             'username' => 'operatordawala',
             'password' => Hash::make('dawala2024'),
             'full_name' => 'DAWALA Operator',

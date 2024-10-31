@@ -37,7 +37,7 @@ class UserController extends Controller
                   ->whereNotNull('district_id');
         })->get();
         
-        $villages = collect(); // Start with empty villages
+        $villages = collect(); 
         
         return view('account-management.create_account_operator', compact('districts', 'villages'));
     }
@@ -110,10 +110,11 @@ class UserController extends Controller
 
         if ($request->input('role') === 'instance') {
             $rules['registration_type'] = 'required|string';
-           
         }
 
+        
         $validator = Validator::make($request->all(), $rules);
+
         
         if($validator->fails()){
             $errors = $validator->errors();
@@ -130,26 +131,28 @@ class UserController extends Controller
         }
 
         try {
-            $user = User::create([
+            $user = new User([
                 'nik' => $request->nik,
-                'full_name' => $request->full_name,
                 'username' => $request->username,
+                'password' => Hash::make($request->password),
+                'full_name' => $request->full_name,
                 'birth_date' => $request->birth_date,
                 'gender' => $request->gender,
-                'rt' => $request->rt,
-                'rw' => $request->rw,
-                'address' => $request->address,
                 'no_kk' => $request->no_kk,
                 'email' => $request->email,
                 'district_id' => $request->district_id,
-                'village_id' =>  $request->village_id,
+                'village_id' => $request->village_id,
                 'phone_number' => $request->phone_number,
-                'password' => Hash::make($request->password),
+                'rt' => $request->rt,
+                'rw' => $request->rw,
+                'address' => $request->address,
                 'role' => $request->role,
-                'registration_status' => $request->role === 'user' || $request->role === 'operator' ? 'Completed' : 'Process',
-                'registration_type' => $request->role === 'instance' || $request->role === 'operator' ? $request->registration_type : 'User, Perorangan',
+                'registration_type' => in_array($request->role, ['instance', 'operator']) ? $request->registration_type : 'User, Perorangan',
+                'registration_status' => in_array($request->role, ['user', 'operator']) ? 'Completed' : 'Process',
             ]);
-        
+            
+            $user->save();
+            
             if($request->role === 'instance') {
                 $instance = Instance::where('user_id', $user->id)->first();
                 if(empty($instance)) {
@@ -162,9 +165,12 @@ class UserController extends Controller
 
             return redirect()->route('admin.manajemen-akun.index')->with('success', 'Akun berhasil dibuat');
         } catch (\Exception $e) {
-            return redirect()->route('admin.manajemen-akun.create')->with('error', 'Pendaftaran gagal! Silakan coba lagi.')->withInput();
+            $errorMessage = 'Pendaftaran gagal! Error pada file ' . basename($e->getFile()) . ' baris ke-' . $e->getLine();
+            return redirect()
+                ->route('admin.manajemen-akun.index')
+                ->with('error', $errorMessage)
+                ->withInput();
         }
-     
     }
 
     /**
@@ -409,8 +415,9 @@ class UserController extends Controller
      * @param User $user
      * @return \Illuminate\Http\JsonResponse
      */
-    public function approveUser(User $user)
+    public function approveUser($id)
     {
+        $user = User::findOrFail($id);
         try {
             if ($user->registration_status !== 'Process') {
                 return response()->json([
@@ -422,10 +429,7 @@ class UserController extends Controller
                 'registration_status' => 'Completed',
                 'email_verified_at' => now(),
             ]);
-
            
-            // Notification::send($user, new UserApproved());
-
             return response()->json([
                 'message' => 'User berhasil disetujui'
             ]);
@@ -443,8 +447,9 @@ class UserController extends Controller
      * @param User $user
      * @return \Illuminate\Http\JsonResponse
      */
-    public function rejectUser(Request $request, User $user)
+    public function rejectUser($id)
     {
+        $user = User::findOrFail($id);
         try {
             if ($user->registration_status !== 'Process') {
                 return response()->json([
@@ -455,9 +460,6 @@ class UserController extends Controller
             $user->update([
                 'registration_status' => 'Rejected'
             ]);
-
-            // You might want to send an email notification here
-            // Notification::send($user, new UserRejected());
 
             return response()->json([
                 'message' => 'User berhasil ditolak'

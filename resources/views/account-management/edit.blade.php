@@ -89,7 +89,7 @@ Edit Akun {{ $user->user }}
                                 <div class="mb-4 form-group">
                                     <label for="nik">NIK</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" value="{{ $user->nik ?? '' }}" minlength="16" required>
+                                        <input type="text" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" value="{{ $user->nik ?? '' }}" maxlength="16" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                         <div class="form-control-icon">
                                             <i class="bi bi-card-text"></i>
                                         </div>

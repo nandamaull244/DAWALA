@@ -16,16 +16,13 @@ Formulir Registrasi Akun Operator
                 <div class="row">
                     <form id="userForm" action="{{ route("admin.manajemen-akun.store") }}" method="POST" novalidate>
                         @csrf
-                        
-                       
-
                         <div class="row mb-1 mt-1">
                             <!-- Sub-category selection (hidden by default) -->
                             <div class="col-md-6">
                                 <div id="sub-category" class="form-group mb-4" hidden>
                                     <label for="sub-category-select" hidden>Pilih Tipe Registrasi</label>
                                     <div class="position-relative">
-                                        <input type="text" class="form-control form-control-md"   name="registration_type" value="Operator" hidden>
+                                        <input type="text" class="form-control form-control-md" name="registration_type" value="operator" hidden>
                                         @error('registration_type')
                                             <span>{{ $message }}</span>
                                         @enderror
@@ -79,9 +76,6 @@ Formulir Registrasi Akun Operator
                             </div>
 
                         </div>
-
-
-                       
 
                         <div class="row mb-1 mt-1">
                             <!-- Full Name -->
@@ -191,7 +185,7 @@ Formulir Registrasi Akun Operator
                         </div>
 
                         <!-- Hidden Inputs -->
-                        <input type="hidden" name="registration_status" id="registration_status" value="completed">
+                        <input type="hidden" name="registration_status" id="registration_status" value="Completed">
                         <input type="hidden" class="form-control form-control-md" data-title="RT" id="rt" name="rt" value="000" >
                         <input type="hidden" class="form-control form-control-md" data-title="RW" id="rw" name="rw" value="000" >
                         <input type="hidden" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" value="1234567890123456" >
