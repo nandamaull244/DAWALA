@@ -136,12 +136,12 @@
                         <table class="table table-hover table-bordered" id="articlesTable" width="100%">
                             <thead>
                                 <tr class="text-center">
-                                    <th>No</th>
-                                    <th>Judul</th>
-                                    <th>Isi Artikel</th>
-                                    <th>Foto</th>
-                                    <th>Penulis</th>
-                                    <th>Aksi</th>
+                                    <th class="text-center" nowrap>No</th>
+                                    <th class="text-center" nowrap>Judul</th>
+                                    <th class="text-center" nowrap>Isi Artikel</th>
+                                    <th class="text-center" nowrap>Foto</th>
+                                    <th class="text-center" nowrap>Penulis</th>
+                                    <th class="text-center" nowrap>Aksi</th>
                                 </tr>
                             </thead>
                         </table>

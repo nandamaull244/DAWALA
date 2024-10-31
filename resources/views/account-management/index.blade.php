@@ -258,22 +258,22 @@ Data Seluruh Akun yang Terdaftar di DAWALA
                             <table id="userTable" class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
-                                        <th nowrap>No</th>
-                                        <th nowrap>NIK</th>
-                                        <th nowrap>No KK</th>
-                                        <th nowrap>Nama Lengkap</th>
-                                        <th nowrap>Email</th>
-                                        <th nowrap>No HP</th>
-                                        <th nowrap>Tanggal Lahir</th>
-                                        <th nowrap>Gender</th>
-                                        <th nowrap>Alamat</th>
-                                        <th nowrap>RT</th>
-                                        <th nowrap>RW</th>
-                                        <th nowrap>Kecamatan</th>
-                                        <th nowrap>Desa</th>
-                                        <th nowrap>Registration Type</th>
-                                        <th nowrap>Status</th>
-                                        <th nowrap>Action</th>
+                                        <th class="text-center" nowrap>No</th>
+                                        <th class="text-center" nowrap>NIK</th>
+                                        <th class="text-center" nowrap>No KK</th>
+                                        <th class="text-center" nowrap>Nama Lengkap</th>
+                                        <th class="text-center" nowrap>Email</th>
+                                        <th class="text-center" nowrap>No HP</th>
+                                        <th class="text-center" nowrap>Tanggal Lahir</th>
+                                        <th class="text-center" nowrap>Gender</th>
+                                        <th class="text-center" nowrap>Alamat</th>
+                                        <th class="text-center" nowrap>RT</th>
+                                        <th class="text-center" nowrap>RW</th>
+                                        <th class="text-center" nowrap>Kecamatan</th>
+                                        <th class="text-center" nowrap>Desa</th>
+                                        <th class="text-center" nowrap>Tipe Registrasi</th>
+                                        <th class="text-center" nowrap>Status</th>
+                                        <th class="text-center" nowrap>Aksi</th>
                                     </tr>
                                 </thead>
                             </table>

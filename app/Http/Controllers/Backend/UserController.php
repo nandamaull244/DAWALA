@@ -351,8 +351,8 @@ class UserController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $btn = '<div class="btn-group" role="group">';    
-                $btn .= '<button onclick="approveUser('.$row->id.')" class="btn btn-success btn-sm">Approve</button>';
-                $btn .= '<button onclick="rejectUser('.$row->id.')" class="btn btn-danger btn-sm">Reject</button>';
+                $btn .= '<button onclick="approveUser('.$row->id.')" class="btn btn-success btn-sm">Setujui</button>';
+                $btn .= '<button onclick="rejectUser('.$row->id.')" class="btn btn-danger btn-sm">Tolak</button>';
                 $btn .= '</div>';
                 return $btn;
             })
