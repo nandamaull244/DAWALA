@@ -155,7 +155,7 @@ class MainServiceController extends Controller
                                                                         data-service_status="'. $row->service_status .'"
                                                                         data-visit_schedule="'. $row->visit_schedule .'" style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></a>';
 
-                if(auth()->user()->role == 'admin' && $row->service_status != 'Rejected' && ($row->working_status != 'Not Yet' && $row->working_status != '-')) {
+                if($row->service_status != 'Rejected' && ($row->working_status != 'Not Yet' && $row->working_status != '-')) {
                     $actionBtn .= '<a class="btn btn-outline-primary" data-bs-toggle="modal" 
                                                                         data-bs-target="#workingStatusModal" 
                                                                         data-id="'.$hashedId.'" 

@@ -54,28 +54,30 @@
                     <div id="completedStatus" style="display: none;">
                         <div class="text-center mb-4">
                             <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
-                            <h5 class="mt-2">Pengajuan ini telah diselesaikan</h5>
+                            <h5 class="mt-2">Pengajuan ini telah selesai</h5>
                         </div>
                         <div class="form-group">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <label class="form-label mb-0">Pesan untuk Pemohon</label>
-                                <button type="button" class="btn btn-sm btn-outline-primary" id="btnEditMessage">
-                                    <i class="bi bi-pencil me-1"></i>Edit Pesan
-                                </button>
+                                @if (auth()->user()->role == 'admin')
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <label class="form-label mb-0">Pesan untuk Pemohon</label>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" id="btnEditMessage">
+                                            <i class="bi bi-pencil me-1"></i>Edit Pesan
+                                        </button>
+                                    </div>
+                                @endif
+                                <div id="messageDisplay">
+                                    <textarea rows="4" id="completedMessage" class="form-control-plaintext" style="font-size: 1.1em;"></textarea>
+                                </div>
+                                <div id="messageEdit" style="display: none;">
+                                    <textarea class="form-control" id="edit_message_for_user" name="message_for_user" rows="4" required style="font-size: 1.1em;"></textarea>
+                                </div>
                             </div>
-                            <div id="messageDisplay">
-                                <p id="completedMessage" class="form-control-plaintext"></p>
-                            </div>
-                            <div id="messageEdit" style="display: none;">
-                                <textarea class="form-control" id="edit_message_for_user" name="message_for_user" rows="3" required></textarea>
-                            </div>
-                        </div>
                     </div>
                 
                     <div id="inputForm">
                         <div class="form-group">
                             <label for="message_for_user" class="form-label">Pesan untuk Pemohon</label>
-                            <textarea class="form-control" id="message_for_user" name="message_for_user" rows="3" placeholder="Masukkan pesan untuk pemohon" required></textarea>
+                            <textarea class="form-control" id="message_for_user" name="message_for_user" rows="4" placeholder="Masukkan pesan untuk pemohon" required style="font-size: 1.1em;"></textarea>
                         </div>
                         <input type="hidden" name="working_status" value="Done">
                     </div>
@@ -106,7 +108,7 @@
             $('#workingStatusForm').attr('action', url);
 
             if (workingStatus === 'Done') {
-                $('#modalTitle').text('Status Layanan');
+                $('#modalTitle').text('Status Pengerjaan');
                 $('#completedStatus').show();
                 $('#inputForm').hide();
                 $('#submitBtn').hide();
@@ -117,7 +119,7 @@
                 $('#messageEdit').hide();
                 $('#btnEditMessage').text('Edit Pesan').removeClass('btn-success').addClass('btn-outline-primary');
             } else {
-                $('#modalTitle').text('Penyelesaian Layanan');
+                $('#modalTitle').text('Status Pengerjaan');
                 $('#completedStatus').hide();
                 $('#inputForm').show();
                 $('#submitBtn').show();
