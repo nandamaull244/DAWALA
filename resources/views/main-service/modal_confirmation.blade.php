@@ -63,7 +63,7 @@
 
                         <div class="mb-3" id="visitScheduleContainer" style="display: none;">
                             <label for="visit_schedule" class="form-label">Tanggal Kunjungan</label>
-                            <input type="date" class="form-control flatpickr-date" id="visit_schedule" name="visit_schedule" required readonly @if(!$isAdminOrOperator) disabled @endif>
+                            <input type="date" class="form-control flatpickr-min-date" id="visit_schedule" name="visit_schedule" required readonly @if(!$isAdminOrOperator) disabled @endif>
                         </div>
 
                         <div id="alasanTolakContainer" style="display: none;">

@@ -50,6 +50,22 @@
             disableMobile: "true",
             defaultDate: "today"
         });
+
+        $(".flatpickr-min-date").flatpickr({
+            dateFormat: "Y-m-d",
+            allowInput: true,
+            altInput: true,
+            altFormat: "d F Y",
+            locale: "id",
+            disableMobile: "true",
+            defaultDate: "today",
+            minDate: "today", 
+            disable: [
+                function(date) {
+                    return date < new Date().setHours(0,0,0,0);
+                }
+            ],
+        });
         var birthDate = "";
         @if (auth()->user()->role == 'user') 
             var birthDate = "{{ auth()->user()->birth_date }}";
