@@ -139,16 +139,23 @@ class MainServiceController extends Controller
                 $approvalName = optional($row->approvalBy)->full_name ?? 'Data tidak ada';
                 $actionBtn = '<div class="btn-group" role="group">';
 
-                if(auth()->user()->role == 'admin' || auth()->user()->role == 'operator') {
+                if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator') {
                     $actionBtn .= '<a target="_blank" href="'.route(auth()->user()->role .'.pelayanan.edit', $hashedId).'" class="btn btn-outline-primary" style="cursor: pointer;"><i class="bi bi-pencil-square fs-5"></i></a>';
                 }
+
+                if((auth()->user()->role == 'user' || auth()->user()->role == 'instance') && $row->service_status == 'Rejected') {
+                    $actionBtn .= '<a target="_blank" href="'. route(auth()->user()->role .'.pelayanan.edit', $hashedId).'" class="btn btn-outline-primary" style="cursor: pointer;"><i class="bi bi-pencil-square fs-5"></i></a>';
+                }
+
                 $actionBtn .= '<a class="btn btn-outline-success delete-btn" data-bs-toggle="modal" 
                                                                         data-bs-target="#confirmationModal" 
                                                                         data-id="'.$hashedId.'" 
                                                                         data-reason="'. $row->rejected_reason .'" 
                                                                         data-approval_by="'. $approvalName.'" 
+                                                                        data-service_status="'. $row->service_status .'"
                                                                         data-visit_schedule="'. $row->visit_schedule .'" style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></a>';
-                if(auth()->user()->role == 'admin' && $row->service_status != 'Rejected' && ($row->working_status != 'Not Yet')) {
+
+                if(auth()->user()->role == 'admin' && $row->service_status != 'Rejected' && ($row->working_status != 'Not Yet' && $row->working_status != '-')) {
                     $actionBtn .= '<a class="btn btn-outline-primary" data-bs-toggle="modal" 
                                                                         data-bs-target="#workingStatusModal" 
                                                                         data-id="'.$hashedId.'" 

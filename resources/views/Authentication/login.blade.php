@@ -13,16 +13,31 @@
         <link rel="stylesheet" href="/backend/assets/css/pages/auth.css">
         <link rel="icon" href="{{ asset('assets') }}/img/logo.png" type="image/x-icon">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+        <style>
+            #toast-container .toast {
+                width: 400px !important;
+            }
+            
+            #toast-container .toast-message {
+                font-size: 20px !important;
+            }
+            
+            #toast-container .toast-title {
+                font-size: 18px !important;
+            }
+            
+            #toast-container .toast-message:before {
+                font-size: 24px !important;
+            }
+        </style>
     </head>
-
     <body>
         <div id="auth">
             <div class="row h-100">
                 <div class="col-lg-5 col-12">
                     <div id="auth-left">
                         <div class="auth-logo mb-3 text-center">
-                            <a href=""><img src="{{ asset('assets') }}/img/logo.png" alt="Logo"
-                                    style="width: 150px; height: auto;"></a>
+                            <a href=""><img src="{{ asset('assets') }}/img/logo.png" alt="Logo" style="width: 150px; height: auto;"></a>
                         </div>
 
                         <form action="{{ route('login.process') }}" method="POST">
@@ -35,23 +50,17 @@
                                 </div>
                             </div>
                             <div class="form-group position-relative has-icon-left mb-2">
-                                <input type="password" class="form-control form-control-lg rounded" name="password"
-                                    id="password" placeholder="Password">
+                                <input type="password" class="form-control form-control-lg rounded" name="password" id="password" placeholder="Password">
                                 <div class="form-control-icon">
                                     <i class="bi bi-shield-lock"></i>
                                 </div>
                             </div>
                             <div class="form-check mb-4">
-                                <input type="checkbox" class="form-check-input" onclick="togglePassword()"
-                                    id="showPassword">
+                                <input type="checkbox" class="form-check-input" onclick="togglePassword()" id="showPassword">
                                 <label class="form-check-label" for="showPassword">Lihat Password</label>
                             </div>
 
-
-                            <button class="btn btn-primary" type="submit"
-                                style="width: 100%; padding: 10px; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); font-size: 1.25rem;"
-                                onmouseover="this.style.backgroundColor='#003366'"
-                                onmouseout="this.style.backgroundColor='#0164eb'">Masuk</button>
+                            <button class="btn btn-primary" type="submit" style="width: 100%; padding: 10px; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); font-size: 1.25rem;">Masuk</button>
                         </form>
                         <div class="text-center mt-5 text-lg fs-4">
                             <p class="text-gray-600" style="color: #0164eb; transition: color 0.3s;"
@@ -92,7 +101,10 @@
                     "showEasing": "swing",
                     "hideEasing": "linear",
                     "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
+                    "hideMethod": "fadeOut",
+                    "onShown": function() {
+                        $('.toast').addClass('custom-larger-toast');
+                    }
                 };
 
                 @if (session('success'))

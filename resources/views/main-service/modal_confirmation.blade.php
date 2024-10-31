@@ -39,9 +39,23 @@
                     @php
                         $isAdminOrOperator = in_array(auth()->user()->role, ['admin', 'operator']);
                     @endphp
+                        <div class="text-center mb-4" id="waitingApproval" style="display: none;">
+                            <h5 class="mt-2">Menunggu untuk pengajuan diterima</h5>
+                        </div>
+
+                        <div class="text-center mb-4" id="approved" style="display: none;">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                            <h5 class="mt-2">Pengajuan telah disetujui</h5>
+                        </div>
+
+                        <div class="text-center mb-4" id="rejected" style="display: none;">
+                            <i class="bi bi-x-circle-fill text-danger" style="font-size: 3rem;"></i>
+                            <h5 class="mt-2">Pengajuan ditolak</h5>
+                        </div>
+
 
                         <div class="row">
-                            <div class="d-flex gap-2 mb-3 justify-content-center">
+                            <div class="d-flex gap-2 mb-3 justify-content-center" id="confirmation-button">
                                 <button type="button" class="btn btn-outline-danger w-50" style="margin:0 !important;" id="btnTolak">Tolak</button>
                                 <button type="button" class="btn btn-outline-success w-50" id="btnTerima">Terima</button>
                             </div>
@@ -55,9 +69,7 @@
                         <div id="alasanTolakContainer" style="display: none;">
                             <div class="form-group">
                                 <label for="alasan_tolak" class="form-label">Alasan Penolakan</label>
-                                <textarea class="form-control" id="alasan_tolak" name="rejected_reason" rows="3"
-                                    placeholder="Masukkan alasan penolakan"
-                                    {{ !$isAdminOrOperator ? 'readonly' : '' }}></textarea>
+                                <textarea class="form-control" id="alasan_tolak" name="rejected_reason" rows="3" placeholder="Masukkan alasan penolakan" {{ !$isAdminOrOperator ? 'readonly' : '' }}></textarea>
                             </div>
                         </div>
                     <input type="hidden" name="status" id="confirmationStatus">
@@ -75,24 +87,11 @@
     <script>
         $(document).ready(function() {
             let selectedStatus = '';
-
-             @if(!$isAdminOrOperator)
-                $('#btnTolak, #btnTerima').on('click', function(e) {
-                    e.preventDefault();
-                    return false;
-                });
+            var isAdminOrOperator = true;
+            @if(!$isAdminOrOperator)
+                $('#confirmation-button').hide();
+                isAdminOrOperator = false;
             @endif
-
-            $('#confirmationModal').on('show.bs.modal', function (event) {
-                const button = $(event.relatedTarget);
-                const serviceStatus = button.data('service_status');
-                
-                if (serviceStatus === 'Rejected' || serviceStatus === 'Done') {
-                    $('#btnTolak, #btnTerima').hide();
-                } else {
-                    $('#btnTolak, #btnTerima').show();
-                }
-            });
 
             $('#btnTerima').click(function() {
                 $(this).removeClass('btn-outline-success').addClass('btn-success active');
@@ -125,12 +124,8 @@
             });
 
             $('#confirmationModal').on('hidden.bs.modal', function () {
-                $('#btnTerima')
-                    .removeClass('btn-success active')
-                    .addClass('btn-outline-success');
-                $('#btnTolak')
-                    .removeClass('btn-danger active')
-                    .addClass('btn-outline-danger');
+                $('#btnTerima').removeClass('btn-success active').addClass('btn-outline-success');
+                $('#btnTolak').removeClass('btn-danger active').addClass('btn-outline-danger')
                 
                 $('#alasanTolakContainer').hide();
                 $('#btnSubmit').hide();
@@ -140,42 +135,57 @@
 
             $('#confirmationModal').on('show.bs.modal', function (event) {
                 const button = $(event.relatedTarget);
+                const serviceStatus = button.data('service_status');
                 const id = button.data('id');
                 const url = `{{ route(auth()->user()->role . '.pelayanan.destroy', ':id') }}`.replace(':id', id);
                 $('#confirmationForm').attr('action', url);
-                
+
                 const reason = button.data('reason');
                 const visitSchedule = button.data('visit_schedule');
-
                 const approvalBy = button.data('approval_by');
-                if(approvalBy) {
-                    $('#approvalByContainer').show();
-                }
-                
-                if(reason) { // Status ditolak
-                    $('#approvalByLabel').text('Ditolak Oleh ' + approvalBy);
-                    $('#btnTolak').addClass('btn-danger active').removeClass('btn-outline-danger').text('Ditolak').show();
-                    $('#alasanTolakContainer').show();
-                    $('#alasan_tolak').val(reason);
-                    $('#btnTerima').hide();
-                    $('#visitScheduleContainer').hide();
-                    $('#confirmationModalLabel').text('Status Pengajuan Layanan ini ditolak')
-                } 
-                if(visitSchedule) { // Status diterima
-                    $('#approvalByLabel').text('Disetujui Oleh ' + approvalBy);
-                    $('#btnTerima').addClass('btn-success active').removeClass('btn-outline-success').text('Diterima').show();
-                    $('#visitScheduleContainer').show();
-                    $('#btnTolak').hide();
-                    $('#confirmationModalLabel').text('Pengajuan Layanan ini diterima');
 
-                    const visitScheduleFlatpickr = $('#visit_schedule')[0]._flatpickr;
+                $('#btnTolak').removeClass('btn-danger active').addClass('btn-outline-danger').show();
+                $('#btnTerima').removeClass('btn-success active').addClass('btn-outline-success').show();
+                $('#rejected, #approved, #waitingApproval, #approvalByContainer, #alasanTolakContainer, #visitScheduleContainer').hide();
 
-                    visitScheduleFlatpickr.setDate(visitSchedule);
-                    $('#visit_schedule').each(function() {
-                        this._flatpickr.setDate(visitSchedule);
-                    });
+                if (serviceStatus != 'Not Yet' || !isAdminOrOperator) {
+                    $('#btnTolak, #btnTerima').hide();
+
+                    if (serviceStatus === 'Rejected') {
+                        $('#rejected').show();
+                        $('#alasanTolakContainer').show();
+                        $('#alasan_tolak').val(reason);
+                    } else if (serviceStatus === 'Completed' || serviceStatus === 'Process') {
+                        $('#approved').show();
+                        $('#visitScheduleContainer').show();
+                        const visitScheduleFlatpickr = $('#visit_schedule')[0]._flatpickr;
+                        visitScheduleFlatpickr.setDate(visitSchedule);
+                    } else {
+                        $('#waitingApproval').show();
+                    }
+                } else {
+                    if (approvalBy) {
+                        $('#approvalByContainer').show();
+                        $('#approvalByLabel').text(serviceStatus === 'Rejected' ? `Ditolak Oleh ${approvalBy}` : `Disetujui Oleh ${approvalBy}`);
+                    }
+
+                    if (reason) { 
+                        $('#btnTolak').addClass('btn-danger active').text('Ditolak').show();
+                        $('#alasanTolakContainer').show();
+                        $('#alasan_tolak').val(reason);
+                        $('#btnTerima').hide();
+                        $('#confirmationModalLabel').text('Status Pengajuan Layanan ini ditolak');
+                    } else if (visitSchedule) { 
+                        $('#btnTerima').addClass('btn-success active').text('Diterima').show();
+                        $('#visitScheduleContainer').show();
+                        $('#btnTolak').hide();
+                        $('#confirmationModalLabel').text('Pengajuan Layanan ini diterima');
+                        const visitScheduleFlatpickr = $('#visit_schedule')[0]._flatpickr;
+                        visitScheduleFlatpickr.setDate(visitSchedule);
+                    }
                 }
             });
+
 
             $('#confirmationForm').on('submit', function(e) {
                 e.preventDefault();

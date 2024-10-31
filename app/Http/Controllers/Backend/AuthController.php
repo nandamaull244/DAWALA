@@ -39,10 +39,12 @@ class AuthController extends Controller
 
                     case 'instance':
                         if ($user->registration_status == 'Completed') {
-                           
                             return redirect()->route('instance.pelayanan.index')->with('success', 'Anda berhasil Login sebagai Instansi, ' . $user->instance->name);
+                        } elseif($user->registration_status == 'Rejected') {
+                            return redirect()->back()->with('error', 'Pengajuan pendaftaran akun ditolak oleh Admin!');
                         } else {
                             return redirect()->back()->with('error', 'Akun anda belum terdaftar sebagai instansi, silakan menunggu admin untuk melakukan verifikasi.');
+                            
                         }
                     case 'user':
                         return redirect()->route('user.pelayanan.index')->with('success', 'Selamat Datang di Sistem DAWALA, ' . $user->full_name);
