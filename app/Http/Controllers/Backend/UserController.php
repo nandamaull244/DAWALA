@@ -149,9 +149,7 @@ class UserController extends Controller
                 'registration_status' => $request->role === 'user' || $request->role === 'operator' ? 'Completed' : 'Process',
                 'registration_type' => $request->role === 'instance' || $request->role === 'operator' ? $request->registration_type : 'User, Perorangan',
             ]);
-
         
-
             if($request->role === 'instance') {
                 $instance = Instance::where('user_id', $user->id)->first();
                 if(empty($instance)) {
