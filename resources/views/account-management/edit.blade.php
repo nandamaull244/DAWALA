@@ -1,11 +1,11 @@
 @extends('layouts.main')
 
 @section('page-heading')
-Tambah Akun
+Edit Akun
 @endsection
 
 @section('page-subheading')
-Formulir Registrasi Akun
+Edit Akun {{ $user->user }}
 @endsection
 
 @section('content')
@@ -39,47 +39,85 @@ Formulir Registrasi Akun
                                     </div>
                                 </div>
                             </div>
+                            <div class="row mb-1 mt-1">
+                                <div class="col-md-6">
+                                    <div class="form-group" id="instance_name_group" style="display: none;">
+                                        <label for="instance_name">Nama Intansi</label>
+                                        <div class="form-group position-relative has-icon-left">
+                                            <input type="text" class="form-control form-control-md" data-title="Nama Intansi" id="instance_name" name="instance_name" value="{{ optional($user->instance)->name ?? '' }}">
+                                            <div class="form-control-icon">
+                                                <i class="bi bi-card-text"></i>
+                                            </div>
+                                        </div>
+                                        @error('instance_name')
+                                            <span>{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <!-- Sub-category selection (hidden by default) -->
+                                <div class="col-md-6">
+                                    <div id="sub-category" class="form-group mb-4" style="display: none;">
+                                        <label for="sub-category-select">Pilih Tipe Registrasi</label>
+                                        <div class="position-relative">
+                                            <select class="form-control form-control-md" data-title="Tipe Registrasi" id="registration_type" name="registration_type">
+                                                <option value="">Pilih Tipe Registrasi</option>
+                                                <option value="Intansi, RT" {{ $user->registration_type == 'Intansi, RT' ? 'selected' : '' }}>RT</option>
+                                                <option value="Intansi, RW" {{ $user->registration_type == 'Intansi, RW' ? 'selected' : '' }}>RW</option>
+                                                <option value="Intansi, Yayasan" {{ $user->registration_type == 'Intansi, Yayasan' ? 'selected' : '' }}>Yayasan</option>
+                                                <option value="Intansi, Instansi" {{ $user->registration_type == 'Intansi, Instansi' ? 'selected' : '' }}>Instansi</option>
+                                            </select>
+                                            @error('registration_type')
+                                                <span>{{ $message }}</span>
+                                            @enderror
+                                            <div class="form-control-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                                                <i class="bi bi-chevron-down" style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         @endif
 
-                        <div class="row mb-1 mt-1">
+                       
+                        
+                        
+                        <input type="hidden" name="role" id="role" value="{{ $user->role }}">
+                        <div class="row mb-1 mt-1" @if($user->role == 'operator') hidden @endif>
+                            <!-- NIK -->
                             <div class="col-md-6">
-                                <div class="form-group" id="instance_name_group" style="display: none;">
-                                    <label for="instance_name">Nama Intansi</label>
+                                <div class="mb-4 form-group">
+                                    <label for="nik">NIK</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="Nama Intansi" id="instance_name" name="instance_name" value="{{ optional($user->instance)->name ?? '' }}">
+                                        <input type="text" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" value="{{ $user->nik ?? '' }}" minlength="16" required>
                                         <div class="form-control-icon">
                                             <i class="bi bi-card-text"></i>
                                         </div>
                                     </div>
-                                    @error('instance_name')
+                                    @error('nik')
                                         <span>{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
-                            <!-- Sub-category selection (hidden by default) -->
+
+                            <!-- No KK -->
                             <div class="col-md-6">
-                                <div id="sub-category" class="form-group mb-4" style="display: none;">
-                                    <label for="sub-category-select">Pilih Tipe Registrasi</label>
-                                    <div class="position-relative">
-                                        <select class="form-control form-control-md" data-title="Tipe Registrasi" id="registration_type" name="registration_type">
-                                            <option value="">Pilih Tipe Registrasi</option>
-                                            <option value="Intansi, RT" {{ $user->registration_type == 'Intansi, RT' ? 'selected' : '' }}>RT</option>
-                                            <option value="Intansi, RW" {{ $user->registration_type == 'Intansi, RW' ? 'selected' : '' }}>RW</option>
-                                            <option value="Intansi, Yayasan" {{ $user->registration_type == 'Intansi, Yayasan' ? 'selected' : '' }}>Yayasan</option>
-                                            <option value="Intansi, Instansi" {{ $user->registration_type == 'Intansi, Instansi' ? 'selected' : '' }}>Instansi</option>
-                                        </select>
-                                        @error('registration_type')
-                                            <span>{{ $message }}</span>
-                                        @enderror
-                                        <div class="form-control-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
-                                            <i class="bi bi-chevron-down" style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
+                                <div class="mb-4 form-group">
+                                    <label for="no_kk">No KK</label>
+                                    <div class="form-group position-relative has-icon-left">
+                                        <input type="text" class="form-control form-control-md" data-title="No Kartu Keluarga" id="no_kk" name="no_kk" value="{{ $user->no_kk ?? '' }}" minlength="16" required>
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-card-text"></i>
                                         </div>
                                     </div>
+                                    @error('no_kk')
+                                        <span>{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="row mb-1 mt-1">
+                    
+                        <div class="row mb-1 mt-1" @if($user->role == 'operator') hidden @endif>
                             <!-- District selection (hidden by default) -->
                             <div class="col-md-6">
                                 <div id="district-select-group" class="form-group mb-4" style="display: none;">
@@ -125,41 +163,57 @@ Formulir Registrasi Akun
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row mb-1 mt-1">
-                            <!-- NIK -->
-                            <div class="col-md-6">
-                                <div class="mb-4 form-group">
-                                    <label for="nik">NIK</label>
-                                    <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" value="{{ $user->nik ?? '' }}" minlength="16" required>
-                                        <div class="form-control-icon">
-                                            <i class="bi bi-card-text"></i>
-                                        </div>
+                        
+                    <div class="row mb-1 mt-1" @if($user->role == 'operator') hidden @endif>
+                        <!-- rt -->
+                        <div class="col-md-6">
+                            <div class="mb-4 form-group">
+                                <label for="rt">RT</label>
+                                <div class="form-group position-relative has-icon-left mb-4 form-group">
+                                    <input type="number" class="form-control form-control-md" data-title="RT" id="rt" name="rt" value="{{ $user->rt ?? '' }}" required>
+                                    <div class="form-control-icon">
+                                        <i class="bi bi-house"></i>
                                     </div>
-                                    @error('nik')
-                                        <span>{{ $message }}</span>
-                                    @enderror
                                 </div>
-                            </div>
-
-                            <!-- No KK -->
-                            <div class="col-md-6">
-                                <div class="mb-4 form-group">
-                                    <label for="no_kk">No KK</label>
-                                    <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="No Kartu Keluarga" id="no_kk" name="no_kk" value="{{ $user->no_kk ?? '' }}" minlength="16" required>
-                                        <div class="form-control-icon">
-                                            <i class="bi bi-card-text"></i>
-                                        </div>
-                                    </div>
-                                    @error('no_kk')
-                                        <span>{{ $message }}</span>
-                                    @enderror
-                                </div>
+                                @error('rt')
+                                    <span>{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
 
+                        <div class="col-md-6">
+                            <!-- rw -->
+                            <div class="mb-4 form-group">
+                                <label for="rw">RW</label>
+                                <div class="form-group position-relative has-icon-left mb-4 form-group">
+                                    <input type="number" class="form-control form-control-md" data-title="RW" id="rw" name="rw" value="{{ $user->rw ?? '' }}" required>
+                                    <div class="form-control-icon">
+                                        <i class="bi bi-house"></i>
+                                    </div>
+                                </div>
+                                @error('rw')
+                                    <span>{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                        <div class="row mb-1 mt-1" @if($user->role !== 'operator')  hidden @endif>
+                            <!-- Username -->
+                            <div class="col-md-6">
+                                <div class="mb-4 form-group">
+                                   <label for="username">Username</label>
+                                   <div class="form-group position-relative has-icon-left mb-4 form-group">
+                                       <input type="text" class="form-control form-control-md" data-title="Username" name="username" id="username" value="{{ $user->username ?? '' }}">
+                                       <div class="form-control-icon">
+                                           <i class="bi bi-person"></i>
+                                       </div>
+                                   </div>
+                                   @error('username')
+                                       <span>{{ $message }}</span>
+                                   @enderror
+                               </div>
+                            </div>
+                        </div>
                         <div class="row mb-1 mt-1">
                             <!-- Full Name -->
                             <div class="col-md-6">
@@ -267,39 +321,6 @@ Formulir Registrasi Akun
                             </div>
                         </div>
 
-                        <div class="row mb-1 mt-1">
-                            <!-- rt -->
-                            <div class="col-md-6">
-                                <div class="mb-4 form-group">
-                                    <label for="rt">RT</label>
-                                    <div class="form-group position-relative has-icon-left mb-4 form-group">
-                                        <input type="number" class="form-control form-control-md" data-title="RT" id="rt" name="rt" value="{{ $user->rt ?? '' }}" required>
-                                        <div class="form-control-icon">
-                                            <i class="bi bi-house"></i>
-                                        </div>
-                                    </div>
-                                    @error('rt')
-                                        <span>{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <!-- rw -->
-                                <div class="mb-4 form-group">
-                                    <label for="rw">RW</label>
-                                    <div class="form-group position-relative has-icon-left mb-4 form-group">
-                                        <input type="number" class="form-control form-control-md" data-title="RW" id="rw" name="rw" value="{{ $user->rw ?? '' }}" required>
-                                        <div class="form-control-icon">
-                                            <i class="bi bi-house"></i>
-                                        </div>
-                                    </div>
-                                    @error('rw')
-                                        <span>{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
 
                         <input type="hidden" name="registration_status" id="registration_status" value="completed">
 
@@ -383,8 +404,8 @@ Formulir Registrasi Akun
             $instance_name.show()
         } else {
             $subCategory.hide();
-            $districtSelect.hide();
-            $villageSelect.hide();
+            $districtSelect.show();
+            $villageSelect.show();
             $instance_name.hide()
         }
         

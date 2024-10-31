@@ -50,6 +50,12 @@
                     <span>Verifikasi Akun</span>
                 </a>
             </li>
+            <li class="submenu-item ">
+                <a href="{{ route('admin.manajemen-akun.create-operator') }}" class='sidebar-link'>
+                    <i class="bi bi-person-plus"></i>
+                    <span>Akun Operator</span>
+                </a>
+            </li>
         </ul>
     </li>
 </li>

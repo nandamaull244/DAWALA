@@ -38,6 +38,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
     Route::get('/articles/data', [ArticleController::class, 'getData'])->name('article.data');
 
     Route::get('/manajemen-akun/verification', [UserController::class, 'verification'])->name('manajemen-akun.verification');
+    Route::get('/manajemen-akun/create-operator', [UserController::class, 'createOperator'])->name('manajemen-akun.create-operator');
     Route::resource('/manajemen-akun', UserController::class);
     Route::get('/users/getData', [UserController::class, 'getData'])->name('user.data'); 
    
@@ -46,6 +47,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
     Route::get('/verification/data', [UserController::class, 'getVerificationData'])->name('user.verification.data');
     Route::post('/verification/{user}/approve', [UserController::class, 'approveUser'])->name('user.verification.approve');
     Route::post('/verification/{user}/reject', [UserController::class, 'rejectUser'])->name('user.verification.reject');
+
+    // Ubah route untuk mengarah ke UserController
+    Route::post('/check-district-availability', [UserController::class, 'checkDistrictAvailability'])
+        ->name('check-district-availability');
 });
 
 

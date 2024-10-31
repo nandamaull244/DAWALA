@@ -22,8 +22,48 @@ class UserController extends Controller
     { 
         $districts = District::with('villages')->get();
         $villages = Village::all();
-        $users = User::whereIn('registration_status', ['Completed', 'Rejected'])->get();
+        $users = User::whereIn('role', ['instance', 'user'])
+                    ->whereIn('registration_status', ['Completed', 'Rejected'])
+                    ->get();
         return view('account-management.index', compact('districts', 'villages', 'users'));
+    }
+
+    public function createOperator()
+    {
+        $districts = District::whereNotIn('id', function($query) {
+            $query->select('district_id')
+                  ->from('users')
+                  ->where('role', 'operator')
+                  ->whereNotNull('district_id');
+        })->get();
+        
+        $villages = collect(); // Start with empty villages
+        
+        return view('account-management.create_account_operator', compact('districts', 'villages'));
+    }
+
+    public function checkDistrictAvailability(Request $request)
+    {
+        $operator = User::where('role', 'operator')
+            ->where('district_id', $request->district_id)
+            ->with('district')
+            ->first();
+
+        if ($operator) {
+            return response()->json([
+                'available' => false,
+                'message' => "Kecamatan ini sudah memiliki operator: {$operator->full_name}",
+                'operator' => [
+                    'name' => $operator->full_name,
+                    'district' => $operator->district->name
+                ]
+            ]);
+        }
+
+        return response()->json([
+            'available' => true,
+            'message' => 'Kecamatan tersedia'
+        ]);
     }
 
     /**
@@ -51,13 +91,14 @@ class UserController extends Controller
             'full_name' => 'required|string|max:255',
             'birth_date' => 'required|string',
             'gender' => 'required|in:Laki-Laki,Perempuan',
+            'username' => 'nullable|string|max:255',
             'rt' => 'required|string',
             'rw' => 'required|string',
             'address' => 'required|string',
             'no_kk' => 'required|string|digits:16',
             'phone_number' => 'required|string|digits_between:10,14',
             'district_id'=> 'required|exists:districts,id',
-            'village_id'=> 'required|exists:villages,id',
+            'village_id'=> 'nullable|exists:villages,id',
             'role' => 'required|in:admin,operator,user,instance',
             'password' => 'required|min:8|confirmed',
             'password_confirmation' => 'required|same:password',
@@ -92,6 +133,7 @@ class UserController extends Controller
             $user = User::create([
                 'nik' => $request->nik,
                 'full_name' => $request->full_name,
+                'username' => $request->username,
                 'birth_date' => $request->birth_date,
                 'gender' => $request->gender,
                 'rt' => $request->rt,
@@ -104,8 +146,8 @@ class UserController extends Controller
                 'phone_number' => $request->phone_number,
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
-                'registration_status' => $request->role === 'user' ? 'Completed' : 'Process',
-                'registration_type' => $request->role === 'instance' ? $request->registration_type : 'User, Perorangan',
+                'registration_status' => $request->role === 'user' || $request->role === 'operator' ? 'Completed' : 'Process',
+                'registration_type' => $request->role === 'instance' || $request->role === 'operator' ? $request->registration_type : 'User, Perorangan',
             ]);
 
         
@@ -171,6 +213,7 @@ class UserController extends Controller
             $user->update([
                 'nik' => $request->nik,
                 'full_name' => $request->full_name,
+                'username' => $request->username,
                 'birth_date' => $request->birth_date,
                 'gender' => $request->gender,
                 'rt' => $request->rt,
@@ -178,12 +221,12 @@ class UserController extends Controller
                 'address' => $request->address,
                 'no_kk' => $request->no_kk,
                 'email' => $request->email,
-                'district_id' => $request->role === 'instance' ? $request->district_id : null,
-                'village_id' => $request->role === 'instance' ? $request->village_id : null,
+                'district_id' => $request->district_id,
+                'village_id' =>  $request->village_id,
                 'phone_number' => $request->phone_number,
                 'role' => $request->role,
                 'registration_status' => $request->role === 'instance' ? 'Process' : 'Completed',
-                'registration_type' => $request->role === 'instance' ? $request->registration_type : 'User, Perorangan',
+                'registration_type' => $request->role === 'operator' ? 'Operator' : ($request->role === 'instance' ? $request->registration_type : 'User, Perorangan'),
             ]);
 
             if ($request->role === 'instance') {
