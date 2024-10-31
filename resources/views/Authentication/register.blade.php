@@ -38,7 +38,75 @@
             background-color: #4e73df;
             border-color: #4e73df;
         }
+    </style>
+    <style>
+        /* Container */
+        #toast-container > div {
+            width: 340px !important;
+            padding: 15px 15px 15px 50px !important;
+            opacity: 1 !important;
+        }
+        
+        /* Message */
+        #toast-container > div.toast-message {
+            font-size: 16px !important;phone
+            line-height: 1.5 !important;
+        }
+        
+        /* Title */
+        .toast-title {
+            font-size: 22px !important;
+            font-weight: bold !important;
+            margin-bottom: 8px !important;
+        }
 
+        .toast-message{
+            font-size: 16px;
+        }
+        
+        /* Close button */
+        .toast-close-button {
+            font-size: 20px !important;
+            font-weight: bold !important;
+            right: 8px !important;
+            top: 8px !important;
+        }
+        
+        /* Icons */
+        .toast:before {
+            font-size: 24px !important;
+            line-height: 24px !important;
+            position: absolute !important;
+            left: 15px !important;
+        }
+        
+        /* Animation */
+        .toast {
+            transition: all 0.3s ease-in-out !important;
+        }
+        
+        /* Optional: Different colors for different types */
+        .toast-success {
+            background-color: #51A351 !important;
+        }
+        
+        .toast-error {
+            background-color: #BD362F !important;
+        }
+        
+        .toast-info {
+            background-color: #2F96B4 !important;
+        }
+        
+        .toast-warning {
+            background-color: #F89406 !important;
+        }
+        
+        /* Optional: Hover effect */
+        #toast-container > div:hover {
+            box-shadow: 0 0 12px rgba(0,0,0,0.3) !important;
+            opacity: 1 !important;
+        }
     </style>
 </head>
 
@@ -50,13 +118,13 @@
                     <h4 class="auth-title text-center">Registrasi Akun</h4>
                     <p class="auth-subtitle mb-5 text-center">Buat akun untuk urusan pelayanan</p>
 
-                    <form action="{{ route('register.process') }}" method="POST">
+                    <form action="{{ route('register.process') }}" method="POST" id="register-form" novalidate>
                         @csrf
                         <div class="mb-4">
                             <div class="form-group">
-                                <label for="sub-category-select">Pilih kategori akun:</label>
+                                <label for="sub-category-select">Pilih kategori akun</label>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="role" id="perorangan"
+                                    <input class="form-check-input" type="radio" name="role" id="perorangan" selected 
                                         value="user" onclick="setRole('user')" required>
                                     <label class="form-check-label" for="perorangan">Perorangan/Untuk Diri Sendiri</label>
                                     @error('role')
@@ -64,21 +132,18 @@
                                     @enderror
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="role" id="instance"
-                                        value="instance" onclick="setRole('instance')" required>
+                                    <input class="form-check-input" type="radio" name="role" id="instance" value="instance" onclick="setRole('instance')" required>
                                     <label class="form-check-label" for="instance">Instansi/Lembaga</label>
                                     @error('role')
                                         <span>{{ $message }}</span>
                                     @enderror
                                 </div>
-
                             </div>
                         </div>
                         <div id="sub-category" class="form-group mb-4" style="display: none;">
-                            <label for="sub-category-select">Pilih Tipe Registrasi:</label>
+                            <label for="sub-category-select">Pilih Tipe Registrasi</label>
                             <div class="position-relative">
-                                <select class="form-control form-control-xl" id="sub-category-select"
-                                    name="registration_type">
+                                <select class="form-control form-control-xl" id="sub-category-select" name="registration_type" data-title="Tipe Registrasi">
                                     <option value="">Pilih Tipe Registrasi</option>
                                     <option value="Intansi, RT"
                                         {{ old('registration_type') == 'Intansi, RT' ? 'selected' : '' }}>
@@ -102,17 +167,14 @@
                                 @error('registration_type')
                                     <span>{{ $message }}</span>
                                 @enderror
-                                <div class="form-control-icon"
-                                    style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
-                                    <i class="bi bi-chevron-down"
-                                        style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
+                                <div class="form-control-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                                    <i class="bi bi-chevron-down" style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
                                 </div>
                             </div>
                         </div>
                         <div id="instansi-select-group" class="mb-4" style="display: none;">
                             <div class="form-group position-relative has-icon-left mb-4"  >
-                                <input type="text" class="form-control " placeholder="Nama Instansi"
-                                    name="instansi" value="{{ old('instansi') }}">
+                                <input type="text" class="form-control " placeholder="Nama Instansi" name="instansi" value="{{ old('instansi') }}" data-title="Nama Intansi">
                                 <div class="form-control-icon">
                                     <i class="bi bi-building"></i>
                                 </div>
@@ -122,9 +184,9 @@
                             @enderror
                         </div>
                         <div id="district-select-group" class="form-group mb-4">
-                            <label for="district-select">Pilih Kecamatan:</label>
+                            <label for="district-select">Pilih Kecamatan</label>
                             <div class="position-relative">
-                                <select class="form-control form-control-xl" id="district-select" name="district_id">
+                                <select class="form-control form-control-xl" id="district-select" name="district_id" data-title="Kecamatan">
                                     <option value="">Pilih Kecamatan</option>
                                     @foreach($districts as $district)
                                         <option value="{{ $district->id }}"
@@ -144,9 +206,9 @@
                             </div>
                         </div>
                         <div id="village-select-group" class="form-group mb-4">
-                            <label for="village-select">Pilih Desa:</label>
+                            <label for="village-select">Pilih Desa</label>
                             <div class="position-relative">
-                                <select class="form-control form-control-xl" id="village-select" name="village_id">
+                                <select class="form-control form-control-xl" id="village-select" name="village_id" data-title="Desa">
                                     <option value="">Pilih Desa</option>
                                 </select>
                                 @error('village_id')
@@ -162,8 +224,7 @@
                         <!-- rt -->
                         <div class="mb-4">
                             <div class="form-group position-relative has-icon-left mb-4">
-                                <input type="number" class="form-control form-control-xl" placeholder="RT contoh(01)"
-                                    name="rt" value="{{ old('rt') }}" required>
+                                <input type="number" class="form-control form-control-xl" placeholder="RT contoh(01)" name="rt" value="{{ old('rt') }}" required data-title="RT">
                                 <div class="form-control-icon">
                                     <i class="bi bi-house"></i>
                                 </div>
@@ -175,8 +236,7 @@
                         <!-- rw -->
                         <div class="mb-4">
                             <div class="form-group position-relative has-icon-left mb-4">
-                                <input type="number" class="form-control form-control-xl" placeholder="RW contoh(03)"
-                                    name="rw" value="{{ old('rw') }}" required>
+                                <input type="number" class="form-control form-control-xl" placeholder="RW contoh(03)" name="rw" value="{{ old('rw') }}" required data-title="RW">
                                 <div class="form-control-icon">
                                     <i class="bi bi-house"></i>
                                 </div>
@@ -188,8 +248,7 @@
                         <!-- address -->
                         <div class="mb-4">
                             <div class="form-group position-relative has-icon-left mb-4">
-                                <input type="text" class="form-control form-control-xl" placeholder="Alamat"
-                                    name="address" value="{{ old('address') }}" required>
+                                <input type="text" class="form-control form-control-xl" placeholder="Alamat" name="address" value="{{ old('address') }}" required data-title="Alamat">
                                 <div class="form-control-icon">
                                     <i class="bi bi-house"></i>
                                 </div>
@@ -200,8 +259,7 @@
                         </div>
                         <div class="mb-4">
                             <div class="form-group position-relative has-icon-left mb-4">
-                                <input type="text" class="form-control form-control-xl" placeholder="Nama Lengkap"
-                                    name="full_name" value="{{ old('full_name') }}" required>
+                                <input type="text" class="form-control form-control-xl" placeholder="Nama Lengkap" name="full_name" value="{{ old('full_name') }}" required data-title="Nama Lengkap">
                                 <div class="form-control-icon">
                                     <i class="bi bi-person"></i>
                                 </div>
@@ -210,10 +268,9 @@
                                 <span>{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-4">
+                        <div class="mb-4" id="nik_container">
                             <div class="form-group position-relative has-icon-left">
-                                <input type="text" class="form-control form-control-xl" placeholder="NIK" name="nik"
-                                    value="{{ old('nik') }}" required>
+                                <input type="text" class="form-control form-control-xl" placeholder="NIK" id="nik" name="nik" value="{{ old('nik') }}" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-title="NIK" maxlength="16">
                                 <div class="form-control-icon">
                                     <i class="bi bi-card-text"></i>
                                 </div>
@@ -222,10 +279,9 @@
                                 <span>{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-4">
+                        <div class="mb-4" id="no_kk_container">
                             <div class="form-group position-relative has-icon-left">
-                                <input type="text" class="form-control form-control-xl" placeholder="No Kartu Keluaga"
-                                    name="no_kk" value="{{ old('no_kk') }}" required>
+                                <input type="text" class="form-control form-control-xl" placeholder="No Kartu Keluaga" id="no_kk" name="no_kk" value="{{ old('no_kk') }}" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-title="No Kartu Keluarga" maxlength="16">
                                 <div class="form-control-icon">
                                     <i class="bi bi-card-text"></i>
                                 </div>
@@ -234,12 +290,9 @@
                                 <span>{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-4">
-                            <label for="birth_date" class="mb-2">Tanggal Lahir</label>
+                        <div class="mb-4" id="birth_date_container">
                             <div class="form-group position-relative has-icon-left">
-                                <input type="text" class="form-control form-control-xl flatpickr" id="birth_date"
-                                    placeholder="Pilih Tanggal Lahir" name="birth_date"
-                                    value="{{ old('birth_date') }}" required readonly="true">
+                                <input type="text" class="form-control form-control-xl flatpickr" id="birth_date" placeholder="Pilih Tanggal Lahir" name="birth_date" value="{{ old('birth_date') }}" readonly="true" data-title="Tanggal Lahir">
                                 <div class="form-control-icon">
                                     <i class="bi bi-calendar"></i>
                                 </div>
@@ -250,8 +303,7 @@
                         </div>
                         <div class="mb-4">
                             <div class="form-group position-relative has-icon-left">
-                                <input type="email" class="form-control form-control-xl" placeholder="Email"
-                                    name="email" value="{{ old('email') }}" required>
+                                <input type="email" class="form-control form-control-xl" placeholder="Email" name="email" value="{{ old('email') }}" data-title="Email">
                                 <div class="form-control-icon">
                                     <i class="bi bi-envelope"></i>
                                 </div>
@@ -263,9 +315,7 @@
 
                         <div class="mb-4">
                             <div class="form-group position-relative has-icon-left">
-                                <input type="tel" class="form-control form-control-xl"
-                                    placeholder="No. Handphone (Whatsapp)" name="phone_number"
-                                    value="{{ old('phone_number') }}" required>
+                                <input type="tel" class="form-control form-control-xl" placeholder="No. Handphone (Whatsapp)" name="phone_number" value="{{ old('phone_number') }}" minlength="10" maxlength="14" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-title="No. Telepon/HP (Whatsapp)">
                                 <div class="form-control-icon">
                                     <i class="bi bi-phone"></i>
                                 </div>
@@ -276,22 +326,18 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="gender-select" class="mb-2">Pilih Jenis Kelamin:</label>
                             <div class="form-group ">
                                 <div class="position-relative">
-                                    <select class="form-control form-control-xl" id="gender-select" name="gender"
-                                        required>
-                                        <option value="Laki-Laki"
+                                    <select class="form-control form-control-xl" id="gender-select" name="gender" required>
+                                        <option value="Laki-Laki" selected
                                             {{ old('gender') == 'Laki-Laki' ? 'selected' : '' }}>
                                             Laki-Laki</option>
                                         <option value="Perempuan"
                                             {{ old('gender') == 'Perempuan' ? 'selected' : '' }}>
                                             Perempuan</option>
                                     </select>
-                                    <div class="form-control-icon"
-                                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
-                                        <i class="bi bi-chevron-down"
-                                            style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
+                                    <div class="form-control-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                                        <i class="bi bi-chevron-down" style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
                                     </div>
                                 </div>
                             </div>
@@ -300,22 +346,18 @@
                             @enderror
                         </div>
 
-                        <input type="hidden" name="registration_status" id="registration_status" value="completed"
-                            onchange="setRole(this.value)">
+                        <input type="hidden" name="registration_status" id="registration_status" value="completed" onchange="setRole(this.value)">
                         <div class="mb-4">
                             <div class="form-group position-relative has-icon-left ">
-                                <input type="password" class="form-control form-control-xl" placeholder="Password"
-                                    name="password" id="password" required>
+                                <input type="password" data-match="#password_confirmation" class="form-control form-control-xl" placeholder="Password" name="password" id="password" required data-title="Password">
 
                                 <div class="form-control-icon">
                                     <i class="bi bi-shield-lock"></i>
                                 </div>
                             </div>
-                            <small class="form-text text-muted mb-2">Centang kotak di bawah untuk melihat password
-                                sebelum disubmit.</small>
+                            <small class="form-text text-muted mb-2">Centang kotak di bawah untuk melihat password sebelum disubmit.</small>
                             <div class="form-check mb-4">
-                                <input type="checkbox" class="form-check-input" onclick="togglePassword()"
-                                    id="showPassword">
+                                <input type="checkbox" class="form-check-input" onclick="togglePassword()" id="showPassword">
                                 <label class="form-check-label" for="showPassword">Lihat Password</label>
                             </div>
                             <label for="password">Minimal 8 karakter</label>
@@ -325,14 +367,13 @@
                         </div>
 
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-xl" placeholder="Ulangi Password"
-                                name="password_confirmation" required>
+                            <input type="password" class="form-control form-control-xl" placeholder="Ulangi Password" name="password_confirmation" required data-title="Ulangi Password" id="password_confirmation">
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
                         </div>
 
-                        <button class="btn btn-primary"
+                        <button class="btn btn-primary" type="submit"
                             style="width: 100%; padding: 10px; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); font-size: 1.25rem;"
                             onmouseover="this.style.backgroundColor='#003366'"
                             onmouseout="this.style.backgroundColor='#0164eb'">Daftar</button>
@@ -351,6 +392,28 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
+        function generateRandomNumber() {
+            let randomNumber = '';
+            for (let i = 0; i < 16; i++) {
+                randomNumber += Math.floor(Math.random() * 10);
+            }
+            return randomNumber;
+        }
+
+        $('[name="role"]').on('change', function() {
+            let role = $(this).val()
+
+            if(role == 'instance') {
+                $('#no_kk_container, #nik_container, #birth_date_container').hide().attr('required', false)
+                $('#no_kk').val(generateRandomNumber())
+                $('#nik').val(generateRandomNumber())
+                $('#birth_date').val('').attr('required', false)
+            } else {
+                $('#no_kk_container, #nik_container, #birth_date_container').show().attr('required', true)
+                $('#no_kk, #nik, #birth_date').val('').attr('required', true)
+            }
+        });
+
         $(".flatpickr").flatpickr({
             dateFormat: "Y-m-d",
             maxDate: "today",
@@ -365,31 +428,164 @@
                     longhand: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
                 },
                 months: {
-                    shorthand: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov',
-                        'Des'
-                    ],
+                    shorthand: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
                     longhand: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus',
                         'September', 'Oktober', 'November', 'Desember'
                     ]
                 }
+            },
+            onChange: function(selectedDates, dateStr, instance) {
+                const birthDate = new Date(dateStr);
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+
+                if (age < 17) {
+                    toastr.error('Anda harus berusia minimal 17 tahun untuk mendaftar', 'Gagal!', {
+                        timeOut: 3000,
+                        closeButton: true,
+                        progressBar: true
+                    });
+                    instance.clear();
+                    return false;
+                }
             }
         });
 
-        $(document).ready(function () {
-            toastr.options = {
-                "closeButton": true,
-                "progressBar": true,
-                "positionClass": "toast-top-right",
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            };
+        var nikCheck = false;
+        $('#nik').on('keyup change', function() {
+            if($('#nik').val().length == 16) {
+                $.ajax({
+                    url: "{{ route('pelayanan.cekNIK') }}",
+                    method: 'GET',
+                    data: {
+                        nik: $('#nik').val()
+                    },
+                    success: function(response) {
+                        if(response) {
+                            toastr.error('NIK sudah terdaftar', 'Gagal!' ,{timeOut: 2000, "className": "custom-larger-toast"});
+                            nikCheck = true;
+                        } else {
+                            toastr.success('NIK dapat digunakan', 'Berhasil!',{timeOut: 2000, "className": "custom-larger-toast"});
+                            nikCheck = false;
+                        }
+                    }, 
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        });
 
+        $(document).ready(function() {
+            $('#register-form').on('submit', function(event) {
+                event.preventDefault();
+                let isValid = true;
+
+                $(this).find('input, select, textarea').each(function() {
+                    const $field = $(this);
+                    let fieldName = $field.data('title');
+                    if (fieldName === 'NIK') $field.val($field.val().replace(/\s+/g, ''));
+
+                    if (fieldName === 'NIK' && nikCheck) {
+                        isValid = false;
+                        toastr.error('NIK sudah terdaftar', 'Astagfirullah', { timeOut: 2000, className: "custom-larger-toast" });
+                    }
+
+                    if ($field.prop('required') && !$field.val()) {
+                        isValid = false;
+                        toastr.warning(`${fieldName} harus diisi`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
+                    }
+
+                    const maxLength = $field.attr('maxlength');
+                    if (maxLength && $field.val().length > maxLength) {
+                        isValid = false;
+                        toastr.warning(`${fieldName} tidak boleh lebih dari ${maxLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
+                    }
+                });
+
+                const villageId = $('#village-select').val();
+                let $hiddenVillageInput = $('#hidden-village-id');
+                if (villageId && $hiddenVillageInput.length === 0) {
+                    $hiddenVillageInput = $('<input>', {
+                        type: 'hidden',
+                        name: 'village_id',
+                        value: villageId
+                    });
+                    $(this).append($hiddenVillageInput);
+                }
+
+                const birthDateStr = $('#birth_date').val();
+                const role = $('input[name="role"]:checked').val();
+                const password = $('#password').val();
+                const passwordConfirmation = $('#password_confirmation').val();
+                if(password !== passwordConfirmation) {
+                    isValid = false;
+                    toastr.error('Password tidak cocok', 'Gagal!', { timeOut: 2000, className: "custom-larger-toast" });
+                }
+
+                if (role === 'instance') {
+                    if (isValid) this.submit();
+                    return;
+                }
+
+                if (role === 'user') {
+                    if (!birthDateStr) {
+                        toastr.error('Tanggal lahir harus diisi', 'Gagal!', {
+                            timeOut: 3000,
+                            closeButton: true,
+                            progressBar: true,
+                            className: "custom-larger-toast"
+                        });
+                        return;
+                    }
+
+                    // Age validation
+                    const birthDate = new Date(birthDateStr);
+                    const today = new Date();
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    const monthDiff = today.getMonth() - birthDate.getMonth();
+                    
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+
+                    if (age < 17) {
+                        toastr.error('Anda harus berusia minimal 17 tahun untuk mendaftar', 'Gagal!', {
+                            timeOut: 3000,
+                            closeButton: true,
+                            progressBar: true,
+                            className: "custom-larger-toast"
+                        });
+                        return;
+                    }
+                }
+
+                if (isValid) this.submit();
+            });
+        });
+
+
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut",
+            "className": "custom-larger-toast"
+        };
+
+        $(document).ready(function () {
             @if(session('success'))
                 toastr.success("{{ session('success') }}", "Berhasil!");
             @endif
@@ -434,24 +630,9 @@
                     $('#village-select-group').hide();
                 }
             });
-
-            $('form').on('submit', function (event) {
-                const villageId = $('#village-select').val();
-                let $hiddenVillageInput = $('#hidden-village-id');
-
-                if (villageId && $hiddenVillageInput.length === 0) {
-                    $hiddenVillageInput = $('<input>', {
-                        type: 'hidden',
-                        name: 'village_id',
-                        value: villageId
-                    });
-                    $(this).append($hiddenVillageInput);
-                }
-            });
         });
 
         function setRole(role) {
-            // Set registration status
             document.getElementById('registration_status').value = role === 'user' ? 'completed' : 'process';
             
             // Get DOM elements
@@ -507,44 +688,6 @@
             } else {
                 instansiGroup.style.display = 'none';
                 instansiInput.placeholder = 'Nama Instansi';
-            }
-        });
-
-        //pengecekan jika user memilih tipe registrasi yayasan, lembaga, atau instansi maka input instansi wajib diisi
-        document.querySelector('form').addEventListener('submit', function (event) {
-            const passwordInput = document.querySelector('input[name="password"]');
-            const passwordConfirmationInput = document.querySelector('input[name="password_confirmation"]');
-            const allInputs = document.querySelectorAll('input[required]');
-            let isValid = true;
-
-            allInputs.forEach(input => {
-                if (!input.value) {
-                    input.classList.add('is-invalid');
-                    input.setCustomValidity('wajib diisi');
-                    isValid = false;
-                } else {
-                    input.classList.remove('is-invalid');
-                    input.setCustomValidity('');
-                }
-            });
-
-            const password = passwordInput.value;
-            const passwordConfirmation = passwordConfirmationInput.value;
-            if (password !== passwordConfirmation) {
-                event.preventDefault();
-                passwordInput.classList.add('is-invalid');
-                passwordConfirmationInput.classList.add('is-invalid');
-                passwordConfirmationInput.setCustomValidity('konfirmasi password tidak cocok!');
-                passwordConfirmationInput.reportValidity();
-                isValid = false;
-            } else {
-                passwordInput.classList.remove('is-invalid');
-                passwordConfirmationInput.classList.remove('is-invalid');
-                passwordConfirmationInput.setCustomValidity('');
-            }
-
-            if (!isValid) {
-                event.preventDefault();
             }
         });
 

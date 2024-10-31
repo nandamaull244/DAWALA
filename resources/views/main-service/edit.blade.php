@@ -61,7 +61,7 @@
 
                             <div class="form-group">
                                 <label for="phone_number">No. Telepon/HP (Whatsapp)</label>
-                                <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="+62" value="{{ $service->user->phone_number ?? '' }}" maxlength="14" required>
+                                <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="+62" value="{{ $service->user->phone_number ?? '' }}" minlength="10" maxlength="14" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             </div>
 
                             @php
@@ -98,7 +98,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nik">NIK</label>
-                                <input type="text" class="form-control" id="nik" name="nik" value="{{ $service->user->nik ?? '' }}" maxlength="16" required>
+                                <input type="text" class="form-control" id="nik" name="nik" value="{{ $service->user->nik ?? '' }}" maxlength="16" required oninput="this.value = this.value.replace(/[^0-9]/g, '')"> 
                             </div>
 
                             <div class="form-group">
@@ -288,6 +288,31 @@
             }
         });
 
+        var nikCheck = false;
+        $('#nik').on('keyup change', function() {
+            if($('#nik').val().length == 16) {
+                $.ajax({
+                    url: "{{ route('pelayanan.cekNIK') }}",
+                    method: 'GET',
+                    data: {
+                        nik: $('#nik').val()
+                    },
+                    success: function(response) {
+                        if(response) {
+                            toastr.error('NIK sudah terdaftar', 'Astagfirullah' ,{timeOut: 2000, "className": "custom-larger-toast"});
+                            nikCheck = true;
+                        } else {
+                            toastr.success('NIK dapat digunakan', 'Alhamdulillah',{timeOut: 2000, "className": "custom-larger-toast"});
+                            nikCheck = false;
+                        }
+                    }, 
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        });
+
         $(document).ready(function() {
             $('form').on('submit', function(e) {
                 var isValid = true;
@@ -296,6 +321,10 @@
                     var $field = $(this);
                     var fieldName = $field.closest('.form-group').find('label').text() || 'Field';
                     if(fieldName == 'F1.02') fieldName = 'Formulir F1.02';
+                    if(fieldName == 'NIK' && nikCheck) {
+                        isValid = false;
+                        toastr.error('NIK sudah terdaftar', 'Gagal!' ,{timeOut: 2000, "className": "custom-larger-toast"});
+                    }
 
                     if ($field.attr('type') === 'file') {
                         var dataExist = $field.data('exist');

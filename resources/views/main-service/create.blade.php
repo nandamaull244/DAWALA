@@ -288,17 +288,17 @@
         $('#nik').on('keyup change', function() {
             if($('#nik').val().length == 16) {
                 $.ajax({
-                    url: "{{ route(auth()->user()->role . '.pelayanan.cekNIK') }}",
+                    url: "{{ route('pelayanan.cekNIK') }}",
                     method: 'GET',
                     data: {
                         nik: $('#nik').val()
                     },
                     success: function(response) {
                         if(response) {
-                            toastr.error('NIK sudah terdaftar', 'Astagfirullah' ,{timeOut: 2000, "className": "custom-larger-toast"});
+                            toastr.error('NIK sudah terdaftar', 'Gagal!' ,{timeOut: 2000, "className": "custom-larger-toast"});
                             nikCheck = true;
                         } else {
-                            toastr.success('NIK dapat digunakan', 'Alhamdulillah',{timeOut: 2000, "className": "custom-larger-toast"});
+                            toastr.success('NIK dapat digunakan', 'Berhasil!',{timeOut: 2000, "className": "custom-larger-toast"});
                             nikCheck = false;
                         }
                     }, 
@@ -321,7 +321,7 @@
 
                 if(fieldName == 'NIK' && nikCheck) {
                     isValid = false;
-                    toastr.error('NIK sudah terdaftar', 'Astagfirullah' ,{timeOut: 2000, "className": "custom-larger-toast"});
+                    toastr.error('NIK sudah terdaftar', 'Gagal!' ,{timeOut: 2000, "className": "custom-larger-toast"});
                 }
 
                 if ($field.prop('required') && !$field.val()) {

@@ -123,23 +123,27 @@ class AuthController extends Controller
         return view("Authentication.register", compact('districts', 'villages'));
     }
 
+    public function cekNIK(Request $request) 
+    {
+        $user = User::where('nik', $request->nik)->first();
+        return response()->json(!empty($user) ? true : false);
+    }
+
     public function registerProcess(Request $request)
     {
         $rules = [
             'nik' => 'required|string|digits:16',
             'full_name' => 'required|string|max:255',
-            'birth_date' => 'required|string',
             'gender' => 'required|in:Laki-Laki,Perempuan',
             'rt' => 'required|string',
             'rw' => 'required|string',
             'address' => 'required|string',
             'no_kk' => 'required|string|digits:16',
-            'email' => 'email|unique:users,email',
-            'phone_number' => 'required|string|digits_between:10,14',
+            'email' => 'email',
+            'phone_number' => 'required|string',
             'role' => 'required|in:admin,operator,user,instance',
             'password' => 'required|min:8|confirmed',
         ];
-
 
         $validator = Validator::make($request->all(), $rules);
         

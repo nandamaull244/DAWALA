@@ -20,10 +20,10 @@ return new class extends Migration
             $table->string('username')->nullable()->unique();
             $table->string('password');
             $table->string('full_name');
-            $table->string('birth_date');
+            $table->string('birth_date')->nullable();
             $table->enum('gender', ['Laki-Laki', 'Perempuan']);
             $table->string('no_kk')->nullable();
-            $table->string('email')->nullable()->unique();
+            $table->string('email')->nullable();
             $table->string('phone_number');
             $table->integer('district_id')->nullable();
             $table->bigInteger('village_id')->nullable();
