@@ -203,7 +203,8 @@ Edit Akun {{ $user->user }}
                                 <div class="mb-4 form-group">
                                    <label for="username">Username</label>
                                    <div class="form-group position-relative has-icon-left mb-4 form-group">
-                                       <input type="text" class="form-control form-control-md" data-title="Username" name="username" id="username" value="{{ $user->username ?? '' }}">
+                                       <input type="text" class="form-control form-control-md" data-title="Username" name="username" id="username" value="{{ $user->username ?? '' }}"  pattern=".*[a-zA-Z].*"
+                                       title="Username harus mengandung minimal satu huruf">
                                        <div class="form-control-icon">
                                            <i class="bi bi-person"></i>
                                        </div>
@@ -326,7 +327,7 @@ Edit Akun {{ $user->user }}
                                 <div class="mb-4 form-group">
                                         <label for="password" class="mb-2">Password (Minimal 8 karakter)</label>
                                     <div class="form-group position-relative has-icon-left ">
-                                        <input type="password" class="form-control form-control-md" data-title="Password" placeholder="Password" name="password" id="password" minlength="8" required>
+                                        <input type="password" class="form-control form-control-md" data-title="Password" placeholder="Password" name="password" id="password" minlength="8">
                                         <div class="form-control-icon">
                                             <i class="bi bi-shield-lock"></i>
                                         </div>
@@ -347,7 +348,7 @@ Edit Akun {{ $user->user }}
                             <div class="col-md-6 form-group">
                                 <label for="password_confirmation" class="mb-2">Konfirmasi Password</label>
                                 <div class="form-group position-relative has-icon-left mb-4 form-group">
-                                    <input type="password" class="form-control form-control-md" data-title="Konfirmasi Password" id="password_confirmation" placeholder="Ulangi Password" minlength="8" name="password_confirmation" required>
+                                    <input type="password" class="form-control form-control-md" data-title="Konfirmasi Password" id="password_confirmation" placeholder="Ulangi Password" minlength="8" name="password_confirmation">
                                     <div class="form-control-icon">
                                         <i class="bi bi-shield-lock"></i>
                                     </div>
@@ -482,13 +483,13 @@ Edit Akun {{ $user->user }}
             }
 
             var maxLength = $field.attr('maxlength');
-            if (maxLength && $field.val().length > maxLength) {
+            if (maxLength && $field.val() && $field.val().length > maxLength) {
                 isValid = false;
                 toastr.warning(fieldName + ' tidak boleh lebih dari ' + maxLength + ' karakter', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
             }
 
             var minLength = $field.attr('minlength');
-            if (minLength && $field.val().length < minLength) {
+            if (minLength && $field.val() && $field.val().length < minLength) {
                 isValid = false;
                 toastr.warning(fieldName + ' harus memiliki setidaknya ' + minLength + ' karakter', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
             }
@@ -496,9 +497,22 @@ Edit Akun {{ $user->user }}
 
         const password = $('#password').val();
         const confirmPassword = $('#password_confirmation').val();
-        if (password && confirmPassword && password !== confirmPassword) {
+        if (password || confirmPassword) { // Only validate if either field has a value
+            if (password !== confirmPassword) {
+                isValid = false;
+                toastr.warning('Password dan Konfirmasi Password tidak cocok!', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
+            }
+        }
+
+        
+        // Add username letter validation
+        const username = $('#username').val();
+        if (!/[a-zA-Z]/.test(username)) {
             isValid = false;
-            toastr.warning('Password dan Konfirmasi Password tidak cocok!', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
+            toastr.warning('Username harus mengandung minimal satu huruf', 'Peringatan', {
+                timeOut: 2500, 
+                "className": "custom-larger-toast"
+            });
         }
 
         if (isValid) {

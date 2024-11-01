@@ -209,7 +209,7 @@ Formulir Registrasi Akun Operator
                         <input type="hidden" class="form-control form-control-md" data-title="No Kartu Keluarga" id="no_kk" name="no_kk" value="{{ mt_rand(1000000000000000, 9999999999999999) }}" >
                         <input type="hidden" class="form-control form-control-md"   name="role" value="operator" >
                         <input type="hidden" class="form-control form-control-md"   name="registration_type" value="Operator" >
-                        <input type="hidden" class="form-control form-control-md"   name="village_id" value="3203062008" >
+                        {{-- <input type="hidden" class="form-control form-control-md"   name="village_id" value="" > --}}
                         <input type="hidden" class="form-control form-control-md" data-title="Tanggal Lahir" id="birth_date"name="birth_date" value="2024-10-02">
 
             

@@ -246,7 +246,7 @@ class UserController extends Controller
                 'rw' => $request->rw ?? '000',
                 'nik' => $request->nik ,
                 'no_kk' => $request->no_kk,
-                'village_id' => $request->village_id,
+                // 'village_id' => $request->village_id,
                 'birth_date' => $request->birth_date ?? now(),
                 'role' => 'operator',
                 'registration_type' => 'Operator',
