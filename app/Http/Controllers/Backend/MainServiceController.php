@@ -199,9 +199,12 @@ class MainServiceController extends Controller
                                                                         data-reason="'. $row->rejected_reason .'" 
                                                                         data-approval_by="'. $approvalName.'" 
                                                                         data-service_status="'. $row->service_status .'"
-                                                                        data-visit_schedule="'. $row->visit_schedule .'" style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></a>';
+                                                                        data-visit_schedule="'. $row->visit_schedule .'" 
+                                                                        data-working_status="'. $row->working_status .'"
+                                                                        data-message_for_user="'. $row->message_for_user .'"
+                                                                        style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></a>';
 
-                if($row->service_status != 'Rejected' && ($row->working_status != 'Not Yet' && $row->working_status != '-')) {
+                if(auth()->user()->role != 'user' && auth()->user()->role != 'instance') {
                     $actionBtn .= '<a class="btn btn-outline-primary" data-bs-toggle="modal" 
                                                                         data-bs-target="#workingStatusModal" 
                                                                         data-id="'.$hashedId.'" 
@@ -691,6 +694,23 @@ class MainServiceController extends Controller
             return redirectByRole(auth()->user()->role, 'pelayanan.index', ['success' => 'Informasi Status Pengerjaan berhasil diperbarui!']);
         }  else {
             return redirectByRole(auth()->user()->role, 'pelayanan.index', ['error' => 'Data Pelayanan Tidak Ditemukan']);
+        }
+    }
+
+    public function requestAgain(Request $request)
+    {
+        $service = Service::whereHash($request->id)->firstOrFail();
+        if($service) {
+            $service->update([
+                'working_status' => 'Not Yet',
+                'service_status' => 'Not Yet',
+                'message_for_user' => null,
+                'message_for_user' => $request->message_for_user
+            ]);
+
+            return response()->json(['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' berhasil dikirim ulang!']);
+        }  else {
+            return response()->json(['error' => 'Data Pelayanan Tidak Ditemukan']);
         }
     }
 

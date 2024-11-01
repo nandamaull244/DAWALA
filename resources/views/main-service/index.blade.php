@@ -483,8 +483,9 @@
             });
         });
 
+        var table;
         $(document).ready(function() {
-            var table = $('#serviceTable').DataTable({
+            table = $('#serviceTable').DataTable({
                 responsive: true,
                 processing: true,
                 serverSide: true,

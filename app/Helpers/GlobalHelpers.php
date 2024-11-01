@@ -32,3 +32,36 @@ function generate16DigitNumber() {
     return $number;
 }
 
+function formatWorkingStatus($status) {
+    switch($status) {
+        case '-':
+            return ['text' => '-', 'color' => 'secondary'];
+        break;
+        case 'Not Yet':
+            return ['text' => 'Menunggu', 'color' => 'secondary'];
+        break;
+        case 'Process':
+            return ['text' => 'Sedang Diproses', 'color' => 'warning'];
+        break;
+        case 'Completed':
+            return ['text' => 'Selesai', 'color' => 'success'];
+        break;
+    }
+}
+
+function formatServiceStatus($status) {
+    switch($status) {
+        case 'Not Yet':
+            return ['text' => 'Menunggu', 'color' => 'secondary'];
+        break;
+        case 'Rejected':
+            return ['text' => 'Ditolak', 'color' => 'danger'];
+        break;
+        case 'Process':
+            return ['text' => 'Sedang Diproses', 'color' => 'warning'];
+        break;
+        case 'Completed':
+            return ['text' => 'Selesai', 'color' => 'success'];
+        break;
+    }
+}
