@@ -23,13 +23,17 @@
             pointer-events: none;
             opacity: 0.7;
         }
+
+        textarea, h5 {
+            font-size: 1.2em !important;
+        }
     </style>
 @endpush
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="confirmationModalLabel">Status Konfirmasi Pengajuan</h5>
+                <h5 class="modal-title" id="confirmationModalLabel">Status @if(auth()->user()->role != 'user' && auth()->user()->role != 'instance') Konfirmasi @endif Pengajuan</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="confirmationForm" method="POST" novalidate>
@@ -72,10 +76,21 @@
                                 <textarea class="form-control" id="alasan_tolak" name="rejected_reason" rows="3" placeholder="Masukkan alasan penolakan" {{ !$isAdminOrOperator ? 'readonly' : '' }}></textarea>
                             </div>
                         </div>
+
+                        @if (auth()->user()->role == 'user' || auth()->user()->role == 'instance')
+                            <br>
+                            <div id="messageDisplay">
+                                <div class="form-group">
+                                    <label for="completedMessage" class="form-label">Status Pengerjaan : <span id="workingStatusText" class="text-success">Selesai</span></label>
+                                    <textarea rows="4" id="completedMessage" class="form-control-plaintext" disabled></textarea>
+                                </div>
+                            </div>
+                        @endif
                     <input type="hidden" name="status" id="confirmationStatus">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary" id="btnRequestAgain" style="display: none;">Ajukan Pengajuan Lagi</button>
                     <button type="submit" class="btn btn-primary" id="btnSubmit" style="display: none;">Submit</button>
                 </div>
             </form>
@@ -140,6 +155,27 @@
                 const url = `{{ route(auth()->user()->role . '.pelayanan.destroy', ':id') }}`.replace(':id', id);
                 $('#confirmationForm').attr('action', url);
 
+                const workingStatus = button.data('working_status');
+                const message_for_user = button.data('message_for_user');
+
+                $('#completedMessage').text(message_for_user);
+                $('#workingStatusText').removeClass('text-danger text-warning text-success text-secondary')
+
+                switch(workingStatus) {
+                    case '-':
+                        $('#workingStatusText').addClass('text-secondary').text('Tidak ada Status');
+                    break;
+                    case 'Not Yet':
+                        $('#workingStatusText').addClass('text-secondary').text('Menunggu');
+                    break;
+                    case 'Process':
+                        $('#workingStatusText').addClass('text-warning').text('Sedang Diproses');
+                    break;
+                    case 'Completed':
+                        $('#workingStatusText').addClass('text-success').text('Selesai');
+                    break;
+                }
+
                 const reason = button.data('reason');
                 const visitSchedule = button.data('visit_schedule');
                 const approvalBy = button.data('approval_by');
@@ -147,6 +183,7 @@
                 $('#btnTolak').removeClass('btn-danger active').addClass('btn-outline-danger').show();
                 $('#btnTerima').removeClass('btn-success active').addClass('btn-outline-success').show();
                 $('#rejected, #approved, #waitingApproval, #approvalByContainer, #alasanTolakContainer, #visitScheduleContainer').hide();
+                $('#btnRequestAgain').hide();
 
                 if (serviceStatus != 'Not Yet' || !isAdminOrOperator) {
                     $('#btnTolak, #btnTerima').hide();
@@ -155,6 +192,7 @@
                         $('#rejected').show();
                         $('#alasanTolakContainer').show();
                         $('#alasan_tolak').val(reason);
+                        $('#btnRequestAgain').show();
                     } else if (serviceStatus === 'Completed' || serviceStatus === 'Process') {
                         $('#approved').show();
                         $('#visitScheduleContainer').show();
@@ -184,8 +222,35 @@
                         visitScheduleFlatpickr.setDate(visitSchedule);
                     }
                 }
+
+                @if(auth()->user()->role == 'user' || auth()->user()->role == 'instance')
+                    $('#btnRequestAgain').off('click').on('click', function(e) {
+                        e.preventDefault()
+                        sendServiceRequestAgain(id);
+                    });
+                @endif
             });
 
+            @if(auth()->user()->role == 'user' || auth()->user()->role == 'instance')
+                function sendServiceRequestAgain(id) {
+                    $.ajax({
+                        url: `{{ route(auth()->user()->role . '.pelayanan.request-again') }}`,
+                        type: 'POST',
+                        data: {
+                            id: id,
+                            _token: '{{ csrf_token() }}' 
+                        },
+                        success: function(response) {
+                            $('#confirmationModal').modal('hide');
+                            toastr.success(response.success, 'Berhasil');
+                            table.ajax.reload();
+                        },
+                        error: function(xhr, status, error) {
+                            toastr.error("Gagal mengirim permintaan ulang", 'Gagal');
+                        }
+                    });
+                }
+            @endif
 
             $('#confirmationForm').on('submit', function(e) {
                 e.preventDefault();

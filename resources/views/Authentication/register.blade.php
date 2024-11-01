@@ -426,7 +426,7 @@
 
                         <div class="mb-4">
                             <div class="form-group position-relative has-icon-left">
-                                <input type="tel" class="form-control form-control-xl" placeholder="No. Handphone (Whatsapp)" name="phone_number" value="{{ old('phone_number') }}" minlength="10" maxlength="14" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-title="No. Telepon/HP (Whatsapp)">
+                                <input type="tel" class="form-control form-control-xl" placeholder="No. Handphone (Whatsapp)" name="phone_number" value="{{ old('phone_number') }}" minlength="9" maxlength="14" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-title="No. Telepon/HP (Whatsapp)">
                                 <div class="form-control-icon">
                                     <i class="bi bi-phone"></i>
                                 </div>
@@ -519,11 +519,10 @@
                 $('#username_container').show().attr('required', true)
                 $('#no_kk').val(generateRandomNumber())
                 $('#nik').val(generateRandomNumber())
-                $('#birth_date').val('').attr('required', false)
+                $('#no_kk, #nik, #birth_date').val('').attr('required', false)
             } else {
-                $('#no_kk_container, #nik_container, #birth_date_container').show().attr('required', true)
+                $('#no_kk_container, #nik_container, #birth_date_container').show()
                 $('#no_kk, #nik, #birth_date').val('').attr('required', true)
-                $('#username_container').hide().attr('required', false)
             }
         });
 

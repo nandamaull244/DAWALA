@@ -90,6 +90,7 @@ Route::group(['prefix' => 'instance', 'middleware' => ['auth:admin', 'checkRole:
     Route::resource('/pelayanan', MainServiceController::class);  
     Route::get('/service/data', [MainServiceController::class, 'getData'])->name('pelayanan.data');
     Route::get('/service/cekNIK', [MainServiceController::class, 'cekNIK'])->name('pelayanan.cekNIK');
+    Route::post('/service/request-again', [MainServiceController::class, 'requestAgain'])->name('pelayanan.request-again');
 });
 
 
@@ -100,6 +101,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:client', 'checkRole:use
     Route::resource('/pelayanan', MainServiceController::class);  
     Route::get('/service/data', [MainServiceController::class, 'getData'])->name('pelayanan.data');
     Route::get('/service/cekNIK', [MainServiceController::class, 'cekNIK'])->name('pelayanan.cekNIK');
+    Route::post('/service/request-again', [MainServiceController::class, 'requestAgain'])->name('pelayanan.request-again');
 });
 
 
