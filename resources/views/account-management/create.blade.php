@@ -321,7 +321,7 @@ Formulir Registrasi Akun
                             </div>
                         </div>
 
-                        <input type="hidden" name="registration_status" id="registration_status" value="completed">
+                        <input type="hidden" name="registration_status" id="registration_status" value="Completed">
                         <button class="btn btn-primary float-end" type="submit">Tambah Akun</button>
                     </form>
                 </div>

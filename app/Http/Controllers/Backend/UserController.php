@@ -344,13 +344,16 @@ class UserController extends Controller
             
             $user->update($userData);
 
-
             if ($request->role === 'instance') {
                 $instance = Instance::where('user_id', $user->id)->first();
                 if (!$instance) {
                     Instance::create([
                         'name' => $request->instance_name,
                         'user_id' => $user->id,
+                    ]);
+                } else {
+                    Instance::where('user_id', $user->id)->update([
+                        'name' => $request->instance_name,
                     ]);
                 }
             }
@@ -462,8 +465,8 @@ class UserController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $btn = '<div class="btn-group" role="group">';    
-                $btn .= '<button onclick="approveUser('.$row->id.')" class="btn btn-success btn-sm">Setujui</button>';
                 $btn .= '<button onclick="rejectUser('.$row->id.')" class="btn btn-danger btn-sm">Tolak</button>';
+                $btn .= '<button onclick="approveUser('.$row->id.')" class="btn btn-success btn-sm">Setujui</button>';
                 $btn .= '</div>';
                 return $btn;
             })
