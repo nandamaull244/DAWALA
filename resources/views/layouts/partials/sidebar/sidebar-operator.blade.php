@@ -10,7 +10,7 @@
         <i class="bi bi-people"></i>
         <span>Pelayanan</span>
     </span>
-    <ul class="submenu {{ request()->routeIs('operator.pelayanan.*') ? 'active' : '' }}">
+    <ul class="submenu {{ request()->routeIs('operator.pelayanan.*') ? 'active' : '' }}" style="list-style-type: none;">
         <li class="sidebar-item {{ request()->routeIs('operator.pelayanan.index') ? 'active' : '' }}">
             <a href="{{ route('operator.pelayanan.index') }}" class='sidebar-link'>
                 <i class="bi bi-archive-fill"></i>
