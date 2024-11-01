@@ -98,12 +98,20 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    private function generate16DigitNumber() {
+        $number = '';
+        for ($i = 0; $i < 16; $i++) {
+            $number .= mt_rand(0, 9);
+        }
+        return $number;
+    }
+
     public function store(Request $request)
     {
         $rules = [
             'nik' => 'required|string|digits:16',
             'full_name' => 'required|string|max:255',
-            'birth_date' => 'required|string',
             'gender' => 'required|in:Laki-Laki,Perempuan',
             'username' => 'nullable|string|max:255',
             'rt' => 'required|string',
@@ -119,16 +127,16 @@ class UserController extends Controller
         ];
 
         if($request->email != null) {
-            $rules['email'] = 'unique:users,email';
+            $rules['email'] = 'email';
         } 
 
         if ($request->input('role') === 'instance') {
             $rules['registration_type'] = 'required|string';
+            $request['nik']= $this->generate16DigitNumber();
+            $request['no_kk'] = $this->generate16DigitNumber();
         }
 
-        
         $validator = Validator::make($request->all(), $rules);
-
         
         if($validator->fails()){
             $errors = $validator->errors();
@@ -177,7 +185,11 @@ class UserController extends Controller
                 } 
             }
 
-            return redirect()->route('admin.manajemen-akun.index')->with('success', 'Akun berhasil dibuat');
+            if ($request->input('role') != 'instance') {
+                return redirect()->route('admin.manajemen-akun.index')->with('success', 'Akun berhasil dibuat');
+            } else {
+                return redirect()->route('admin.user.verification')->with('success', 'Akun berhasil dibuat');
+            }
         } catch (\Exception $e) {
             $errorMessage = 'Pendaftaran gagal! Error pada file ' . basename($e->getFile()) . ' baris ke-' . $e->getLine();
             return redirect()
@@ -197,7 +209,6 @@ class UserController extends Controller
             'password_confirmation' => 'required|same:password',
         ];
 
-        // Optional fields validation
         if($request->email) {
             $rules['email'] = 'email|unique:users,email';
         }
@@ -375,6 +386,10 @@ class UserController extends Controller
             ->where('role', '!=', 'admin')
             ->whereIn('registration_status', ['Completed', 'Rejected']);
 
+        if(auth()->user()->role === 'operator') {
+            $query->where('district_id', auth()->user()->district_id);
+        }
+
         $query = $this->applyFilters($query, $request);
 
         return DataTables::of($query)
@@ -441,8 +456,6 @@ class UserController extends Controller
     public function getVerificationData(Request $request)
     {
         $query = User::with(['district', 'village'])->where('role', '!=', 'admin')->where('registration_status', 'Process');
-        // ->where('registration_type', 'LIKE', '%Instansi%');
-
         $query = $this->applyFilters($query, $request);
 
         return DataTables::of($query)

@@ -14,34 +14,32 @@ Formulir Registrasi Akun
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <form id="userForm" action="{{ route("admin.manajemen-akun.store") }}" method="POST" novalidate>
+                    <form id="register-form" action="{{ route("admin.manajemen-akun.store") }}" method="POST" novalidate>
                         @csrf
                         
                         <!-- Role selection -->
-                        <div class="mb-4">
-                            <div class="form-group">
-                                <label for="sub-category-select">Pilih Kategori Akun</label>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="role" id="perorangan" value="user" onclick="setRole('user')" checked required>
-                                    <label class="form-check-label" for="perorangan">Perorangan/Untuk Diri Sendiri sendiri</label>
-                                    @error('role')
-                                        <span>{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="role" id="instance" value="instance" onclick="setRole('instance')" required>
-                                    <label class="form-check-label" for="instance">Instansi/Lembaga</label>
-                                    @error('role')
-                                        <span>{{ $message }}</span>
-                                    @enderror
-                                </div>
+                        <div class="form-group col-md-6">
+                            <label for="sub-category-select">Pilih Kategori Akun</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="role" id="perorangan" value="user" onclick="setRole('user')" checked required>
+                                <label class="form-check-label" for="perorangan">Perorangan/Untuk Diri Sendiri sendiri</label>
+                                @error('role')
+                                    <span>{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="role" id="instance" value="instance" onclick="setRole('instance')" required>
+                                <label class="form-check-label" for="instance">Instansi/Lembaga</label>
+                                @error('role')
+                                    <span>{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
 
-                        <div class="row mb-1 mt-1">
+                        <div class="row mt-4 mb-1">
                             <!-- Sub-category selection (hidden by default) -->
-                            <div class="col-md-6">
-                                <div id="sub-category" class="form-group mb-4" style="display: none;">
+                            <div class="col-md-6" id="sub-category" style="display: none;">
+                                <div class="form-group mb-4">
                                     <label for="sub-category-select">Pilih Tipe Registrasi</label>
                                     <div class="position-relative">
                                         <select class="form-control form-control-md" data-title="Tipe Registrasi" id="registration_type" name="registration_type">
@@ -63,8 +61,8 @@ Formulir Registrasi Akun
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <div class="form-group" id="instance_name_group" style="display: none;">
+                            <div class="col-md-6" style="display: none;" id="instance_name_group">
+                                <div class="form-group">
                                     <label for="instance_name">Nama Intansi</label>
                                     <div class="form-group position-relative has-icon-left">
                                         <input type="text" class="form-control form-control-md" data-title="Nama Intansi" id="instance_name" name="instance_name" value="{{ old('nama_intansi') }}">
@@ -77,9 +75,7 @@ Formulir Registrasi Akun
                                     @enderror
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="row mb-1 mt-1">
+                            
                             <!-- District selection (hidden by default) -->
                             <div class="col-md-6">
                                 <div id="district-select-group" class="form-group mb-4">
@@ -122,16 +118,14 @@ Formulir Registrasi Akun
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
 
-                        <div class="row mb-1 mt-1">
                             <!-- NIK -->
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="nik_container">
                                 <div class="mb-4 form-group">
                                     <label for="nik">NIK</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" value="{{ old('nik') }}" maxlength="16" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                        <input type="text" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" maxlength="16" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                         <div class="form-control-icon">
                                             <i class="bi bi-card-text"></i>
                                         </div>
@@ -143,11 +137,11 @@ Formulir Registrasi Akun
                             </div>
 
                             <!-- No KK -->
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="no_kk_container">
                                 <div class="mb-4 form-group">
                                     <label for="no_kk">No KK</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="No Kartu Keluarga" id="no_kk" name="no_kk" value="{{ old('no_kk') }}" maxlength="16" required>
+                                        <input type="text" class="form-control form-control-md" data-title="No Kartu Keluarga" id="no_kk" name="no_kk" maxlength="16" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                         <div class="form-control-icon">
                                             <i class="bi bi-card-text"></i>
                                         </div>
@@ -157,23 +151,21 @@ Formulir Registrasi Akun
                                     @enderror
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row mb-1 mt-1">
                             <!-- Full Name -->
                             <div class="col-md-6">
                                 <div class="mb-4 form-group">
-                                   <label for="full_name">Nama Lengkap</label>
-                                   <div class="form-group position-relative has-icon-left mb-4 form-group">
-                                       <input type="text" class="form-control form-control-md" data-title="Nama Lengkap" name="full_name" id="full_name" value="{{ old('full_name') }}" required>
-                                       <div class="form-control-icon">
-                                           <i class="bi bi-person"></i>
-                                       </div>
-                                   </div>
-                                   @error('full_name')
-                                       <span>{{ $message }}</span>
-                                   @enderror
-                               </div>
+                                    <label for="full_name">Nama Lengkap</label>
+                                    <div class="form-group position-relative has-icon-left mb-4 form-group">
+                                        <input type="text" class="form-control form-control-md" data-title="Nama Lengkap" name="full_name" id="full_name" value="{{ old('full_name') }}" required>
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+                                    </div>
+                                    @error('full_name')
+                                        <span>{{ $message }}</span>
+                                    @enderror
+                                </div>
                             </div>
 
                             <!-- Email -->
@@ -191,19 +183,17 @@ Formulir Registrasi Akun
                                     @enderror
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row mb-1 mt-1">
                             <!-- Birth Date -->
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="birth_date_container">
                                 <div class="mb-4 form-group">
                                     <label for="birth_date" class="mb-2">Tanggal Lahir</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="date" class="form-control form-control-md flatpickr-date" data-title="Tanggal Lahir" id="birth_date" placeholder="Pilih Tanggal Lahir" name="birth_date" value="{{ old('birth_date') }}" required>
+                                        <input type="date" class="form-control form-control-md flatpickr-birth-date-check" data-title="Tanggal Lahir" id="birth_date" placeholder="Pilih Tanggal Lahir" name="birth_date">
                                         <div class="form-control-icon">
                                             <i class="bi bi-calendar"></i>
                                         </div>
-                                        </div>
+                                    </div>
                                     @error('birth_date')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -215,7 +205,7 @@ Formulir Registrasi Akun
                                 <div class="mb-4 form-group">
                                     <label for="phone_number">No. Handphone (Whatsapp)</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="tel" class="form-control form-control-md" data-title="No Handphone (Whatsapp)" id="phone_number" name="phone_number" value="{{ old('phone_number') }}" required>
+                                        <input type="tel" class="form-control form-control-md" data-title="No Handphone (Whatsapp)" id="phone_number" name="phone_number" value="{{ old('phone_number') }}" required minlength="9" maxlength="14" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                         <div class="form-control-icon">
                                             <i class="bi bi-phone"></i>
                                         </div>
@@ -225,9 +215,7 @@ Formulir Registrasi Akun
                                     @enderror
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row mb-1 mt-1">
                             <!-- Address -->
                             <div class="col-md-6">
                                 <div class="mb-4 form-group">
@@ -247,26 +235,24 @@ Formulir Registrasi Akun
                             <!-- Gender -->
                             <div class="col-md-6">
                                 <div class="mb-4 form-group">
-                                   <label for="gender-select" class="mb-2">Pilih Jenis Kelamin</label>
-                                   <div class="form-group ">
-                                       <div class="position-relative">
-                                           <select class="form-control form-control-md" data-title="Jenis Kelamin" id="gender-select" name="gender" required>
-                                               <option selected value="Laki-Laki" {{ old('gender') == 'Laki-Laki' ? 'selected' : '' }}> Laki-Laki</option>
-                                               <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : '' }}> Perempuan</option>
-                                           </select>
-                                           <div class="form-control-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
-                                               <i class="bi bi-chevron-down" style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
-                                           </div>
-                                       </div>
-                                   </div>
-                                   @error('gender')
-                                       <span>{{ $message }}</span>
-                                   @enderror
-                               </div>
+                                    <label for="gender-select" class="mb-2">Pilih Jenis Kelamin</label>
+                                    <div class="form-group ">
+                                        <div class="position-relative">
+                                            <select class="form-control form-control-md" data-title="Jenis Kelamin" id="gender-select" name="gender" required>
+                                                <option selected value="Laki-Laki" {{ old('gender') == 'Laki-Laki' ? 'selected' : '' }}> Laki-Laki</option>
+                                                <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : '' }}> Perempuan</option>
+                                            </select>
+                                            <div class="form-control-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                                                <i class="bi bi-chevron-down" style="font-size: 1.25rem; transition: transform 0.3s; width: 100%; max-width: 1.5rem;"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @error('gender')
+                                        <span>{{ $message }}</span>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="row mb-1 mt-1">
                             <!-- rt -->
                             <div class="col-md-6">
                                 <div class="mb-4 form-group">
@@ -300,9 +286,7 @@ Formulir Registrasi Akun
                             </div>
                         </div>
 
-                        <input type="hidden" name="registration_status" id="registration_status" value="completed">
-
-                        <div class="row mb-1 mt-1">
+                        <div class="row">
                             <!-- Password -->
                             <div class="col-md-6">
                                 <div class="mb-4 form-group">
@@ -337,8 +321,7 @@ Formulir Registrasi Akun
                             </div>
                         </div>
 
-
-                        <!-- Submit Button -->
+                        <input type="hidden" name="registration_status" id="registration_status" value="completed">
                         <button class="btn btn-primary float-end" type="submit">Tambah Akun</button>
                     </form>
                 </div>
@@ -398,13 +381,11 @@ Formulir Registrasi Akun
             $passwordInput.attr('type', $(this).prop('checked') ? 'text' : 'password');
         });
 
-        // Show instance name field for specific types
         $('#registration_type').on('change', function() {
             const selectedType = $(this).val();
             const $instanceNameGroup = $('#instance_name_group');
             const $instanceNameInput = $('#instance_name');
             
-            // Show instance name field for specific types
             const showInstanceTypes = ['Intansi, Yayasan', 'Intansi, Instansi', 'Intansi, Lembaga'];
             const isShowInstance = showInstanceTypes.includes(selectedType);
             
@@ -412,7 +393,6 @@ Formulir Registrasi Akun
                 $instanceNameGroup.show();
                 $instanceNameInput.prop('required', true);
                 
-                // Set placeholder based on selection
                 const placeholders = {
                     'Intansi, Yayasan': 'Masukkan nama yayasan',
                     'Intansi, Instansi': 'Masukkan nama instansi',
@@ -427,7 +407,6 @@ Formulir Registrasi Akun
             }
         });
 
-        // Trigger change event on page load
         $('#registration_type').trigger('change');
     });
 
@@ -441,18 +420,10 @@ Formulir Registrasi Akun
             instanceName: $('#instance_name_group')
         };
         
-        // Set registration status
         elements.status.val(isInstance ? 'process' : 'completed');
-        
-        // Toggle visibility hanya untuk sub-category
         elements.subCategory[isInstance ? 'show' : 'hide']();
-        
-        
-        
-        // Selalu sembunyikan instance name saat pergantian role
         elements.instanceName.hide();
         
-        // Set required fields
         const requiredFields = {
             user: {
                 '#perorangan': true,
@@ -474,7 +445,6 @@ Formulir Registrasi Akun
             $(selector).prop('required', required);
         });
 
-        // Reset registration type dan instance name saat pergantian role
         if (!isInstance) {
             $('#registration_type').val('');
             $('#instance_name').val('').prop('required', false);
@@ -489,21 +459,43 @@ Formulir Registrasi Akun
         );
     }
 
+    function generateRandom16Digits() {
+        let randomNumber = '';
+        for (let i = 0; i < 16; i++) {
+            randomNumber += Math.floor(Math.random() * 10);
+        }
+        return randomNumber;
+    }
+
+    $('[name="role"]').on('change', function() {
+        let role = $(this).val()
+
+        if(role == 'instance') {
+            $('#no_kk_container, #nik_container, #birth_date_container').hide()
+            $('#no_kk').val(generateRandom16Digits())
+            $('#nik').val(generateRandom16Digits())
+            $('#no_kk, #nik, #birth_date').val('').attr('required', false)
+        } else {
+            $('#no_kk_container, #nik_container, #birth_date_container').show()
+            $('#no_kk, #nik, #birth_date').val('').attr('required', true)
+        }
+    });
+
     var nikCheck = false;
     $('#nik').on('keyup change', function() {
         if($('#nik').val().length == 16) {
             $.ajax({
-                url: "{{ route(auth()->user()->role . '.pelayanan.cekNIK') }}",
+                url: "{{ route('pelayanan.cekNIK') }}",
                 method: 'GET',
                 data: {
                     nik: $('#nik').val()
                 },
                 success: function(response) {
                     if(response) {
-                        toastr.error('NIK sudah terdaftar', 'Astagfirullah' ,{timeOut: 2000, "className": "custom-larger-toast"});
+                        toastr.error('NIK sudah terdaftar', 'Gagal!' ,{timeOut: 2000, "className": "custom-larger-toast"});
                         nikCheck = true;
                     } else {
-                        toastr.success('NIK dapat digunakan', 'Alhamdulillah',{timeOut: 2000, "className": "custom-larger-toast"});
+                        toastr.success('NIK dapat digunakan', 'Berhasil!',{timeOut: 2000, "className": "custom-larger-toast"});
                         nikCheck = false;
                     }
                 }, 
@@ -514,42 +506,94 @@ Formulir Registrasi Akun
         }
     });
 
-    $('#userForm').on('submit', function(e) {
-        e.preventDefault();
-        var isValid = true;
+    $(document).ready(function() {
+        $('#register-form').on('submit', function(event) {
+            event.preventDefault();
+            let isValid = true;
 
-        $(this).find('input, select, textarea').each(function() {
-            var $field = $(this);
-            var fieldName = $field.data('title') || 'Field';
+            $(this).find('input, select, textarea').each(function() {
+                const $field = $(this);
+                
+                let fieldName = $field.data('title');
+                if (fieldName === 'NIK') $field.val($field.val().replace(/\s+/g, ''));
 
-            if ($field.prop('required') && !$field.val()) {
-                isValid = false;
-                toastr.warning(fieldName + ' harus diisi', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
+                if (fieldName === 'NIK' && nikCheck) {
+                    isValid = false;
+                    toastr.error('NIK sudah terdaftar', 'Astagfirullah', { timeOut: 2000, className: "custom-larger-toast" });
+                }
+
+                if ($field.prop('required') && !$field.val()) {
+                console.log(this);
+                    isValid = false;
+                    toastr.warning(`${fieldName} harus diisi`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
+                }
+
+                const maxLength = $field.attr('maxlength');
+                if (maxLength && $field.val().length > maxLength) {
+                    isValid = false;
+                    toastr.warning(`${fieldName} tidak boleh lebih dari ${maxLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
+                }
+            });
+
+            const villageId = $('#village-select').val();
+            let $hiddenVillageInput = $('#hidden-village-id');
+            if (villageId && $hiddenVillageInput.length === 0) {
+                $hiddenVillageInput = $('<input>', {
+                    type: 'hidden',
+                    name: 'village_id',
+                    value: villageId
+                });
+                $(this).append($hiddenVillageInput);
             }
 
-            var maxLength = $field.attr('maxlength');
-            if (maxLength && $field.val().length > maxLength) {
+            const birthDateStr = $('#birth_date').val();
+            const role = $('input[name="role"]:checked').val();
+            const password = $('#password').val();
+            const passwordConfirmation = $('#password_confirmation').val();
+            if(password !== passwordConfirmation) {
                 isValid = false;
-                toastr.warning(fieldName + ' tidak boleh lebih dari ' + maxLength + ' karakter', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
+                toastr.error('Password tidak cocok', 'Gagal!', { timeOut: 2000, className: "custom-larger-toast" });
             }
 
-            var minLength = $field.attr('minlength');
-            if (minLength && $field.val().length < minLength) {
-                isValid = false;
-                toastr.warning(fieldName + ' harus memiliki setidaknya ' + minLength + ' karakter', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
+            if (role === 'instance') {
+                if (isValid) this.submit();
+                return;
             }
+
+            if (role === 'user') {
+                if (!birthDateStr) {
+                    toastr.error('Tanggal lahir harus diisi', 'Gagal!', {
+                        timeOut: 3000,
+                        closeButton: true,
+                        progressBar: true,
+                        className: "custom-larger-toast"
+                    });
+                    return;
+                }
+
+                // Age validation
+                const birthDate = new Date(birthDateStr);
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+
+                if (age < 17) {
+                    toastr.error('Anda harus berusia minimal 17 tahun untuk mendaftar', 'Gagal!', {
+                        timeOut: 3000,
+                        closeButton: true,
+                        progressBar: true,
+                        className: "custom-larger-toast"
+                    });
+                    return;
+                }
+            }
+
+            if (isValid) this.submit();
         });
-
-        const password = $('#password').val();
-        const confirmPassword = $('#password_confirmation').val();
-        if (password && confirmPassword && password !== confirmPassword) {
-            isValid = false;
-            toastr.warning('Password dan Konfirmasi Password tidak cocok!', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
-        }
-
-        if (isValid) {
-            this.submit();
-        }
     });
     
 </script>
