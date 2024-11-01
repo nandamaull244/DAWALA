@@ -85,6 +85,48 @@
             },
         });
 
+        $(".flatpickr-birth-date-check").flatpickr({
+            dateFormat: "Y-m-d",
+            maxDate: "today",
+            altInput: true,
+            altFormat: "d F Y",
+            clickOpens: true,
+            disableMobile: "true",
+            locale: {
+                firstDayOfWeek: 1,
+                weekdays: {
+                    shorthand: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+                    longhand: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
+                },
+                months: {
+                    shorthand: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+                    longhand: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus',
+                        'September', 'Oktober', 'November', 'Desember'
+                    ]
+                }
+            },
+            onChange: function(selectedDates, dateStr, instance) {
+                const birthDate = new Date(dateStr);
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+
+                if (age < 17) {
+                    toastr.error('Anda harus berusia minimal 17 tahun untuk mendaftar', 'Gagal!', {
+                        timeOut: 3000,
+                        closeButton: true,
+                        progressBar: true
+                    });
+                    instance.clear();
+                    return false;
+                }
+            }
+        });
+
 
         toastr.options = {
             "closeButton": true,
@@ -155,6 +197,7 @@
             }
         });
     });
+
 </script>
 @stack('scripts')
 

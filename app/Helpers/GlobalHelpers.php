@@ -23,3 +23,12 @@ function containsLetter($str) {
 function formatNumber($number) {
     return number_format($number, 0, ',', '.');
 }
+
+function generate16DigitNumber() {
+    $number = '';
+    for ($i = 0; $i < 16; $i++) {
+        $number .= mt_rand(0, 9);
+    }
+    return $number;
+}
+
