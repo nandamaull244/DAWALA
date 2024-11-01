@@ -22,9 +22,9 @@ class DashboardController extends Controller
                 'data' => $data
             ]);
         } elseif (auth()->user()->role == 'instance') {
-            return view("Dashboard.dashboard_instance");
+            return redirect()->route('instance.pelayanan.index');
         } else {
-            return view("Dashboard.dashboard_user");
+            return redirect()->route('user.pelayanan.index');
         }
     }
 
