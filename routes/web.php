@@ -124,6 +124,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/register/process', [AuthController::class, 'registerProcess'])->name('register.process');
     Route::post('/check-email', [AuthController::class, 'checkEmail'])->name('check-email');
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
+    Route::get('/cek-username', [AuthController::class, 'cekUsername'])->name('cek-username');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -141,4 +142,5 @@ Route::group([], function () {
     Route::get('/visi-misi', [PageController::class, 'visiMisi'])->name('page.visimisi');
     Route::get('/detail-persyaratan', [PageController::class, 'detailPersyaratan'])->name('page.detail-persyaratan');
 });
+
 
