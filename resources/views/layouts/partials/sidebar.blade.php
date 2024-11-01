@@ -13,6 +13,21 @@
         </div>
         <div class="sidebar-user-info px-4 py-3">
             <div class="d-flex flex-column">
+                <div class="user-role">
+                    @if (Auth::user()->role == 'admin')
+                    <span class="badge bg-light-success fs-5">{{ ucfirst(Auth::user()->role) }}</span>
+                    @endif
+                    @if (Auth::user()->role == 'operator')
+                    <span class="badge bg-light-info fs-5">{{ ucfirst(Auth::user()->role) }}</span>
+                    @endif
+                    @if (Auth::user()->role == 'instance')
+                    <span class="badge bg-light-primary fs-5">{{ ucfirst(Auth::user()->role) }}</span>
+                    @endif
+                    
+                    @if (Auth::user()->role == 'user')
+                    <span class="badge bg-light-warning fs-5">{{ ucfirst(Auth::user()->role) }}</span>
+                    @endif
+                </div>
                 <div class="user-name mb-1">
                     <h5 class="mb-0">{{ Auth::user()->full_name }}</h5>
                     @if (Auth::user()->role == 'user')
@@ -20,21 +35,6 @@
                     @endif
                     @if (Auth::user()->role == 'operator')
                         <p class="text-muted">Kecamatan: {{ Auth::user()->village->district->name }}</p>
-                    @endif
-                </div>
-                <div class="user-role">
-                    @if (Auth::user()->role == 'admin')
-                        <span class="badge bg-light-success fs-5">{{ ucfirst(Auth::user()->role) }}</span>
-                    @endif
-                    @if (Auth::user()->role == 'operator')
-                        <span class="badge bg-light-info fs-5">{{ ucfirst(Auth::user()->role) }}</span>
-                    @endif
-                    @if (Auth::user()->role == 'instance')
-                        <span class="badge bg-light-primary fs-5">{{ ucfirst(Auth::user()->role) }}</span>
-                    @endif
-
-                    @if (Auth::user()->role == 'user')
-                        <span class="badge bg-light-warning fs-5">{{ ucfirst(Auth::user()->role) }}</span>
                     @endif
                 </div>
             </div>
