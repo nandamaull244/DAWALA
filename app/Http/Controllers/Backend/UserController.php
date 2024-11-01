@@ -29,18 +29,18 @@ class UserController extends Controller
     }
 
     public function createOperator()
-    {
-        $districts = District::whereNotIn('id', function($query) {
-            $query->select('district_id')
-                  ->from('users')
-                  ->where('role', 'operator')
-                  ->whereNotNull('district_id');
-        })->get();
-        
-        $villages = collect(); 
-        
-        return view('account-management.create_account_operator', compact('districts', 'villages'));
-    }
+{
+    // Ambil semua kecamatan dan status ketersediaannya
+    $districts = District::select('districts.*')
+        ->leftJoin('users', function($join) {
+            $join->on('districts.id', '=', 'users.district_id')
+                 ->where('users.role', '=', 'operator');
+        })
+        ->selectRaw('CASE WHEN users.id IS NULL THEN true ELSE false END as is_available')
+        ->get();
+
+    return view('account-management.create_account_operator', compact('districts'));
+}
 
     public function checkDistrictAvailability(Request $request)
     {
@@ -65,6 +65,20 @@ class UserController extends Controller
             'message' => 'Kecamatan tersedia'
         ]);
     }
+
+    public function checkAllAvailability()
+{
+    $districts = District::all()->map(function ($district) {
+        return [
+            'id' => $district->id,
+            'available' => !User::where('district_id', $district->id)
+                              ->where('role', 'operator')
+                              ->exists()
+        ];
+    });
+
+    return response()->json(['districts' => $districts]);
+}
 
     /**
      * Show the form for creating a new resource.
@@ -170,6 +184,86 @@ class UserController extends Controller
                 ->route('admin.manajemen-akun.index')
                 ->with('error', $errorMessage)
                 ->withInput();
+        }
+    }
+    public function storeOperator(Request $request)
+    {
+        // Validasi input
+        $rules = [
+            'username' => 'required|string|max:255|unique:users',
+            'full_name' => 'required|string|max:255',
+            'district_id'=> 'required|exists:districts,id',
+            'password' => 'required|min:8|confirmed',
+            'password_confirmation' => 'required|same:password',
+        ];
+
+        // Optional fields validation
+        if($request->email) {
+            $rules['email'] = 'email|unique:users,email';
+        }
+        if($request->phone_number) {
+            $rules['phone_number'] = 'string|digits_between:10,14';
+        }
+        if($request->nik) {
+            $rules['nik'] = 'string|digits:16';
+        }
+        if($request->no_kk) {
+            $rules['no_kk'] = 'string|digits:16';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', implode('<br>', $validator->errors()->all()));
+        }
+
+        try {
+            // Double check district availability
+            $isDistrictAvailable = !User::where('district_id', $request->district_id)
+                ->where('role', 'operator')
+                ->exists();
+
+            if (!$isDistrictAvailable) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Kecamatan ini sudah memiliki operator');
+            }
+
+            // Create new user
+            $user = User::create([
+                'username' => $request->username,
+                'password' => Hash::make($request->password),
+                'full_name' => $request->full_name,
+                'email' => $request->email,
+                'district_id' => $request->district_id,
+                'phone_number' => $request->phone_number,
+                'gender' => $request->gender,
+                'address' => $request->address,
+                'rt' => $request->rt ?? '000',
+                'rw' => $request->rw ?? '000',
+                'nik' => $request->nik ,
+                'no_kk' => $request->no_kk,
+                // 'village_id' => $request->village_id,
+                'birth_date' => $request->birth_date ?? now(),
+                'role' => 'operator',
+                'registration_type' => 'Operator',
+                'registration_status' => 'Completed',
+            ]);
+
+            return redirect()
+                ->route('admin.manajemen-akun.index')
+                ->with('success', 'Akun operator berhasil dibuat');
+
+        } catch (\Exception $e) {
+            \Log::error('Error creating operator account: ' . $e->getMessage());
+            
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat membuat akun operator: ' . $e->getMessage());
         }
     }
 

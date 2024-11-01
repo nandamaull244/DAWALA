@@ -40,7 +40,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
     Route::get('/articles/data', [ArticleController::class, 'getData'])->name('article.data');
 
     Route::get('/manajemen-akun/verification', [UserController::class, 'verification'])->name('manajemen-akun.verification');
-    Route::get('/manajemen-akun/create-operator', [UserController::class, 'createOperator'])->name('manajemen-akun.create-operator');
+    Route::get('/manajemen-akun/create-operator', [UserController::class, 'createOperator'])->name('manajemen-akun.createOperator');
+    Route::post('/manajemen-akun/create-operator/process', [UserController::class, 'storeOperator'])->name('manajemen-akun.storeOperator');
     Route::resource('/manajemen-akun', UserController::class);
     Route::get('/users/getData', [UserController::class, 'getData'])->name('user.data'); 
    
@@ -53,6 +54,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
     // Ubah route untuk mengarah ke UserController
     Route::post('/check-district-availability', [UserController::class, 'checkDistrictAvailability'])
         ->name('check-district-availability');
+
+    Route::get('/check-all-districts-availability', [UserController::class, 'checkAllAvailability'])
+        ->name('check-all-districts-availability');
 });
 
 

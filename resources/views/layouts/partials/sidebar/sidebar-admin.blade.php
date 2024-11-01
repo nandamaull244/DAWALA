@@ -53,8 +53,8 @@
                 <span>Verifikasi Akun</span>
             </a>
         </li>
-        <li class="sidebar-item {{ request()->routeIs('admin.manajemen-akun.create-operator') ? 'active' : '' }}">
-            <a href="{{ route('admin.manajemen-akun.create-operator') }}" class='sidebar-link'>
+        <li class="sidebar-item {{ request()->routeIs('admin.manajemen-akun.createOperator') ? 'active' : '' }}">
+            <a href="{{ route('admin.manajemen-akun.createOperator') }}" class='sidebar-link'>
                 <i class="bi bi-person-plus"></i>
                 <span>Akun Operator</span>
             </a>

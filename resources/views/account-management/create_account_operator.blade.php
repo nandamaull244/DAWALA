@@ -14,7 +14,7 @@ Formulir Registrasi Akun Operator
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <form id="userForm" action="{{ route("admin.manajemen-akun.store") }}" method="POST" novalidate>
+                    <form id="userForm" action="{{ route("admin.manajemen-akun.storeOperator") }}" method="POST" novalidate>
                         @csrf
                         <div class="row mb-1 mt-1">
                             <!-- Sub-category selection (hidden by default) -->
@@ -43,8 +43,11 @@ Formulir Registrasi Akun Operator
                                         <select class="form-control form-control-md" data-title="Kecamatan" id="district-select" name="district_id" required>
                                             <option value="">Pilih Kecamatan</option>
                                             @foreach ($districts as $district)
-                                                <option value="{{ $district->id }}" {{ old('district_id') == $district->id ? 'selected' : '' }}>
-                                                    {{ $district->name }}
+                                                <option value="{{ $district->id }}" 
+                                                    {{ old('district_id') == $district->id ? 'selected' : '' }}
+                                                    data-status="{{ $district->is_available ? 'available' : 'unavailable' }}"
+                                                    {{ !$district->is_available ? 'disabled' : '' }}>
+                                                    {{ $district->name }}{{ !$district->is_available ? ' (Sudah ada operator)' : '' }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -64,7 +67,15 @@ Formulir Registrasi Akun Operator
                                 <div class="mb-4 form-group">
                                    <label for="username">Username</label>
                                    <div class="form-group position-relative has-icon-left mb-4 form-group">
-                                       <input type="text" class="form-control form-control-md" data-title="Username" name="username" id="username" value="{{ old('username') }}" required>
+                                    <input type="text" 
+                                    class="form-control form-control-md" 
+                                    data-title="Username" 
+                                    name="username" 
+                                    id="username" 
+                                    value="{{ old('username') }}"
+                                    pattern=".*[a-zA-Z].*"
+                                    title="Username harus mengandung minimal satu huruf"
+                                    required>
                                        <div class="form-control-icon">
                                            <i class="bi bi-person"></i>
                                        </div>
@@ -112,21 +123,6 @@ Formulir Registrasi Akun Operator
                         </div>
 
                         <div class="row mb-1 mt-1">
-                            <!-- Birth Date -->
-                            <div class="col-md-6">
-                                <div class="mb-4 form-group">
-                                    <label for="birth_date" class="mb-2">Tanggal Lahir</label>
-                                    <div class="form-group position-relative has-icon-left">
-                                        <input type="date" class="form-control form-control-md flatpickr-date" data-title="Tanggal Lahir" id="birth_date" placeholder="Pilih Tanggal Lahir" name="birth_date" value="birth_date" hidden>
-                                        <div class="form-control-icon">
-                                            <i class="bi bi-calendar"></i>
-                                        </div>
-                                    </div>
-                                    @error('birth_date')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
 
                             <div class="col-md-6">
                                 <!-- Phone Number -->
@@ -143,25 +139,6 @@ Formulir Registrasi Akun Operator
                                     @enderror
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row mb-1 mt-1">
-                            <!-- Address -->
-                            <div class="col-md-6">
-                                <div class="mb-4 form-group">
-                                    <label for="address">Alamat</label>
-                                    <div class="form-group position-relative has-icon-left mb-4 form-group">
-                                        <input type="text" class="form-control form-control-md" data-title="Alamat" id="address" name="address" value="{{ old('address') }}" required>
-                                        <div class="form-control-icon">
-                                            <i class="bi bi-house"></i>
-                                        </div>
-                                    </div>
-                                    @error('address')
-                                        <span>{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-
                             <!-- Gender -->
                             <div class="col-md-6">
                                 <div class="mb-4 form-group">
@@ -184,19 +161,7 @@ Formulir Registrasi Akun Operator
                             </div>
                         </div>
 
-                        <!-- Hidden Inputs -->
-                        <input type="hidden" name="registration_status" id="registration_status" value="Completed">
-                        <input type="hidden" class="form-control form-control-md" data-title="RT" id="rt" name="rt" value="000" >
-                        <input type="hidden" class="form-control form-control-md" data-title="RW" id="rw" name="rw" value="000" >
-                        <input type="hidden" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" value="1234567890123456" >
-                        <input type="hidden" class="form-control form-control-md" data-title="No Kartu Keluarga" id="no_kk" name="no_kk" value="1234567890123456" >
-                        <input type="hidden" class="form-control form-control-md"   name="role" value="operator" >
-                        <input type="hidden" class="form-control form-control-md"   name="registration_type" value="Operator" >
-                        <input type="hidden" class="form-control form-control-md"   name="village_id" value="3203062008" >
-            
-                        
                         <div class="row mb-1 mt-1">
-                            <!-- Password -->
                             <div class="col-md-6">
                                 <div class="mb-4 form-group">
                                         <label for="password" class="mb-2">Password (Minimal 8 karakter)</label>
@@ -217,6 +182,41 @@ Formulir Registrasi Akun Operator
                                     @enderror
                                 </div>
                             </div>
+                            <!-- Address -->
+                            <div class="col-md-6">
+                                <div class="mb-4 form-group">
+                                    <label for="address">Alamat</label>
+                                    <div class="form-group position-relative has-icon-left mb-4 form-group">
+                                        <input type="text" class="form-control form-control-md" data-title="Alamat" id="address" name="address" value="{{ old('address') }}" required>
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-house"></i>
+                                        </div>
+                                    </div>
+                                    @error('address')
+                                        <span>{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            
+                        </div>
+
+                        <!-- Hidden Inputs -->
+                        <input type="hidden" name="registration_status" id="registration_status" value="Completed">
+                        <input type="hidden" class="form-control form-control-md" data-title="RT" id="rt" name="rt" value="000" >
+                        <input type="hidden" class="form-control form-control-md" data-title="RW" id="rw" name="rw" value="000" >
+                        <input type="hidden" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" value="{{ mt_rand(1000000000000000, 9999999999999999) }}" >
+                        <input type="hidden" class="form-control form-control-md" data-title="No Kartu Keluarga" id="no_kk" name="no_kk" value="{{ mt_rand(1000000000000000, 9999999999999999) }}" >
+                        <input type="hidden" class="form-control form-control-md"   name="role" value="operator" >
+                        <input type="hidden" class="form-control form-control-md"   name="registration_type" value="Operator" >
+                        {{-- <input type="hidden" class="form-control form-control-md"   name="village_id" value="" > --}}
+                        <input type="hidden" class="form-control form-control-md" data-title="Tanggal Lahir" id="birth_date"name="birth_date" value="2024-10-02">
+
+            
+                        
+                        <div class="row mb-1 mt-1">
+                            <!-- Password -->
+                            
 
                             <!-- Password Confirmation -->
                             <div class="col-md-6 form-group">
@@ -245,53 +245,36 @@ Formulir Registrasi Akun Operator
 <script>
     $(document).ready(function() {
         const $districtSelect = $('#district-select');
-        const $submitButton = $('button[type="submit"]');
-        const $invalidFeedback = $districtSelect.siblings('.invalid-feedback');
-
-        $districtSelect.on('change', function() {
-            const districtId = $(this).val();
-            
-            // Reset validation state
-            $districtSelect.removeClass('is-invalid');
-            $invalidFeedback.hide();
-            $submitButton.prop('disabled', false);
-
-            if (!districtId) {
-                return;
-            }
-
-            // Check district availability
-            $.ajax({
-                url: "{{ route('admin.check-district-availability') }}",
-                method: 'POST',
-                data: {
-                    district_id: districtId,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    if (!response.available) {
-                        // Show error state
-                        $districtSelect.addClass('is-invalid');
-                        $invalidFeedback.text(response.message).show();
-                        $districtSelect.val('');
-                        $submitButton.prop('disabled', true);
-                        toastr.error(response.message, 'Kecamatan Tidak Tersedia');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    toastr.error('Terjadi kesalahan saat memeriksa ketersediaan kecamatan', 'Error');
+        
+        // Add CSS for unavailable districts
+        $('<style>')
+            .text(`
+                #district-select option[data-status="unavailable"] {
+                    background-color: #ffe6e6 !important;
+                    color: #dc3545 !important;
                 }
-            });
+            `)
+            .appendTo('head');
+
+        // Tambahkan class untuk styling select2 jika menggunakan select2
+        $('#district-select').select2({
+            templateResult: formatDistrict,
+            templateSelection: formatDistrict
         });
 
-        $('#showPassword').on('change', function() {
-            const $passwordInput = $('#password');
-            $passwordInput.attr('type', $(this).prop('checked') ? 'text' : 'password');
-        });
-
-      
- 
+        // Format option untuk select2
+        function formatDistrict(district) {
+            if (!district.id) return district.text;
+            
+            var $district = $(district.element);
+            var $option = $(
+                '<span class="' + ($district.attr('data-status') === 'unavailable' ? 'unavailable-district' : '') + '">' + 
+                district.text + 
+                '</span>'
+            );
+            
+            return $option;
+        }
     });
 
 
@@ -336,9 +319,32 @@ Formulir Registrasi Akun Operator
             toastr.warning('Password dan Konfirmasi Password tidak cocok!', 'Peringatan', {timeOut: 2500, "className": "custom-larger-toast"});
         }
 
+        // Add username letter validation
+        const username = $('#username').val();
+        if (!/[a-zA-Z]/.test(username)) {
+            isValid = false;
+            toastr.warning('Username harus mengandung minimal satu huruf', 'Peringatan', {
+                timeOut: 2500, 
+                "className": "custom-larger-toast"
+            });
+        }
+
         if (isValid) {
             this.submit();
         }
     });
 </script>
+
+<style>
+    .unavailable-district {
+        background-color: #ffe6e6 !important;
+        color: #dc3545 !important;
+    }
+    
+    /* Jika menggunakan select2, tambahkan styling berikut */
+    .select2-container--default .select2-results__option[aria-disabled=true] {
+        background-color: #ffe6e6 !important;
+        color: #dc3545 !important;
+    }
+</style>
 @endpush
