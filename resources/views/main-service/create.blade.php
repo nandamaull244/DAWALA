@@ -184,16 +184,16 @@
                             <div class="form-group mt-3">
                                 <label class="form-label">Download Formulir</label>
                                 <div class="d-flex">
-                                    <a href="{{ asset('path/to/F1.01.pdf') }}" class="btn btn-primary me-2" download>
+                                    <a href="{{ asset('/backend/documents/formulir/Formulir-F1.01.pdf') }}" class="btn btn-primary me-2" download="F1.01(Formulir_Biodata_Keluarga).pdf">
                                         <i class="bi bi-file-earmark-pdf"></i> F1.01
                                     </a>
-                                    <a href="{{ asset('path/to/F1.02.pdf') }}" class="btn btn-primary me-2" download>
+                                    <a href="{{ asset('/backend/documents/formulir/Formulir-F1.02.pdf') }}" class="btn btn-primary me-2" download="F1.02.pdf">
                                         <i class="bi bi-file-earmark-pdf"></i> F1.02
                                     </a>
-                                    <a href="{{ asset('path/to/F1.03.pdf') }}" class="btn btn-primary me-2" download>
+                                    <a href="{{ asset('/backend/documents/formulir/Formulir-F1.03.pdf') }}" class="btn btn-primary me-2" download="F1.03(Pendaftaran_Perpindahan_Penduduk).pdf">
                                         <i class="bi bi-file-earmark-pdf"></i> F1.03
                                     </a>
-                                    <a href="{{ asset('path/to/F1.04.pdf') }}" class="btn btn-primary me-2" download>
+                                    <a href="{{ asset('/backend/documents/formulir/Formulir-F1.04.pdf') }}" class="btn btn-primary me-2" download="F1.04.pdf">
                                         <i class="bi bi-file-earmark-pdf"></i> F1.04
                                     </a>
                                 </div>
