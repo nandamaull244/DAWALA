@@ -11,6 +11,7 @@ use App\Http\Controllers\Backend\MainServiceController;
 use App\Http\Controllers\Backend\ArticleController;
 use App\Http\Controllers\Backend\FormArticleController;
 use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\ReportController;
 
 /*
 |--------------------------------------------------------------------------
