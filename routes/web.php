@@ -57,6 +57,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'checkRole:adm
 
     Route::get('/check-all-districts-availability', [UserController::class, 'checkAllAvailability'])
         ->name('check-all-districts-availability');
+
+    //report routes
+    Route::resource('report', ReportController::class);
 });
 
 
@@ -80,6 +83,10 @@ Route::group(['prefix' => 'operator', 'middleware' => ['auth:admin', 'checkRole:
     Route::get('/verification/data', [UserController::class, 'getVerificationData'])->name('user.verification.data');
     Route::post('/verification/{user}/approve', [UserController::class, 'approveUser'])->name('user.verification.approve');
     Route::post('/verification/{user}/reject', [UserController::class, 'rejectUser'])->name('user.verification.reject');
+
+    //report routes
+    Route::resource('report', ReportController::class);
+
 });
 
 

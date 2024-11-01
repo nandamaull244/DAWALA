@@ -18,6 +18,15 @@
             </a>
         </li>
     </ul>
+    <ul class="submenu {{ request()->routeIs('admin.report.*') ? 'active' : '' }}" style="list-style-type: none;">
+        <li class="sidebar-item {{ request()->routeIs('admin.report.index') ? 'active' : '' }}">
+            <a href="{{ route('admin.report.index') }}" class='sidebar-link'>
+                <i class="bi bi-archive-fill"></i>
+                <span>Laporan Layanan</span>
+            </a>
+        </li>
+    </ul>
+
 </li>
 
 <li class="sidebar-item has-sub">
