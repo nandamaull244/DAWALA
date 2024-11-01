@@ -154,12 +154,12 @@
 }
 
 .navbar-light .navbar-brand img {
-    max-height: 85px;
+    max-height: 130px;
     transition: .5s;
 }
 
 .nav-bar .navbar-light .navbar-brand img {
-    max-height: 85px;
+    max-height: 130px;
 }
 
 .navbar .navbar-nav .nav-item .nav-link {
