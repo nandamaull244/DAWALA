@@ -6,11 +6,11 @@
 </li>
 
 <li class="sidebar-item has-sub">
-    <span href="#" class='sidebar-link'>
+    <a href="javascript:void(0)" class='sidebar-link'>
         <i class="bi bi-people"></i>
         <span>Pelayanan</span>
-    </span>
-    <ul class="submenu {{ request()->routeIs('admin.pelayanan.*') ? 'active' : '' }}">
+    </a>
+    <ul class="submenu {{ request()->routeIs('admin.pelayanan.*') ? 'active' : '' }}" style="list-style-type: none;">
         <li class="sidebar-item {{ request()->routeIs('admin.pelayanan.index') ? 'active' : '' }}">
             <a href="{{ route('admin.pelayanan.index') }}" class='sidebar-link'>
                 <i class="bi bi-archive-fill"></i>
@@ -21,11 +21,11 @@
 </li>
 
 <li class="sidebar-item has-sub">
-    <span href="#" class='sidebar-link'>
+    <a href="javascript:void(0)" class='sidebar-link'>
         <i class="bi bi-newspaper"></i>
         <span>Artikel</span>
-    </span>
-    <ul class="submenu {{ request()->routeIs('admin.article.*') ? 'active' : '' }}">
+    </a>
+    <ul class="submenu {{ request()->routeIs('admin.article.*') ? 'active' : '' }}" style="list-style-type: none;">
         <li class="sidebar-item {{ request()->routeIs('admin.article.index') ? 'active' : '' }}">
             <a href="{{ route('admin.article.index') }}" class='sidebar-link'>
                 <i class="bi bi-table"></i>
@@ -36,11 +36,11 @@
 </li>
 
 <li class="sidebar-item has-sub">
-    <span href="#" class='sidebar-link'>
+    <a href="javascript:void(0)" class='sidebar-link'>
         <i class="bi bi-people"></i>
         <span>Manajemen Akun</span>
-    </span>
-    <ul class="submenu {{ request()->routeIs('admin.manajemen-akun.*') ? 'active' : '' }}">
+    </a>
+    <ul class="submenu {{ request()->routeIs('admin.manajemen-akun.*') ? 'active' : '' }}" style="list-style-type: none;">
         <li class="sidebar-item {{ request()->routeIs('admin.manajemen-akun.index') ? 'active' : '' }}">
             <a href="{{ route('admin.manajemen-akun.index') }}" class='sidebar-link'>
                 <i class="bi bi-table"></i>

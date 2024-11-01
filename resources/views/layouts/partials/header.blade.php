@@ -142,5 +142,20 @@
     .custom-larger-toast .toast-message:before {
         font-size: 24px !important;  
     }
+
+
+    /* Menghilangkan ikon panah pada submenu */
+    .submenu .sidebar-item::after,
+    .submenu .sidebar-item::before,
+    .submenu .sidebar-link::after,
+    .submenu .sidebar-link::before {
+        display: none !important;
+    }
+
+    /* Jika masih belum hilang, coba tambahkan ini */
+    .submenu li a::after,
+    .submenu li a::before {
+        display: none !important;
+    }
 </style>
 @stack('css')
