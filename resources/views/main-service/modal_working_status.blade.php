@@ -66,7 +66,7 @@
                                     </div>
                                 @endif
                                 <div id="messageDisplay">
-                                    <textarea rows="4" id="completedMessage" class="form-control-plaintext" style="font-size: 1.1em;"></textarea>
+                                    <textarea rows="4" id="completedMessage" class="form-control-plaintext" disabled style="font-size: 1.1em;"></textarea>
                                 </div>
                                 <div id="messageEdit" style="display: none;">
                                     <textarea class="form-control" id="edit_message_for_user" name="message_for_user" rows="4" required style="font-size: 1.1em;"></textarea>
@@ -127,21 +127,21 @@
             }
         });
 
-        $('#btnEditMessage').click(function() {
+        $('#btnEditMessage').click(function(e) {
+            e.preventDefault();
             const isEditing = $('#messageEdit').is(':visible');
             
             if (isEditing) {
                 let newMessage = $('#edit_message_for_user').val().trim();
                 $('textarea[name="message_for_user"]').val(newMessage);
                 $('#workingStatusForm').submit();
+                table.ajax.reload()
             } else {
                 $('#edit_message_for_user').val($('#completedMessage').text());
                 $('#messageDisplay').hide();
                 $('#messageEdit').show();
                 $('#submitBtn').hide();
-                $(this).html('<i class="bi bi-check me-1"></i>Simpan')
-                    .removeClass('btn-outline-primary')
-                    .addClass('btn-success');
+                $(this).html('<i class="bi bi-check me-1"></i>Simpan').removeClass('btn-outline-primary').addClass('btn-success');
             }
         });
 
@@ -153,9 +153,7 @@
             $('#submitBtn').show();
             $('#messageDisplay').show();
             $('#messageEdit').hide();
-            $('#btnEditMessage').html('<i class="bi bi-pencil me-1"></i>Edit Pesan')
-                .removeClass('btn-success')
-                .addClass('btn-outline-primary');
+            $('#btnEditMessage').html('<i class="bi bi-pencil me-1"></i>Edit Pesan').removeClass('btn-success').addClass('btn-outline-primary');
         });
 
         $('#workingStatusForm').on('submit', function(e) {
@@ -182,7 +180,24 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.submit();
+                    const form = $(this);
+                    const url = form.attr('action');
+                    const formData = form.serialize();
+
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: formData,
+                        success: function(response) {
+                            $('#workingStatusModal').modal('hide');
+                            toastr.success(response.success, 'Berhasil');
+                            table.ajax.reload();
+                        },
+                        error: function(xhr, status, error) {
+                            toastr.error('Terjadi kesalahan saat memproses permintaan', 'Gagal');
+                            console.error(error);
+                        }
+                    });
                 }
             });
         });

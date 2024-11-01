@@ -718,9 +718,11 @@ class MainServiceController extends Controller
                 'message_for_user' => $request->message_for_user
             ]);
 
-            return redirectByRole(auth()->user()->role, 'pelayanan.index', ['success' => 'Informasi Status Pengerjaan berhasil diperbarui!']);
+            return response()->json(['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' Informasi Status Pengerjaan berhasil diperbarui!']);
+            // return redirectByRole(auth()->user()->role, 'pelayanan.index', ['success' => 'Informasi Status Pengerjaan berhasil diperbarui!']);
         }  else {
-            return redirectByRole(auth()->user()->role, 'pelayanan.index', ['error' => 'Data Pelayanan Tidak Ditemukan']);
+            return response()->json(['error' => 'Data Pelayanan Tidak Ditemukan']);
+            // return redirectByRole(auth()->user()->role, 'pelayanan.index', ['error' => 'Data Pelayanan Tidak Ditemukan']);
         }
     }
 
