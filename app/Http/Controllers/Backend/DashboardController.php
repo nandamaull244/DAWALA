@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Models\Service;
+use App\Models\District;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -35,12 +36,29 @@ class DashboardController extends Controller
         $data['document_recieved_visit'] = (clone $baseQuery)->where('document_recieved_status', 'Recieved')->count();
         $data['completed_visit'] = (clone $baseQuery)->where('service_status', 'Completed')->count();
 
-        $data['services_by_district'] = DB::table('districts')
-                                       ->leftJoin('users', 'districts.id', '=', 'users.district_id')
-                                       ->leftJoin('services', 'users.id', '=', 'services.user_id')
-                                       ->select('districts.name', DB::raw('COUNT(services.id) as total'))
-                                       ->groupBy('districts.id', 'districts.name')
-                                       ->get();
+        $data['services_by_district'] = District::withCount(['user' => function($query) {
+                                            $query->whereHas('services', function($q) {
+                                                $q->where('service_status', 'Not Yet')->whereNull('deleted_at');
+                                            });
+                                        }])
+                                        ->orderBy('name', 'asc')
+                                        ->get()
+                                        ->map(function($district) {
+                                            return (object) [
+                                                'name' => $district->name,
+                                                'total' => $district->user_count
+                                            ];
+                                        });
+
+        $data['visit_schedule'] = Service::where('working_status', 'Process')
+                                    ->whereNotNull('visit_schedule')
+                                    ->get()
+                                    ->map(function($service) {
+                                        return [
+                                            'title' => 'Kunjungan - ' . $service->user->full_name,
+                                            'date' => $service->visit_schedule
+                                        ];
+                                    });                           
 
         $data['services_by_category'] = DB::table('services')->select('service_category', DB::raw('COUNT(service_category) as total'))->groupBy('service_category')->get();
         return $data;
