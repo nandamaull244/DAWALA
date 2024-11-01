@@ -143,13 +143,17 @@
         }
     }
 
-    // Menutup panel ketika mengklik di luar
-    document.addEventListener('click', function(event) {
-        const panel = document.getElementById('notificationPanel');
-        const button = document.getElementById('notificationButton');
-        if (!panel.contains(event.target) && !button.contains(event.target) && panel.style.display !== 'none') {
-            toggleNotifications();
-        }
+    $(document).ready(function() {
+        $(document).on('click', function(event) {
+            const $panel = $('#notificationPanel');
+            const $button = $('#notificationButton');
+
+            if ($panel.length && $button.length) {
+                if (!$panel.is(event.target) && !$button.is(event.target) && $panel.is(':visible')) {
+                    toggleNotifications();
+                }
+            }
+        });
     });
 </script>
 @stack('scripts')
