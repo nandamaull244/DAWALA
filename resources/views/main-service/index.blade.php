@@ -483,8 +483,9 @@
             });
         });
 
+        var table;
         $(document).ready(function() {
-            var table = $('#serviceTable').DataTable({
+            table = $('#serviceTable').DataTable({
                 responsive: true,
                 processing: true,
                 serverSide: true,
@@ -495,6 +496,7 @@
                         d.start_date = $('#startDate').val();
                         d.end_date = $('#endDate').val(); 
                         d.time = $('#selectedTime').val();
+                        d.services = $('#selectedServices').val();
                         d.categories = $('#selectedCategories').val();
                         d.types = $('#selectedTypes').val();
                         d.kecamatan = $('#selectedDistricts').val();

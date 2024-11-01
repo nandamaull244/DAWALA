@@ -84,10 +84,29 @@ class MainServiceController extends Controller
             $query->orderBy('id', $order);
         }        
 
-        if ($request->filled('categories')) {
+        if ($request->filled('services')) {
             $query->whereHas('service_list', function($q) use ($request) {
-                $q->whereIn('service_name', explode(',', $request->categories));
+                $q->whereIn('service_name', explode(',', $request->services));
             });
+        }
+
+        if ($request->filled('categories')) {
+            $categories = []; 
+
+            if (str_contains($request->categories, 'Disabilitas')) {
+                $categories = array_merge($categories, ['Disabilitas Fisik', 'Disabilitas Netra/Buta', 'Disabilitas Rungu/Bicara', 'Disabilitas Mental/Jiwa', 'Disabilitas Fisik dan Mental', 'Disabilitas Lainnya']);
+            } 
+            if (str_contains($request->categories, 'Lansia')) {
+                $categories = array_merge($categories, ['Lansia']);
+            } 
+            if (str_contains($request->categories, 'ODGJ')) {
+                $categories = array_merge($categories, ['ODGJ']);
+            } 
+            if (str_contains($request->categories, 'Penduduk')) {
+                $categories = array_merge($categories, ['Penduduk Sakit', 'Penduduk Terlantar', 'Penduduk Terkena Bencana']);
+            }
+
+            $query->whereIn('service_category', $categories);
         }
 
         if ($request->filled('types')) {
@@ -107,10 +126,16 @@ class MainServiceController extends Controller
         }
 
         if ($request->filled('service_statuses')) {
+            if(str_contains($request->service_statuses, 'Not Yet')) { 
+                $request->service_statuses .= ',-';
+            }
             $query->whereIn('service_status', explode(',', $request->service_statuses));
         }
 
         if ($request->filled('work_statuses')) {
+            if(str_contains($request->work_statuses, 'Not Yet')) { 
+                $request->work_statuses .= ',-';
+            }
             $query->whereIn('working_status', explode(',', $request->work_statuses));
         }
 
@@ -153,7 +178,7 @@ class MainServiceController extends Controller
                 $q->where('instance_id', $instanceId);
             });
         }
-        
+
         if ($request->filled('search') && $request->search['value']) {
             $searchValue = $request->search['value'];
             $query->where(function($q) use ($searchValue) {
@@ -199,9 +224,12 @@ class MainServiceController extends Controller
                                                                         data-reason="'. $row->rejected_reason .'" 
                                                                         data-approval_by="'. $approvalName.'" 
                                                                         data-service_status="'. $row->service_status .'"
-                                                                        data-visit_schedule="'. $row->visit_schedule .'" style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></a>';
+                                                                        data-visit_schedule="'. $row->visit_schedule .'" 
+                                                                        data-working_status="'. $row->working_status .'"
+                                                                        data-message_for_user="'. $row->message_for_user .'"
+                                                                        style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></a>';
 
-                if($row->service_status != 'Rejected' && ($row->working_status != 'Not Yet' && $row->working_status != '-')) {
+                if(auth()->user()->role != 'user' && auth()->user()->role != 'instance') {
                     $actionBtn .= '<a class="btn btn-outline-primary" data-bs-toggle="modal" 
                                                                         data-bs-target="#workingStatusModal" 
                                                                         data-id="'.$hashedId.'" 
@@ -312,13 +340,15 @@ class MainServiceController extends Controller
                     $html .= '<span class="badge bg-danger mb-1">Ditolak</span>';
                 } elseif ($row->service_status == 'Completed') {
                     $html .= '<span class="badge bg-success mb-1">Selesai</span>';
+                } else {
+                    $html .= '<span class="badge bg-secondary mb-1">-</span>';
                 }
             
                 if($row->rejected_reason == null) {
                     if ($row->document_recieved_status == 'Not Yet Recieved') {
-                        $html .= '<span class="badge bg-danger">Belum diterima</span>';
+                        $html .= '<span class="badge bg-danger">Dokumen Belum</span>';
                     } else {
-                        $html .= '<span class="badge bg-success">Telah diterima</span>';
+                        $html .= '<span class="badge bg-success">Dokumen Sudah</span>';
                     }
                 }
             
@@ -691,6 +721,23 @@ class MainServiceController extends Controller
             return redirectByRole(auth()->user()->role, 'pelayanan.index', ['success' => 'Informasi Status Pengerjaan berhasil diperbarui!']);
         }  else {
             return redirectByRole(auth()->user()->role, 'pelayanan.index', ['error' => 'Data Pelayanan Tidak Ditemukan']);
+        }
+    }
+
+    public function requestAgain(Request $request)
+    {
+        $service = Service::whereHash($request->id)->firstOrFail();
+        if($service) {
+            $service->update([
+                'working_status' => 'Not Yet',
+                'service_status' => 'Not Yet',
+                'message_for_user' => null,
+                'message_for_user' => $request->message_for_user
+            ]);
+
+            return response()->json(['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' berhasil dikirim ulang!']);
+        }  else {
+            return response()->json(['error' => 'Data Pelayanan Tidak Ditemukan']);
         }
     }
 

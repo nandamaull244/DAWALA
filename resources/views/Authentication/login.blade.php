@@ -90,10 +90,18 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
         <script>
 
-            // $('#loginForm').submit(function(e) {
-            //     e.preventDefault();
-            //     this.submit();
-            // });
+            $('#loginForm').submit(function(e) {
+                e.preventDefault();
+                let nikValue = $('#nik').val();
+                if (/[a-zA-Z]/.test(nikValue)) {
+                    $('#username').val(nikValue);
+                    $('#loginForm').attr('action', "{{ route('login-admin.process') }}"); 
+                } else {
+                    $('#username').val(''); 
+                    $('#loginForm').attr('action', "{{ route('login-user.process') }}"); 
+                }
+                this.submit();
+            });
 
 
             $(document).ready(function() {
