@@ -108,12 +108,104 @@
             opacity: 1 !important;
         }
     </style>
+    <style>
+        /* Existing styles tetap sama */
+        body {
+            background-image: url('{{ asset('assets') }}/img/1.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        #auth-left {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-control {
+            border-radius: 20px;
+        }
+
+        .btn-primary {
+            border-radius: 20px;
+            background-color: #4e73df;
+            border-color: #4e73df;
+        }
+
+        /* Tambahkan CSS responsif */
+        @media (max-width: 768px) {
+            #auth-left {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            /* Sembunyikan icon pada input */
+            .form-control-icon {
+                display: none !important;
+            }
+
+            /* Reset padding input karena tidak ada icon */
+            .form-control, 
+            .form-control-xl,
+            .form-select, 
+            select.form-control-xl {
+                font-size: 16px !important;
+                height: auto !important;
+                padding: 0.5rem 1rem !important;
+                padding-left: 1rem !important; /* Reset padding kiri */
+            }
+
+            .auth-title {
+                font-size: 1.5rem !important;
+            }
+
+            .auth-subtitle {
+                font-size: 0.9rem;
+            }
+
+            /* Sesuaikan margin form groups */
+            .form-group {
+                margin-bottom: 1rem !important;
+            }
+
+            /* Sesuaikan padding container */
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            /* Sesuaikan ukuran tombol */
+            .btn {
+                padding: 0.75rem 1rem;
+                font-size: 1rem !important;
+            }
+
+            /* Reset position relative pada form group */
+            .form-group.position-relative {
+                position: static !important;
+            }
+        }
+
+        /* Perbaikan untuk layar sangat kecil */
+        @media (max-width: 375px) {
+            #auth-left {
+                padding: 1rem;
+                margin: 0.5rem;
+            }
+
+            .form-control, 
+            .form-control-xl {
+                padding: 0.4rem 0.8rem !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <div id="auth">
-        <div class="row h-100 justify-content-center align-items-center my-5 mb-5">
-            <div class="col-lg-8 col-6">
+        <div class="row h-100 justify-content-center align-items-center my-3 my-md-5 mb-5">
+            <div class="col-12 col-lg-8 px-3 px-lg-0">
                 <div id="auth-left">
                     <h4 class="auth-title text-center">Registrasi Akun</h4>
                     <p class="auth-subtitle mb-5 text-center">Buat akun untuk urusan pelayanan</p>
