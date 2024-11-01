@@ -85,13 +85,16 @@
             },
         });
 
+        const today = new Date();
+        const date17YearsAgo = new Date(today.setFullYear(today.getFullYear() - 17));
         $(".flatpickr-birth-date-check").flatpickr({
             dateFormat: "Y-m-d",
-            maxDate: "today",
+            maxDate: date17YearsAgo,
             altInput: true,
             altFormat: "d F Y",
             clickOpens: true,
             disableMobile: "true",
+            defaultDate: date17YearsAgo,
             locale: {
                 firstDayOfWeek: 1,
                 weekdays: {

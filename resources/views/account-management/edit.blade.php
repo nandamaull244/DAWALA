@@ -128,7 +128,7 @@ Formulir Edit Data Akun
                                 <div class="mb-4 form-group">
                                     <label for="nik">NIK</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" maxlength="16" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="{{ $user->nik }}">
+                                        <input type="text" class="form-control form-control-md" data-title="NIK" id="nik" name="nik" maxlength="16" minlength="16" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="{{ $user->nik }}">
                                         <div class="form-control-icon">
                                             <i class="bi bi-card-text"></i>
                                         </div>
@@ -144,7 +144,7 @@ Formulir Edit Data Akun
                                 <div class="mb-4 form-group">
                                     <label for="no_kk">No KK</label>
                                     <div class="form-group position-relative has-icon-left">
-                                        <input type="text" class="form-control form-control-md" data-title="No Kartu Keluarga" id="no_kk" name="no_kk" maxlength="16" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="{{ $user->no_kk }}">
+                                        <input type="text" class="form-control form-control-md" data-title="No Kartu Keluarga" id="no_kk" name="no_kk" maxlength="16" minlength="16" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="{{ $user->no_kk }}">
                                         <div class="form-control-icon">
                                             <i class="bi bi-card-text"></i>
                                         </div>
@@ -535,6 +535,13 @@ Formulir Edit Data Akun
                 if (maxLength && $field.val().length > maxLength) {
                     isValid = false;
                     toastr.warning(`${fieldName} tidak boleh lebih dari ${maxLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
+                }
+
+                const minLength = $field.attr('minlength');
+                if (minLength && $field.val().length < minLength) {
+                    isValid = false;
+                    toastr.warning(`${fieldName} tidak boleh kurang dari ${minLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
+                    return;
                 }
             });
 

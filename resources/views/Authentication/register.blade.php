@@ -362,7 +362,7 @@
                         </div>
                         <div class="mb-4" id="nik_container">
                             <div class="form-group position-relative has-icon-left">
-                                <input type="text" class="form-control form-control-xl" placeholder="NIK" id="nik" name="nik" value="{{ old('nik') }}" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-title="NIK" maxlength="16">
+                                <input type="text" class="form-control form-control-xl" placeholder="NIK" id="nik" name="nik" value="{{ old('nik') }}" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-title="NIK" minlength="16" maxlength="16">
                                 <div class="form-control-icon">
                                     <i class="bi bi-card-text"></i>
                                 </div>
@@ -373,7 +373,7 @@
                         </div>
                         <div class="mb-4" id="no_kk_container">
                             <div class="form-group position-relative has-icon-left">
-                                <input type="text" class="form-control form-control-xl" placeholder="No Kartu Keluaga" id="no_kk" name="no_kk" value="{{ old('no_kk') }}" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-title="No Kartu Keluarga" maxlength="16">
+                                <input type="text" class="form-control form-control-xl" placeholder="No Kartu Keluaga" id="no_kk" name="no_kk" value="{{ old('no_kk') }}" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-title="No Kartu Keluarga" minlength="16" maxlength="16">
                                 <div class="form-control-icon">
                                     <i class="bi bi-card-text"></i>
                                 </div>
@@ -384,7 +384,7 @@
                         </div>
                         <div class="mb-4" id="birth_date_container">
                             <div class="form-group position-relative has-icon-left">
-                                <input type="text" class="form-control form-control-xl flatpickr" id="birth_date" placeholder="Pilih Tanggal Lahir" name="birth_date" value="{{ old('birth_date') }}" readonly="true" data-title="Tanggal Lahir" {{ request()->role == 'instance' ? 'value=' . now()->format('Y-m-d') : '' }}>
+                                <input type="text" class="form-control form-control-xl flatpickr-birth-date-check" id="birth_date" placeholder="Pilih Tanggal Lahir" name="birth_date" value="{{ old('birth_date') }}" readonly="true" data-title="Tanggal Lahir" {{ request()->role == 'instance' ? 'value=' . now()->format('Y-m-d') : '' }}>
                                 <div class="form-control-icon">
                                     <i class="bi bi-calendar"></i>
                                 </div>
@@ -526,13 +526,16 @@
             }
         });
 
-        $(".flatpickr").flatpickr({
+        const today = new Date();
+        const date17YearsAgo = new Date(today.setFullYear(today.getFullYear() - 17));
+        $(".flatpickr-birth-date-check").flatpickr({
             dateFormat: "Y-m-d",
-            maxDate: "today",
+            maxDate: date17YearsAgo,
             altInput: true,
             altFormat: "d F Y",
             clickOpens: true,
             disableMobile: "true",
+            defaultDate: date17YearsAgo,
             locale: {
                 firstDayOfWeek: 1,
                 weekdays: {
@@ -617,6 +620,13 @@
                     if (maxLength && $field.val().length > maxLength) {
                         isValid = false;
                         toastr.warning(`${fieldName} tidak boleh lebih dari ${maxLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
+                    }
+
+                    const minLength = $field.attr('minlength');
+                    if (minLength && $field.val().length < minLength) {
+                        isValid = false;
+                        toastr.warning(`${fieldName} tidak boleh kurang dari ${minLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
+                        return;
                     }
                 });
 
