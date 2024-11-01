@@ -761,11 +761,13 @@ class MainServiceController extends Controller
             $endDate = $request->filled('end_date') ? 
                 date('d/m/Y', strtotime($request->end_date)) : null;
 
+
             $pdf = PDF::loadView('exports.pdf.services-pdf', [
                 'services' => $services,
                 'startDate' => $startDate,
                 'endDate' => $endDate
             ]);
+
 
             $pdf->setPaper($request->paper, $request->orientation);
             

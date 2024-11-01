@@ -22,7 +22,7 @@
                     </div>
                 </div>
 
-                @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
+                @if (auth()->user()->role == 'admin')
                     <div class="mb-3">
                         <div class="row">
                             <div class="col-md-6 mb-3 mb-md-0">
@@ -104,7 +104,7 @@
                 </div>
 
                 <input type="hidden" id="selectedTime" name="time">
-                <input type="hidden" id="selectedDistricts" name="districts">
+                <input type="hidden" id="selectedDistricts" name="districts" value="{{ auth()->user()->role == 'operator' ? auth()->user()->district_id : '' }}  ">
                 <input type="hidden" id="selectedCategories" name="categories[]">
                 <input type="hidden" id="selectedTypes" name="types[]">
                 <input type="hidden" id="selectedServiceStatuses" name="serviceStatuses[]">

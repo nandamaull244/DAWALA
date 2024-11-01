@@ -268,12 +268,12 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="reportDropdown">
                                     <li>
-                                        <a class="dropdown-item" href="#" id="downloadExcel">
+                                        <a class="dropdown-item" href="#" id="downloadExcel" data-url="{{ route(auth()->user()->role . '.pelayanan.export.excel') }}">
                                             <i class="bi bi-file-earmark-excel"></i> Download Excel
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="#" id="btnDownloadPDF" data-bs-toggle="modal" data-bs-target="#selectPaperModal">
+                                        <a class="dropdown-item" href="#" id="btnDownloadPDF" data-bs-toggle="modal" data-bs-target="#selectPaperModal"> 
                                             <i class="bi bi-file-earmark-pdf"></i> Download PDF
                                         </a>
                                     </li>
@@ -385,6 +385,7 @@
             // Handle Excel download
             $('#downloadExcel').click(function(e) {
                 e.preventDefault();
+                const url = $(this).data('url')
                 
                 const filters = {
                     start_date: $('#startDate').val(),
@@ -399,7 +400,7 @@
                 };
 
                 $.ajax({
-                    url: "{{ route('admin.pelayanan.export.excel') }}",
+                    url: url,
                     method: 'POST',
                     data: filters,
                     headers: {
@@ -433,7 +434,8 @@
             // Handle PDF download
             $('#downloadPDF').click(function(e) {
                 e.preventDefault();
-                
+                const url = $(this).data('url')
+
                 const filters = {
                     start_date: $('#startDate').val(),
                     end_date: $('#endDate').val(),
@@ -449,7 +451,7 @@
                 };
 
                 $.ajax({
-                    url: "{{ route('admin.pelayanan.export.pdf') }}",
+                    url: url,
                     method: 'POST',
                     data: filters,
                     headers: {

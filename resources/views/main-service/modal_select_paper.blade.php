@@ -27,7 +27,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="submit" class="btn btn-primary" id="downloadPDF">Submit</button>
+                <button type="submit" class="btn btn-primary" id="downloadPDF" data-url="{{ route(auth()->user()->role . '.pelayanan.export.pdf') }}">Submit</button>
             </div>
         </div>
     </div>

@@ -59,60 +59,66 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($services as $index => $service)
+            @if ($services->count() > 0)
+                @foreach($services as $index => $service)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $service->user->full_name }}</td>
+                        <td>{{ getFlatpickrDate(date('Y-m-d', strtotime($service->created_at))) }}</td>
+                        <td>{{ $service->service_list->service_name }}</td>
+                        <td>{{ $service->service_category }}</td>
+                        <td>{{ $service->service_type }}</td>
+                        <td>{{ getFlatpickrDate($service->user->birth_date) }}</td>
+                        <td>{{ $service->user->address }}</td>
+                        <td>{{ $service->user->rt }}</td>
+                        <td>{{ $service->user->rw }}</td>
+                        <td>{{ $service->user->district->name }}</td>
+                        <td>{{ $service->user->village->name }}</td>
+                        <td>{{ $service->user->phone_number }}</td>
+                        <td>{{ $service->reason }}</td>
+                        <td>
+                            @switch($service->working_status)
+                                @case('Not Yet')
+                                    Menunggu
+                                    @break
+                                @case('Late')
+                                    Terlambat
+                                    @break
+                                @case('Process')
+                                    Proses
+                                    @break
+                                @case('Done')
+                                    Selesai
+                                    @break
+                                @default
+                                    {{ $service->working_status }}
+                            @endswitch
+                        </td>
+                        <td>
+                            @switch($service->service_status)
+                                @case('Not Yet')
+                                    Belum Dikerjakan
+                                    @break
+                                @case('Process')
+                                    Proses
+                                    @break
+                                @case('Rejected')
+                                    Ditolak
+                                    @break
+                                @case('Completed')
+                                    Selesai
+                                    @break
+                                @default
+                                    {{ $service->service_status }}
+                            @endswitch
+                        </td>
+                    </tr>
+                @endforeach
+            @else 
                 <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $service->user->full_name }}</td>
-                    <td>{{ getFlatpickrDate(date('Y-m-d', strtotime($service->created_at))) }}</td>
-                    <td>{{ $service->service_list->service_name }}</td>
-                    <td>{{ $service->service_category }}</td>
-                    <td>{{ $service->service_type }}</td>
-                    <td>{{ getFlatpickrDate($service->user->birth_date) }}</td>
-                    <td>{{ $service->user->address }}</td>
-                    <td>{{ $service->user->rt }}</td>
-                    <td>{{ $service->user->rw }}</td>
-                    <td>{{ $service->user->district->name }}</td>
-                    <td>{{ $service->user->village->name }}</td>
-                    <td>{{ $service->user->phone_number }}</td>
-                    <td>{{ $service->reason }}</td>
-                    <td>
-                        @switch($service->working_status)
-                            @case('Not Yet')
-                                Menunggu
-                                @break
-                            @case('Late')
-                                Terlambat
-                                @break
-                            @case('Process')
-                                Proses
-                                @break
-                            @case('Done')
-                                Selesai
-                                @break
-                            @default
-                                {{ $service->working_status }}
-                        @endswitch
-                    </td>
-                    <td>
-                        @switch($service->service_status)
-                            @case('Not Yet')
-                                Belum Dikerjakan
-                                @break
-                            @case('Process')
-                                Proses
-                                @break
-                            @case('Rejected')
-                                Ditolak
-                                @break
-                            @case('Completed')
-                                Selesai
-                                @break
-                            @default
-                                {{ $service->service_status }}
-                        @endswitch
-                    </td>
+                    <td colspan="16" class="text-center">Tidak ada data</td>
                 </tr>
-            @endforeach
+            @endif
         </tbody>
     </table>
 </body>
