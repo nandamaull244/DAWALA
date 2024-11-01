@@ -84,7 +84,7 @@ Route::group(['prefix' => 'operator', 'middleware' => ['auth:admin', 'checkRole:
 
 
 //  instance ROUTES GROUP -->
-Route::group(['prefix' => 'instance', 'middleware' => ['auth:client', 'checkRole:instance'], 'as' => 'instance.'], function(){
+Route::group(['prefix' => 'instance', 'middleware' => ['auth:admin', 'checkRole:instance'], 'as' => 'instance.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('/pelayanan', MainServiceController::class);  
@@ -94,7 +94,7 @@ Route::group(['prefix' => 'instance', 'middleware' => ['auth:client', 'checkRole
 
 
 //  USER ROUTES GROUP -->
-Route::group(['prefix' => 'user', 'middleware' => ['auth:user', 'checkRole:user'], 'as' => 'user.'], function(){
+Route::group(['prefix' => 'user', 'middleware' => ['auth:client', 'checkRole:user'], 'as' => 'user.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('/pelayanan', MainServiceController::class);  
