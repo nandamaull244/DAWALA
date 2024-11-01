@@ -19,7 +19,7 @@
 
 @section('content')
     <section class="section">
-        <form action="{{ route('admin.pelayanan.update', $service->getHashedId()) }}" id="pelayanan-form" method="POST" enctype="multipart/form-data" novalidate>
+        <form action="{{ route(auth()->user()->role . '.pelayanan.update', $service->getHashedId()) }}" id="pelayanan-form" method="POST" enctype="multipart/form-data" novalidate>
             @csrf
             @method('PUT')
             <div class="card">
@@ -172,7 +172,7 @@
                                 <label for="service_type">Tipe Pelayanan</label>
                                 <div class="input-group">
                                     @php
-                                        $serviceTypes = ['Buat baru', 'Pembaruan KK barcode', 'Baru menikah', 'Penambahan anggota keluarga', 'Hilang/rusak', 'Mutasi KK'];
+                                        $serviceTypes = ['Buat baru', 'Pembaruan KK barcode', 'Baru menikah', 'Penambahan anggota keluarga', 'Hilang/rusak', 'Mutasi KK', 'Perekaman KTP', 'Perubahan data KTP'];
                                     @endphp
                                     <select id="service_type" class="form-control" name="service_type" required>
                                         <option value="" disabled {{ is_null($service->service_type) ? 'selected' : '' }}>Pilih Tipe Pelayanan</option>

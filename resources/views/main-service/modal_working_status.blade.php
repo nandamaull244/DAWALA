@@ -104,7 +104,7 @@
             const workingStatus = button.data('working_status');
             const message = button.data('message');
             
-            const url = '{{ route("admin.pelayanan.working-status", ":id") }}'.replace(':id', id);
+            const url = '{{ route((auth()->user()->role == 'admin' ? 'admin' : 'operator') . '.pelayanan.working-status', ":id") }}'.replace(':id', id);
             $('#workingStatusForm').attr('action', url);
 
             if (workingStatus === 'Done') {
