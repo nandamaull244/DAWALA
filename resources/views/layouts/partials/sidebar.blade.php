@@ -92,7 +92,7 @@
         </div>
         <div class="sidebar-menu mt-5" style="position: relative; bottom: 0; width: 100%; padding: 1rem;">
             @if (Auth::user()->role == 'admin' || Auth::user()->role == 'operator')
-                <form action="{{ route('logout-admin') }}" method="POST" style="display: inline;">
+                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                     @csrf
                     <button type="submit" class="btn btn-danger w-100 mb-2">Logout</button>
                 </form>

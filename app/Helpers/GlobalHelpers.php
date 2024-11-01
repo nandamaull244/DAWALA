@@ -16,6 +16,10 @@ function dashboardRedirect($role) {
     }
 }
 
+function containsLetter($str) {
+    return preg_match('/[a-zA-Z]/', $str);
+}
+
 function formatNumber($number) {
     return number_format($number, 0, ',', '.');
 }

@@ -23,29 +23,27 @@ class AuthController extends Controller
         return view("Authentication.login")->with('success', 'Berhasil Login');
     }
 
-    public function loginProcess(Request $request)
+    public function loginUserProcess(Request $request)
     {
         try {
-            $credentials = $request->validate([
-                'nik' => ['required'],
-                'password' => ['required'],
-            ]);
+            $credentials = [
+                'nik' => $request->nik,
+                'password' => $request->password,
+            ];
 
-            if (Auth::attempt($credentials)) {
-                $request->session()->regenerate();
-                $user = Auth::user();
+            if (Auth::guard('client')->attempt($credentials)) {
+                $user = Auth::guard('client')->user();
 
                 switch ($user->role) {
-
                     case 'instance':
                         if ($user->registration_status == 'Completed') {
                             return redirect()->route('instance.pelayanan.index')->with('success', 'Anda berhasil Login sebagai Instansi, ' . $user->instance->name);
-                        } elseif($user->registration_status == 'Rejected') {
-                            return redirect()->back()->with('error', 'Pengajuan pendaftaran akun ditolak oleh Admin!');
-                        } else {
-                            return redirect()->back()->with('error', 'Akun anda belum terdaftar sebagai instansi, silakan menunggu admin untuk melakukan verifikasi.');
-                            
                         }
+                        $error = $user->registration_status === 'Rejected' 
+                            ? 'Pengajuan pendaftaran akun ditolak oleh Admin!' 
+                            : 'Akun anda belum terdaftar sebagai instansi, silakan menunggu admin untuk melakukan verifikasi.';
+                        return redirect()->back()->with('error', $error);
+
                     case 'user':
                         return redirect()->route('user.pelayanan.index')->with('success', 'Selamat Datang di Sistem DAWALA, ' . $user->full_name);
                 }
@@ -57,63 +55,33 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(Request $request){
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect()->route('login.index')->with('success','Anda berhasil logout');
-    }
-
-    public function loginAdmin(Request $request)
-    {
-        $successMessage = session('success');
-        return view("Authentication.loginAdmin", compact('successMessage'));
-    }
-
     public function loginAdminProcess(Request $request)
     {
         try {
-            $credentials = $request->validate([
-                'username' => ['required'],
-                'password' => ['required'],
-            ]);
-            
-            if (Auth::attempt($credentials)) {
-                $user = Auth::user();
-                
-                switch ($user->role) {
-                    case 'admin':
-                        $request->session()->regenerate();
-                        return redirect()->intended('/admin/dashboard')->with('success', 'Anda berhasil Login sebagai Admin');
-                    case 'operator':
-                        $request->session()->regenerate();
-                        return redirect()->intended('/operator/dashboard')->with('success', 'Anda berhasil Login sebagai Operator');
-                    default:
-                        Auth::logout();
-                        return redirect()->back()->with('error', 'Anda tidak memiliki akses yang sesuai.');
-                }
-            }
-           
-            return redirect()->back()->with('error', 'Username atau Password tidak sesuai');
+            $credentials = [
+                'username' => $request->username,
+                'password' => $request->password,
+            ];
 
+            if (Auth::guard('admin')->attempt($credentials)) {
+                $user = Auth::guard('admin')->user();
+
+                return redirect()->route($user->role . '.dashboard')->with('success', "Anda berhasil Login sebagai " . ucfirst($user->role));
+            } else {
+                return redirect()->back()->with('error', 'Username atau Password tidak sesuai');
+            }
         } catch (\Exception | PDOException | QueryException $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat login: ' . $e->getMessage());
         }
     }
 
-    public function logoutAdmin(Request $request)
-    {
-        $role = Auth::user()->role;
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        
-        $message = $role === 'operator' 
-            ? 'Anda berhasil Logout dari Operator.'
-            : 'Anda berhasil Logout dari Admin.';
-
-        
-        return redirect()->route('login-admin.index')->with('success', $message);
+    public function logout(Request $request){
+        if (Auth::guard('admin')->check()) {
+            Auth::guard('admin')->logout();
+        } else if (Auth::guard('client')->check()) {
+            Auth::guard('client')->logout();
+        }
+        return redirect()->route('login.index')->with('success','Anda berhasil logout');
     }
 
     public function register(Request $request)

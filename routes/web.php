@@ -26,7 +26,7 @@ use App\Http\Controllers\Backend\UserController;
 Route::get('/service/cekNIK', [AuthController::class, 'cekNIK'])->name('pelayanan.cekNIK');
 
 //  ADMIN ROUTES GROUP -->
-Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.'], function(){
+Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'checkRole:admin'], 'as' => 'admin.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     Route::resource('/pelayanan', MainServiceController::class);  
@@ -61,7 +61,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.
 
 
 //  OPERATOR ROUTES GROUP -->
-Route::group(['prefix' => 'operator', 'middleware' => 'auth:operator', 'as' => 'operator.'], function(){
+Route::group(['prefix' => 'operator', 'middleware' => ['auth:admin', 'checkRole:operator'], 'as' => 'operator.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/articles/data', [ArticleController::class, 'getData'])->name('article.data');
 
@@ -82,7 +82,7 @@ Route::group(['prefix' => 'operator', 'middleware' => 'auth:operator', 'as' => '
 
 
 //  instance ROUTES GROUP -->
-Route::group(['prefix' => 'instance', 'middleware' => 'auth:instance', 'as' => 'instance.'], function(){
+Route::group(['prefix' => 'instance', 'middleware' => ['auth:client', 'checkRole:instance'], 'as' => 'instance.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('/pelayanan', MainServiceController::class);  
@@ -92,7 +92,7 @@ Route::group(['prefix' => 'instance', 'middleware' => 'auth:instance', 'as' => '
 
 
 //  USER ROUTES GROUP -->
-Route::group(['prefix' => 'user', 'middleware' => 'auth:user', 'as' => 'user.'], function(){
+Route::group(['prefix' => 'user', 'middleware' => ['auth:user', 'checkRole:user'], 'as' => 'user.'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('/pelayanan', MainServiceController::class);  
@@ -105,27 +105,26 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:user', 'as' => 'user.'],
 Route::get('/get-villages-by-district/{districtId}', [LocationController::class, 'getVillagesByDistrict'])->name('get-villages');
 
 
+Route::get('/login', function () {
+    return redirect('auth/login');
+})->name('login');
+
 // AUTHENTICATION ROUTES GROUP -->
 Route::group(['prefix' => 'auth'], function () {
     // Public auth routes
     Route::get('/login', [AuthController::class, 'login'])->name('login.index');
-    Route::post('/login/process', [AuthController::class, 'loginProcess'])->name('login.process');
-    Route::get('/login-admin', [AuthController::class, 'loginAdmin'])->name('login-admin.index');
+    Route::post('/login-user/process', [AuthController::class, 'loginUserProcess'])->name('login-user.process');
     Route::post('/login-admin/process', [AuthController::class, 'loginAdminProcess'])->name('login-admin.process');
+    // Route::get('/login-admin', [AuthController::class, 'loginAdmin'])->name('login-admin.index');
     Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password.index');
     Route::post('/forgot-password/process', [AuthController::class, 'forgotProcess'])->name('forgot-password.process');
     Route::get('/register', [AuthController::class, 'register'])->name('register.index');
     Route::post('/register/process', [AuthController::class, 'registerProcess'])->name('register.process');
     Route::post('/check-email', [AuthController::class, 'checkEmail'])->name('check-email');
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
-
-    // Protected auth routes
-});
-Route::group(['middleware' => 'auth'], function () {
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::post('/logout-admin', [AuthController::class, 'logoutAdmin'])->name('logout-admin');
 });
 
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // MAIN PAGE ROUTES GROUP -->
 Route::group([], function () {

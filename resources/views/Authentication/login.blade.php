@@ -40,11 +40,11 @@
                             <a href=""><img src="{{ asset('assets') }}/img/logo.png" alt="Logo" style="width: 150px; height: auto;"></a>
                         </div>
 
-                        <form action="{{ route('login.process') }}" method="POST">
+                        <form action="" method="POST" id="loginForm">
                             @csrf
                             <div class="form-group position-relative has-icon-left mb-3 ">
-                                <input type="text" class="form-control form-control-lg rounded" name="nik"
-                                    placeholder="Masukan no NIK">
+                                <input type="text" class="form-control form-control-lg rounded" name="nik" placeholder="Masukan NIK" id="nik">
+                                <input type="hidden" name="username" id="username">
                                 <div class="form-control-icon">
                                     <i class="bi bi-person"></i>
                                 </div>
@@ -89,7 +89,25 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
         <script>
+
+            // $('#loginForm').submit(function(e) {
+            //     e.preventDefault();
+            //     this.submit();
+            // });
+
+
             $(document).ready(function() {
+                $('#nik').on('keyup', function() {
+                    let nikValue = $(this).val();
+                    if (/[a-zA-Z]/.test(nikValue)) {
+                        $('#username').val(nikValue);
+                        $('#loginForm').attr('action', "{{ route('login-admin.process') }}"); 
+                    } else {
+                        $('#username').val(''); 
+                        $('#loginForm').attr('action', "{{ route('login-user.process') }}"); 
+                    }
+                });
+                
                 toastr.options = {
                     "closeButton": true,
                     "progressBar": true,

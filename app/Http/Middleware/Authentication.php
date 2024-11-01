@@ -12,26 +12,30 @@ class Authentication
     public function handle(Request $request, Closure $next, ...$roles)
     {
         $url = 'http://127.0.0.1:8000';
+        $guard = $request->route()->parameter('guard') ?? 'web'; 
 
-        if (!Auth::check()) {
+        if (!Auth::guard($guard)->check()) {
             throw new AccessDeniedHttpException('Anda harus login untuk mengakses halaman ini.');
         }
 
-        $user = Auth::user();
+        $user = Auth::guard($guard)->user();
+        // if (Auth::guard('petugas')->check()) {
 
-        if (!empty($roles) && !in_array($user->role, $roles)) {
-            throw new AccessDeniedHttpException('Anda tidak memiliki hak akses');
-        }
+        // return redirect('/app');
+
+        // } else if (Auth::guard('masyarakat')->check()) {
+
+        // return redirect('/dashboard');
+        
+        // }
 
         $response = $next($request);
-
         $response->headers->set('Dawala', $url);
-        
         if ($response->headers->has('Dawala')) {
             $response->headers->set('Cache-Control', 'no-store, no-cache');
-            // $response->headers->set('Expires', 'Sat, 01 Jan 2000 00:00:00 GMT');
         }
 
         return $response;
     }
+
 }
