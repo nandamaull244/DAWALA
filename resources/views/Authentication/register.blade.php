@@ -405,14 +405,13 @@
                         </div>
                         <div class="mb-4" id="username_container" style="display: none;">
                             <div class="form-group position-relative has-icon-left">
-                                <input type="text" class="form-control form-control-xl" placeholder="Username" 
+                                <input id="username" type="text" class="form-control form-control-xl" placeholder="Username" 
                                     name="username" 
                                     value="{{ old('username') }}" 
                                     data-title="Username" 
                                     pattern="^(?=.*[a-zA-Z])[a-zA-Z0-9_-]+$"
                                     title="Username harus mengandung minimal satu huruf dan hanya boleh menggunakan huruf, angka, underscore (_), atau strip (-)"
-                                    minlength="3"
-                                    maxlength="20">
+                                   >
                                 <div class="form-control-icon">
                                     <i class="bi bi-person"></i>
                                 </div>
@@ -523,6 +522,7 @@
             } else {
                 $('#no_kk_container, #nik_container, #birth_date_container').show()
                 $('#no_kk, #nik, #birth_date').val('').attr('required', true)
+                $('#username').attr('required', false)
             }
         });
 
