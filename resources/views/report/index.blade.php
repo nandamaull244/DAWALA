@@ -233,10 +233,12 @@
             color: #FF0000; /* Warna PDF */
         }
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css">
 @endpush
 
 @section('page-heading')
-    Arsip Layanan
+    Laporan Layanan
 @endsection
 
 @section('page-subheading')
@@ -248,20 +250,24 @@
         <div class="card">
             <div class="card-body">
                 <div class="row mb-3">
-                    <div class="col-md-6 col-sm-12 mb-2 mb-md-0 row">
-                        <div class="col-md-3">
-                            <button class="btn btn-secondary w-100 text-white" data-bs-toggle="modal" data-bs-target="#filterModal">
-                                <i class="bi bi-funnel"></i> Filter
-                            </button>
+                    <div class="filter-container col-md-12 form-group">
+                        <div class="filter-item col-md-2-5">
+                            <label for="start_date">Tanggal Awal</label>
+                            <input type="text" id="start_date" name="start_date" class="form-control flatpickr-date" placeholder="Pilih tanggal awal">
                         </div>
-                        <div class="col-md-4">
-                            <button class="btn btn-danger w-100" id="reset">
-                                <i class="bi bi-arrow-repeat"></i> Reset Filter
-                            </button>
+                    
+                        <div class="filter-item col-md-2-5">
+                            <label for="end_date">Tanggal Akhir</label>
+                            <input type="text" id="end_date" name="end_date" class="form-control flatpickr-date" placeholder="Pilih tanggal akhir">
                         </div>
-
-                        {{-- @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
-                            <div class="col-md-4">
+                    
+                        <div class="filter-item col-md-1">
+                            <label>&nbsp;</label>
+                            <button class="btn btn-danger w-100" onclick="resetFilters()">Reset</button>
+                        </div>
+                        <div class="filter-item col-md-1"></div>
+                        @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
+                            
                                 <div class="dropdown">
                                 <button class="btn btn-success w-100 dropdown-toggle" type="button" id="reportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-file-earmark-text"></i> Laporan
@@ -278,18 +284,14 @@
                                         </a>
                                     </li>
                                 </ul>
-                                </div>
                             </div>
-                        @endif --}}
+                        @endif
+                    </div>
+
+                       
 
                     </div>
-                    <div class="col-md-6 col-sm-12">
-                        <div class="col-md-5 float-end">
-                            <a class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#layananModal">
-                                <i class="bi bi-plus-circle"></i> Daftar Pelayanan
-                            </a>
-                        </div>
-                    </div>
+                  
                 </div>
 
                 <div class="table-container">
@@ -306,26 +308,13 @@
                             <thead>
                                 <tr>
                                     <th class="text-center" nowrap>No</th>
-                                        <th class="text-center" nowrap>Nama</th>
                                         <th class="text-center" nowrap>Tanggal Pengajuan</th>
                                         <th class="text-center" nowrap>Jenis Pelayanan</th>
                                         <th class="text-center" nowrap>Kategori Layanan</th>
                                         <th class="text-center" nowrap>Tipe Layanan</th>
-                                        <th class="text-center" nowrap>Tanggal Lahir</th>
-                                        <th class="text-center" nowrap>Alamat</th>
-                                        <th class="text-center" nowrap>Rt</th>
-                                        <th class="text-center" nowrap>Rw</th>
                                         <th class="text-center" nowrap>Kecamatan</th>
                                         <th class="text-center" nowrap>Desa/Kelurahan</th>
-                                        <th class="text-center" nowrap>No Hp</th>
-                                        <th class="text-center" nowrap>Alasan Pengajuan</th>
-                                        <th class="text-center" nowrap>Foto Bukti Keterbatasan</th>
-                                        <th class="text-center" nowrap>Foto Ktp</th>
-                                        <th class="text-center" nowrap>Foto Kk</th>
-                                        <th class="text-center" nowrap>Formulir</th>
-                                        <th class="text-center" nowrap>Status Pengerjaan</th>
-                                        <th class="text-center" nowrap>Status Pelayanan</th>
-                                        <th class="text-center" nowrap>Aksi</th>
+                                        {{-- <th class="text-center" nowrap>Aksi</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -344,53 +333,28 @@
             </div>
         </div>
     </section>
+  @include('report.modal_select_paper')
 
-    @include('main-service.modal_layanan')
-    @include('main-service.modal_confirmation')
-    @include('main-service.delete_modal')
-    @include('main-service.modal_filter')
-    @include('main-service.modal_image')
-    @include('main-service.modal_download_formulir')
-    @include('main-service.modal_select_paper')
-    @include('main-service.modal_working_status')
 @endsection
 
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/id.js"></script>
     <script>
         $(document).ready(function() {
-            function saveChanges() {
-                $('#dataModalEdit').modal('hide');
-            }
 
-            function saveRejection() {
-                const alasanTolak = $('#alasan_tolak').val().trim();
-                if (alasanTolak === '') {
-                    alert('Mohon masukkan alasan penolakan.');
-                    return;
-                }
-                $('#rejectModal').modal('hide');
-            }
+           
 
-            $('.layanan-btn').on('click', function() {
-                toggleLayanan(this);
-            });
-
-            $('.pelayanan-btn').on('click', function() {
-                selectPelayanan(this);
-            });
-
-            $('#saveChangesBtn').on('click', saveChanges);
-            $('#saveRejectionBtn').on('click', saveRejection);
+            
 
             // Handle Excel download
             $('#downloadExcel').click(function(e) {
                 e.preventDefault();
-                const url = $(this).data('url')
                 
                 const filters = {
-                    start_date: $('#startDate').val(),
-                    end_date: $('#endDate').val(),
-                    time: $('#selectedTime').val(),
+                    start_date: $('#start_date').val(),
+                    end_date: $('#end_date').val(),
+                    time: $('#time').val(),
                     categories: $('#selectedCategories').val(),
                     types: $('#selectedTypes').val(),
                     kecamatan: $('#selectedDistricts').val(),
@@ -400,7 +364,7 @@
                 };
 
                 $.ajax({
-                    url: url,
+                    url: "{{ route('admin.pelayanan.export.excel') }}",
                     method: 'POST',
                     data: filters,
                     headers: {
@@ -434,8 +398,7 @@
             // Handle PDF download
             $('#downloadPDF').click(function(e) {
                 e.preventDefault();
-                const url = $(this).data('url')
-
+                
                 const filters = {
                     start_date: $('#startDate').val(),
                     end_date: $('#endDate').val(),
@@ -451,7 +414,7 @@
                 };
 
                 $.ajax({
-                    url: url,
+                    url: "{{ route('admin.pelayanan.export.pdf') }}",
                     method: 'POST',
                     data: filters,
                     headers: {
@@ -483,9 +446,8 @@
             });
         });
 
-        var table;
         $(document).ready(function() {
-            table = $('#serviceTable').DataTable({
+            var table = $('#serviceTable').DataTable({
                 responsive: true,
                 processing: true,
                 serverSide: true,
@@ -493,10 +455,9 @@
                     url: "{{ route(auth()->user()->role . '.pelayanan.data') }}",
                     method: 'GET',
                     data: function(d) {
-                        d.start_date = $('#startDate').val();
-                        d.end_date = $('#endDate').val(); 
-                        d.time = $('#selectedTime').val();
-                        d.services = $('#selectedServices').val();
+                        d.start_date = $('#start_date').val();
+                        d.end_date = $('#end_date').val();
+                        d.time = $('#time').val();
                         d.categories = $('#selectedCategories').val();
                         d.types = $('#selectedTypes').val();
                         d.kecamatan = $('#selectedDistricts').val();
@@ -507,26 +468,13 @@
                 },
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, className: 'text-center', width: '5%'},
-                    {data: 'name', name: 'name'},
                     {data: 'tanggal', name: 'tanggal'},
                     {data: 'service', name: 'service'},
                     {data: 'service_category', name: 'service_category'},
                     {data: 'service_type', name: 'service_type'},
-                    {data: 'birth_date', name: 'birth_date'},
-                    {data: 'address', name: 'address'},
-                    {data: 'rt', name: 'rt'},
-                    {data: 'rw', name: 'rw'},
                     {data: 'district', name: 'district'},
                     {data: 'village', name: 'village'},
-                    {data: 'phone_number', name: 'phone_number'},
-                    {data: 'reason', name: 'reason'},
-                    {data: 'evidence_of_disability_image', name: 'evidence_of_disability_image', orderable: false, searchable: false},
-                    {data: 'ktp_image', name: 'ktp_image', orderable: false, searchable: false},
-                    {data: 'kk_image', name: 'kk_image', orderable: false, searchable: false},
-                    {data: 'formulir', name: 'formulir', orderable: false, searchable: false},
-                    {data: 'working_status', name: 'working_status', orderable: false, searchable: false},
-                    {data: 'service_status', name: 'service_status', orderable: false, searchable: false},
-                    {data: 'action', name: 'action', orderable: false, searchable: false, width: '25%'},
+                    // {data: 'action', name: 'action', orderable: false, searchable: false, width: '25%'}
                 ],
                 order: [[1, 'asc']],
                 drawCallback: function(settings) {
@@ -606,5 +554,39 @@
                 $('#desa').append('<option value="">Pilih Desa</option>');
             }
         };
+
+        $(document).ready(function() {
+            // Initialize Flatpickr for date inputs
+            flatpickr(".flatpickr-date", {
+                dateFormat: "Y-m-d",
+                allowInput: true,
+                altInput: true,
+                altFormat: "d F Y",
+                locale: "id"
+            });
+
+            // Time filter change handler
+            $('#time').on('change', function() {
+                table.ajax.reload();
+            });
+
+            // Date filter change handlers
+            $('#start_date, #end_date').on('change', function() {
+                table.ajax.reload();
+            });
+        });
+
+        // Reset filter function
+        function resetFilters() {
+            // Reset date inputs
+            $('#start_date')[0]._flatpickr.clear();
+            $('#end_date')[0]._flatpickr.clear();
+            
+            // Reset time select
+            $('#time').val('');
+            
+            // Reload the table
+            $('#serviceTable').DataTable().ajax.reload();
+        }
     </script>
 @endpush

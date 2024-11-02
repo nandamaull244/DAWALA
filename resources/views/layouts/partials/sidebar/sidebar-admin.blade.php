@@ -17,7 +17,14 @@
                 <span>Arsip Layanan</span>
             </a>
         </li>
+        <li class="sidebar-item {{ request()->routeIs('admin.report.index') ? 'active' : '' }}">
+            <a href="{{ route('admin.report.index') }}" class='sidebar-link'>
+                <i class="bi bi-file-earmark-excel"></i>
+                <span>Laporan Layanan</span>
+            </a>
+        </li>
     </ul>
+    
 </li>
 
 <li class="sidebar-item has-sub">
