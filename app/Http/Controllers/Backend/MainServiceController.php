@@ -142,10 +142,8 @@ class MainServiceController extends Controller
     public function getData(Request $request)
     {
         $query = Service::with(['user', 'user.district', 'user.village', 'user.instance', 'user.instance.instanceUsers'])
-                        ->orderByRaw("CASE 
-                            WHEN working_status = 'Late' THEN created_at 
-                            ELSE NULL 
-                            END ASC"); 
+                        ->orderByRaw("working_status = 'Late' DESC")
+                        ->orderBy('created_at', 'DESC');
 
         if (auth()->user()->role == 'instance') {
             $instance = Instance::where('user_id', auth()->user()->id)->first();
@@ -385,6 +383,7 @@ class MainServiceController extends Controller
      */
     public function store(Request $request)
     {
+        set_time_limit(0);
         try {
             $request->nik = str_replace(' ', '', $request->nik);
             $userData = [
@@ -402,6 +401,8 @@ class MainServiceController extends Controller
                 'registration_status' => 'Completed',
                 'role' => 'user'
             ];
+
+
 
             if(auth()->user()->role == 'user'){
                 $user = User::find(auth()->user()->id);
@@ -475,19 +476,19 @@ class MainServiceController extends Controller
                 }
             }
 
-            $notifications = new Notification();
-            $notifications->user_id = auth()->user()->id;
-            $notifications->action = 'CREATE';
-            $notifications->title = 'Pengajuan ' . $request->pelayanan;
-            $notifications->body = 'Pengajuan ' . $request->pelayanan . ' baru telah diajukan';
-            $notifications->save();
+            // $notifications = new Notification();
+            // $notifications->user_id = auth()->user()->id;
+            // $notifications->action = 'CREATE';
+            // $notifications->title = 'Pengajuan ' . $request->pelayanan;
+            // $notifications->body = 'Pengajuan ' . $request->pelayanan . ' baru telah diajukan';
+            // $notifications->save();
 
             return redirectByRole(auth()->user()->role, 'pelayanan.index', ['success' => 'Pengajuan ' . ($request->service) . ' baru berhasil dibuat!']);
         } catch (\Exception $e) {
             return redirect()->route(auth()->user()->role . '.pelayanan.index')
-                ->with([
-                    'error' => $e->getMessage()
-                ]);
+                    ->with([
+                        'error' => 'Error pada baris ' . $e->getLine() . ': ' . $e->getMessage()
+                    ]);
         }
     }
 
@@ -722,7 +723,8 @@ class MainServiceController extends Controller
                 'working_status' => 'Not Yet',
                 'service_status' => 'Not Yet',
                 'message_for_user' => null,
-                'message_for_user' => $request->message_for_user
+                'approval_by' => null,
+                'rejected_reason' => null
             ]);
 
             return response()->json(['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' berhasil dikirim ulang!']);

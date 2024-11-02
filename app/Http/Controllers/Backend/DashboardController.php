@@ -32,8 +32,8 @@ class DashboardController extends Controller
         $baseQuery = Service::query();
         $data['incoming_visit'] = (clone $baseQuery)->where('service_status', 'Not Yet')->count();
         $data['process_visit'] = (clone $baseQuery)->where('service_status', 'Process')->count();
-        $data['visit_scheduled'] = (clone $baseQuery)->whereNotNull('visit_schedule')->count();
-        $data['document_recieved_visit'] = (clone $baseQuery)->where('document_recieved_status', 'Recieved')->count();
+        $data['visit_scheduled'] = (clone $baseQuery)->whereNotNull('visit_schedule')->where('service_status', '!=', 'Completed')->count();
+        $data['document_recieved_visit'] = (clone $baseQuery)->where('document_recieved_status', 'Not Yet Recieved')->where('working_status', 'Done')->where('service_status', 'Process')->count();
         $data['completed_visit'] = (clone $baseQuery)->where('service_status', 'Completed')->where('document_recieved_status', 'Recieved')->count();
 
         $data['services_by_district'] = District::withCount(['user' => function($query) {
@@ -73,8 +73,8 @@ class DashboardController extends Controller
             ->select([
                 DB::raw('COUNT(CASE WHEN service_status = "Not Yet" THEN 1 END) as incoming_visit'),
                 DB::raw('COUNT(CASE WHEN service_status = "Process" THEN 1 END) as process_visit'),
-                DB::raw('COUNT(CASE WHEN visit_schedule IS NOT NULL THEN 1 END) as visit_scheduled'),
-                DB::raw('COUNT(CASE WHEN document_recieved_status = "Recieved" THEN 1 END) as document_recieved_visit'),
+                DB::raw('COUNT(CASE WHEN visit_schedule IS NOT NULL AND service_status != "Completed" THEN 1 END) as visit_scheduled'),
+                DB::raw('COUNT(CASE WHEN document_recieved_status = "Not Yet Recieved" AND working_status = "Done" AND service_status = "Process" THEN 1 END) as document_recieved_visit'),
                 DB::raw('COUNT(CASE WHEN service_status = "Completed" AND document_recieved_status = "Recieved" THEN 1 END) as completed_visit')
             ])
             ->first();

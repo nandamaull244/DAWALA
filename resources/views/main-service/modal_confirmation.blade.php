@@ -88,17 +88,19 @@
                         @endif
 
                         <br>
-                        <div id="documentConfirmation">
-                            <div class="form-group">
-                                <label for="completedMessage" class="form-label">Status Dokumen : <span id="documentStatusText" class=""></span></label>
-                                <div class="row" id="document-confirmation-button">
-                                    <div class="d-flex gap-2 mb-3 justify-content-center" >
-                                        <button type="button" class="btn btn-outline-danger w-50" style="margin:0 !important;" id="btnNotRecieved">Belum Diterima</button>
-                                        <button type="button" class="btn btn-outline-success w-50" id="btnRecieved">Sudah Terima</button>
+                        @if (auth()->user()->role == 'user' || auth()->user()->role == 'instance')
+                            <div id="documentConfirmation">
+                                <div class="form-group">
+                                    <label for="completedMessage" class="form-label">Status Dokumen : <span id="documentStatusText" class=""></span></label>
+                                    <div class="row" id="document-confirmation-button">
+                                        <div class="d-flex gap-2 mb-3 justify-content-center" >
+                                            {{-- <button type="button" class="btn btn-outline-danger w-50" style="margin:0 !important;" id="btnNotRecieved">Belum Diterima</button> --}}
+                                            <button type="button" class="btn btn-outline-success w-50" id="btnRecieved">Sudah Terima</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
 
                     <input type="hidden" name="status" id="confirmationStatus">
                 </div>
@@ -191,6 +193,12 @@
                 }
                 
                 const documentRecievedStatus = button.data('document_recieved_status');
+                if(serviceStatus == 'Process') {
+                    $('#document-confirmation-button').show();
+                } else {
+                    $('#documentStatusText').addClass('text-danger').text('Belum Diterima');
+                    $('#document-confirmation-button').hide();
+                }
                 if(documentRecievedStatus == 'Recieved') {
                     $('#document-confirmation-button').hide();
                     switch(documentRecievedStatus) {
@@ -204,18 +212,44 @@
                 } else {
                     $('#btnRecieved').off('click').on('click', function(e) {
                         e.preventDefault();
-                        sendDocumentConfirmation(id, 'Recieved');
+
+                        Swal.fire({
+                            title: 'Konfirmasi',
+                            text: 'Apakah anda yakin sudah menerima dokumen?',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya, Sudah Terima',
+                            cancelButtonText: 'Batal',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                sendDocumentConfirmation(id, 'Recieved');
+                            }
+                        });
                     });
 
-                    $('#btnNotRecieved').off('click').on('click', function(e) {
-                        e.preventDefault();
-                        sendDocumentConfirmation(id, 'Not Yet Recieved');
-                    });
+                    // $('#btnNotRecieved').off('click').on('click', function(e) {
+                    //     e.preventDefault();
+                    //     Swal.fire({
+                    //         title: 'Konfirmasi',
+                    //         text: 'Apakah anda yakin belum menerima dokumen?',
+                    //         icon: 'question',
+                    //         showCancelButton: true,
+                    //         confirmButtonText: 'Ya, Sudah Terima',
+                    //         cancelButtonText: 'Batal',
+                    //         reverseButtons: true
+                    //     }).then((result) => {
+                    //         if (result.isConfirmed) {
+                    //             sendDocumentConfirmation(id, 'Not Yet Recieved');
+                    //         }
+                    //     });
+                    // });
 
-                    @if(auth()->user()->role == 'user') 
+                    @if(auth()->user()->role == 'user' || auth()->user()->role == 'instance') 
                         function sendDocumentConfirmation(id, status) {
+                            let documentConfirmationUrl = "{{ route(auth()->user()->role . '.pelayanan.document-confirmation') }}";
                             $.ajax({
-                                url: `{{ route('user.pelayanan.document-confirmation') }}`,
+                                url: documentConfirmationUrl,
                                 type: 'POST',
                                 data: {
                                     id: id,
@@ -272,7 +306,8 @@
                         $('#alasan_tolak').val(reason);
                         $('#btnTerima').hide();
                         $('#confirmationModalLabel').text('Status Pengajuan Layanan ini ditolak');
-                    } else if (visitSchedule) { 
+                    } 
+                    if (visitSchedule) { 
                         $('#btnTerima').addClass('btn-success active').text('Diterima').show();
                         $('#visitScheduleContainer').show();
                         $('#btnTolak').hide();

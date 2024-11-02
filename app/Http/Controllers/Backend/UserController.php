@@ -589,7 +589,7 @@ class UserController extends Controller
         }
 
         if ($request->filled('types')) {
-            $query->whereIn('registration_type', explode(',', $request->types));
+            $query->whereIn('role', explode(',', $request->types));
         }
 
         if ($request->filled('kecamatan')) {

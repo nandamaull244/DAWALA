@@ -175,7 +175,7 @@ Data Seluruh Layanan Kependudukan Kecamatan
                                 </div>
                             </div>
                             <div class="col-md-8">
-                                <h6 class="text-muted font-semibold">Dokumen diterima</h6>
+                                <h6 class="text-muted font-semibold">Dokumen Belum Diterima</h6>
                                 <h6 class="increment-number font-extrabold mb-0" data-value="{{ $data['document_recieved_visit'] }}">0</h6>
                             </div>
                         </div>

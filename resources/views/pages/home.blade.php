@@ -9,7 +9,7 @@
                     <div class="row g-4 align-items-center">
                         <div class="col-lg-7 animated fadeInLeft">
                             <div class="text-sm-center text-md-start">
-                                <h4 class="text-white text-uppercase fw-bold mb-4">Melayani sepenuh hati</h4>
+                                <h4 class="text-white text-uppercase fw-bold mb-4">Dengan Dawala Semua Bahagia  </h4>
                                 <h1 class="display-1 text-white mb-4">DAWALA-PEDULI</h1>
                                 <p class="mb-5 fs-5">Program DAWALA (Datangi Warga Layani) merupakan program
                                     inovatif yang diluncurkan oleh Dinas Kependudukan dan Pencatatan Sipil (Disdukcapil)

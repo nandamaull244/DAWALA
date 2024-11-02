@@ -108,7 +108,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">Dokumen diterima</h6>
+                                    <h6 class="text-muted font-semibold">Dokumen Belum Diterima</h6>
                                     <h6 class="font-extrabold mb-0 increment-number" data-count="{{ $data['document_recieved_visit'] }}">0</h6>
                                 </div>
                             </div>
@@ -240,84 +240,76 @@
     }
 
     var optionsProfileVisit = {
-        annotations: {
-            position: 'back'
-        },
-        dataLabels: {
-            enabled: false
-        },
-        chart: {
+            series: [{
+            name: 'PRODUCT A',
+            data: [44, 55, 41, 67, 22, 43]
+        }, {
+            name: 'PRODUCT B',
+            data: [13, 23, 20, 8, 13, 27]
+        }, {
+            name: 'PRODUCT C',
+            data: [11, 17, 15, 15, 21, 14]
+        }, {
+            name: 'PRODUCT D',
+            data: [21, 7, 25, 13, 22, 8]
+        }],
+            chart: {
             type: 'bar',
-            height: 300,
-            scrollX: true
+            height: 500,
+            stacked: true,
+            toolbar: {
+                show: true
+            },
+            zoom: {
+                enabled: true
+            }
         },
-        fill: {
-            opacity: 1
-        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                legend: {
+                position: 'bottom',
+                offsetX: -10,
+                offsetY: 0
+                }
+            }
+        }],
         plotOptions: {
             bar: {
                 horizontal: false,
-                columnWidth: '55%',
-                endingShape: 'rounded'
+                borderRadius: 10,
+                borderRadiusApplication: 'end',
+                borderRadiusWhenStacked: 'last', 
+                dataLabels: {
+                total: {
+                    enabled: true,
+                    style: {
+                    fontSize: '13px',
+                    fontWeight: 900
+                    }
+                }
+                }
             },
         },
-        series: [{
-            name: 'Total Pengajuan',
-            data: [@foreach ($data['services_by_district'] as $item) {{ $item->total }}, @endforeach]
-        }],
-        colors: '#435ebe',
         xaxis: {
-            categories: [@foreach ($data['services_by_district'] as $item) "{{ $item->name }}", @endforeach],
-            tickPlacement: 'on',
-            labels: {
-                rotate: -45,
-                rotateAlways: true,
-                style: {
-                    fontSize: '12px'
-                }
-            }
-        },
-        yaxis: {
-            title: {
-                text: 'Jumlah Pengajuan'
-            }
-        },
-        tooltip: {
-            y: {
-                formatter: function (val) {
-                    return val + " pengajuan"
-                }
-            }
-        }
-    }
-
-    let optionsVisitorsProfile  = {
-        series: [@foreach ($data['services_by_category'] as $item) {{ $item->total }}, @endforeach],
-        labels: [@foreach ($data['services_by_category'] as $item) "{{ $item->service_category }}", @endforeach],
-        colors: ['#435ebe','#55c6e8'],
-        chart: {
-            type: 'donut',
-            width: '100%',
-            height:'350px'
+            type: 'datetime',
+            categories: ['01/01/2011 GMT', '01/02/2011 GMT', '01/03/2011 GMT', '01/04/2011 GMT',
+                '01/05/2011 GMT', '01/06/2011 GMT'
+            ],
         },
         legend: {
-            position: 'bottom'
+            position: 'right',
+            offsetY: 40
         },
-        plotOptions: {
-            pie: {
-                donut: {
-                    size: '30%'
-                }
-            }
+        fill: {
+            opacity: 1
         }
-    }
-
+    };
 
     var chartProfileVisit = new ApexCharts(document.querySelector("#chart-profile-visit"), optionsProfileVisit);
-    var chartVisitorsProfile = new ApexCharts(document.getElementById('chart-visitors-profile'), optionsVisitorsProfile)
-
     chartProfileVisit.render();
-    chartVisitorsProfile.render()
 
+    // var chartVisitorsProfile = new ApexCharts(document.getElementById('chart-visitors-profile'), optionsVisitorsProfile)
+    // chartVisitorsProfile.render()
 </script>
 @endpush

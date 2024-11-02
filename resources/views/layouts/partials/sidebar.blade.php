@@ -31,13 +31,23 @@
                 <div class="user-name ">
                     <h5 class="mb-0">{{ Auth::user()->full_name }}</h5>
                     @if (Auth::user()->role == 'instance')
-                        <p class="text-muted">Instansi: {{ Auth::user()->instance->name }}</p>
+                        @if (in_array(Auth::user()->registration_type, ['Intansi, Yayasan', 'Intansi, Intansi', 'Intansi, Lembaga']))
+                            <p class="text-muted">Instansi : {{ Auth::user()->instance->name }}</p>
+                        @elseif(Auth::user()->registration_type == 'Intansi, Desa')
+                            <p class="text-muted">Desa : {{ Auth::user()->village->name }}</p>
+                        @elseif(Auth::user()->registration_type == 'Intansi, Kecamatan')
+                            <p class="text-muted">Kecamatan : {{ Auth::user()->district->name }}</p>
+                        @elseif(Auth::user()->registration_type == 'Intansi, RT')
+                            <p class="text-muted">RT : {{ Auth::user()->rt }}</p>
+                        @elseif(Auth::user()->registration_type == 'Intansi, RW')
+                            <p class="text-muted">RW : {{ Auth::user()->rw }}</p>
+                        @endif
                     @endif
                     @if (Auth::user()->role == 'user')
-                        <p class="text-muted">NIK: {{ Auth::user()->nik }}</p>
+                        <p class="text-muted">NIK : {{ Auth::user()->nik }}</p>
                     @endif
                     @if (Auth::user()->role == 'operator')
-                        <p class="text-muted">Kecamatan: {{ Auth::user()->district->name }}</p>
+                        <p class="text-muted">Kecamatan : {{ Auth::user()->district->name }}</p>
                     @endif
                 </div>
             </div>
@@ -89,8 +99,6 @@
                 @if (Auth::user()->role == 'user')
                     @include('layouts.partials.sidebar.sidebar-user')
                 @endif
-
-               
             </ul>
         </div>
         <div class="sidebar-menu mt-5" style="position: relative; bottom: 0; width: 100%; padding: 1rem;">
