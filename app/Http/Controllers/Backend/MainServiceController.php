@@ -499,13 +499,9 @@ class MainServiceController extends Controller
 
             return redirectByRole(auth()->user()->role, 'pelayanan.index', ['success' => 'Pengajuan ' . ($request->service) . ' baru berhasil dibuat!']);
         } catch (\Exception $e) {
-            return redirect()->route(auth()->user()->role . '.pelayanan.create')
-                ->withInput()
+            return redirect()->route(auth()->user()->role . '.pelayanan.index')
                 ->with([
-                    // 'error' => 'Gagal menyimpan pengajuan. Error pada baris ' . $e->getLine() . ': ' . $e->getMessage(),
-                    'error' => $e->getMessage(),
-                    'pelayanan' => $request->service,
-                    'tipe_layanan' => $request->service_type
+                    'error' => $e->getMessage()
                 ]);
         }
     }

@@ -26,8 +26,10 @@ class Authenticate extends Middleware
                         return redirect()->route('instance.pelayanan.index')->with('success', 'Anda berhasil Login sebagai Instansi, ' . $user->instance->name);
                     }
                     $error = $user->registration_status === 'Rejected' 
-                        ? 'Pengajuan pendaftaran akun ditolak oleh Admin!' 
-                        : 'Akun anda belum terdaftar sebagai instansi, silakan menunggu admin untuk melakukan verifikasi.';
+                        ? 'Pengajuan pendaftaran akun ditolak oleh Admin!'
+                        : ($user->registration_status === 'Process'
+                            ? 'Akun anda sedang dalam proses verifikasi oleh admin, silakan menunggu.'
+                            : 'Akun anda belum terdaftar sebagai instansi, silakan menunggu admin untuk melakukan verifikasi.');
                     return redirect()->back()->with('error', $error);
 
                 case 'user':

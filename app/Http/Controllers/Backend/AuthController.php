@@ -31,20 +31,30 @@ class AuthController extends Controller
                 'password' => $request->password,
             ];
 
+            // Check user first without logging them in
+            $user = User::where('nik', $credentials['nik'])->first();
+            
+            // Prevent login for instance users with Process or Rejected status
+            if ($user && $user->role === 'instance') {
+                if ($user->registration_status !== 'Completed') {
+                    $message = $user->registration_status === 'Process' 
+                        ? 'Akun anda belum disetujui, silakan menunggu admin untuk melakukan verifikasi.'
+                        : 'Pengajuan pendaftaran akun ditolak oleh Admin!';
+                    return redirect()->back()->with('error', $message);
+                }
+            }
+
+            // Add registration status check to credentials for instances
+            if ($user && $user->role === 'instance') {
+                $credentials['registration_status'] = 'Completed';
+            }
+
             if (Auth::guard('client')->attempt($credentials)) {
                 $user = Auth::guard('client')->user();
 
                 switch ($user->role) {
                     case 'instance':
-                        if ($user->registration_status == 'Completed') {
-                            return redirect()->route('instance.layanan.index')->with('success', 'Anda berhasil Login sebagai Instansi, ' . $user->instance->name);
-                        } else {
-                            $error = $user->registration_status === 'Rejected' 
-                                ? 'Pengajuan pendaftaran akun ditolak oleh Admin!' 
-                                : 'Akun anda belum disetujui, silakan menunggu admin untuk melakukan verifikasi.';
-                            return redirect()->back()->with('error', $error);
-                        }
-
+                        return redirect()->route('instance.layanan.index')->with('success', 'Anda berhasil Login sebagai Instansi, ' . $user->instance->name);
                     case 'user':
                         return redirect()->route('user.pelayanan.index')->with('success', 'Selamat Datang di Sistem DAWALA, ' . $user->full_name);
                 }
@@ -215,3 +225,4 @@ class AuthController extends Controller
         return response()->json($exists);
     }
 }
+

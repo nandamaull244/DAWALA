@@ -512,17 +512,29 @@
         }
 
         $('[name="role"]').on('change', function() {
-            let role = $(this).val()
+            const role = $(this).val();
+            const randomNumber = generateRandomNumber();
 
             if(role == 'instance') {
-                $('#no_kk_container, #nik_container, #birth_date_container').hide().attr('required', false)
-                $('#username_container').show().attr('required', true)
-                $('#no_kk').val(generateRandomNumber())
-                $('#nik').val(generateRandomNumber())
-                $('#no_kk, #nik, #birth_date').val('').attr('required', false)
+                $('#no_kk_container, #nik_container, #birth_date_container').hide();
+                $('#username_container').show();
+                
+                // Set random numbers
+                $('#nik, #no_kk').val(randomNumber);
+                
+                // Update required attributes
+                $('#no_kk, #nik, #birth_date').prop('required', false);
+                $('#username').prop('required', true);
             } else {
-                $('#no_kk_container, #nik_container, #birth_date_container').show()
-                $('#no_kk, #nik, #birth_date').val('').attr('required', true)
+                $('#no_kk_container, #nik_container, #birth_date_container').show();
+                $('#username_container').hide();
+                
+                // Clear values for user role
+                $('#nik, #no_kk').val('');
+                
+                // Update required attributes
+                $('#no_kk, #nik, #birth_date').prop('required', true);
+                $('#username').prop('required', false);
             }
         });
 
@@ -600,15 +612,30 @@
             $('#register-form').on('submit', function(event) {
                 event.preventDefault();
                 let isValid = true;
+                const role = $('input[name="role"]:checked').val();
+
+                // Jika role instance, set NIK dan KK dengan random number sebelum validasi
+                if (role === 'instance') {
+                    const randomNumber = generateRandomNumber();
+                    $('#nik, #no_kk').val(randomNumber);
+                }
 
                 $(this).find('input, select, textarea').each(function() {
                     const $field = $(this);
                     let fieldName = $field.data('title');
-                    if (fieldName === 'NIK') $field.val($field.val().replace(/\s+/g, ''));
+                    
+                    // Skip validasi untuk NIK dan KK jika role instance
+                    if (role === 'instance' && (fieldName === 'NIK' || fieldName === 'No Kartu Keluarga')) {
+                        return true; // continue ke iterasi berikutnya
+                    }
+
+                    if (fieldName === 'NIK') {
+                        $field.val($field.val().replace(/\s+/g, ''));
+                    }
 
                     if (fieldName === 'NIK' && nikCheck) {
                         isValid = false;
-                        toastr.error('NIK sudah terdaftar', 'Astagfirullah', { timeOut: 2000, className: "custom-larger-toast" });
+                        toastr.error('NIK sudah terdaftar', 'Gagal!', { timeOut: 2000, className: "custom-larger-toast" });
                     }
 
                     if ($field.prop('required') && !$field.val()) {
@@ -704,7 +731,14 @@
                     }
                 }
 
-                if (isValid) this.submit();
+                if (isValid) {
+                    // Pastikan NIK dan KK terisi untuk role instance sebelum submit
+                    if (role === 'instance') {
+                        const randomNumber = generateRandomNumber();
+                        $('#nik, #no_kk').val(randomNumber);
+                    }
+                    this.submit();
+                }
             });
         });
 

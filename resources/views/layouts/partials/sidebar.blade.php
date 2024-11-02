@@ -30,6 +30,9 @@
                 </div>
                 <div class="user-name ">
                     <h5 class="mb-0">{{ Auth::user()->full_name }}</h5>
+                    @if (Auth::user()->role == 'instance')
+                        <p class="text-muted">Instansi: {{ Auth::user()->instance->name }}</p>
+                    @endif
                     @if (Auth::user()->role == 'user')
                         <p class="text-muted">NIK: {{ Auth::user()->nik }}</p>
                     @endif
