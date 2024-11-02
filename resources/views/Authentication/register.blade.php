@@ -264,11 +264,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="instansi-select-group" class="mb-4" style="display: none;">
-                            <div class="form-group position-relative has-icon-left mb-4"  >
-                                <input type="text" class="form-control " placeholder="Nama Instansi" name="instansi" value="{{ old('instansi') }}" data-title="Nama Intansi">
+                        <div id="instansi-select-group" class="form-group mb-4" style="display: none;">
+                            <div class="form-group position-relative has-icon-left">
+                                <input type="text" class="form-control form-control-xl" placeholder="Nama Instansi" name="instansi" value="{{ old('instansi') }}" data-title="Nama Intansi">
                                 <div class="form-control-icon">
-                                    <i class="bi bi-building"></i>
+                                    <i class="bi bi-building" style="font-size: 1.25rem"></i>
                                 </div>
                             </div>
                             @error('instansi')
@@ -362,7 +362,7 @@
                         </div>
                         <div class="mb-4" id="nik_container">
                             <div class="form-group position-relative has-icon-left">
-                                <input type="text" class="form-control form-control-xl" placeholder="NIK" id="nik" name="nik" value="{{ old('nik') }}" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-title="NIK" maxlength="16">
+                                <input type="text" class="form-control form-control-xl" placeholder="NIK" id="nik" name="nik" value="{{ old('nik') }}" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-title="NIK" minlength="16" maxlength="16">
                                 <div class="form-control-icon">
                                     <i class="bi bi-card-text"></i>
                                 </div>
@@ -373,7 +373,7 @@
                         </div>
                         <div class="mb-4" id="no_kk_container">
                             <div class="form-group position-relative has-icon-left">
-                                <input type="text" class="form-control form-control-xl" placeholder="No Kartu Keluaga" id="no_kk" name="no_kk" value="{{ old('no_kk') }}" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-title="No Kartu Keluarga" maxlength="16">
+                                <input type="text" class="form-control form-control-xl" placeholder="No Kartu Keluaga" id="no_kk" name="no_kk" value="{{ old('no_kk') }}" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-title="No Kartu Keluarga" minlength="16" maxlength="16">
                                 <div class="form-control-icon">
                                     <i class="bi bi-card-text"></i>
                                 </div>
@@ -384,7 +384,7 @@
                         </div>
                         <div class="mb-4" id="birth_date_container">
                             <div class="form-group position-relative has-icon-left">
-                                <input type="text" class="form-control form-control-xl flatpickr" id="birth_date" placeholder="Pilih Tanggal Lahir" name="birth_date" value="{{ old('birth_date') }}" readonly="true" data-title="Tanggal Lahir">
+                                <input type="text" class="form-control form-control-xl flatpickr-birth-date-check" id="birth_date" placeholder="Pilih Tanggal Lahir" name="birth_date" value="{{ old('birth_date') }}" readonly="true" data-title="Tanggal Lahir" {{ request()->role == 'instance' ? 'value=' . now()->format('Y-m-d') : '' }}>
                                 <div class="form-control-icon">
                                     <i class="bi bi-calendar"></i>
                                 </div>
@@ -404,10 +404,29 @@
                                 <span>{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="mb-4" id="username_container" style="display: none;">
+                            <div class="form-group position-relative has-icon-left">
+                                <input type="text" class="form-control form-control-xl" placeholder="Username" 
+                                    name="username" 
+                                    value="{{ old('username') }}" 
+                                    data-title="Username" 
+                                    pattern="^(?=.*[a-zA-Z])[a-zA-Z0-9_-]+$"
+                                    title="Username harus mengandung minimal satu huruf dan hanya boleh menggunakan huruf, angka, underscore (_), atau strip (-)"
+                                    minlength="3"
+                                    maxlength="20">
+                                <div class="form-control-icon">
+                                    <i class="bi bi-person"></i>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">Username minimal 3 karakter, harus mengandung huruf, dan hanya boleh menggunakan huruf, angka, underscore (_), atau strip (-)</small>
+                            @error('username')
+                                <span>{{ $message }}</span>
+                            @enderror
+                        </div>
 
                         <div class="mb-4">
                             <div class="form-group position-relative has-icon-left">
-                                <input type="tel" class="form-control form-control-xl" placeholder="No. Handphone (Whatsapp)" name="phone_number" value="{{ old('phone_number') }}" minlength="10" maxlength="14" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-title="No. Telepon/HP (Whatsapp)">
+                                <input type="tel" class="form-control form-control-xl" placeholder="No. Handphone (Whatsapp)" name="phone_number" value="{{ old('phone_number') }}" minlength="9" maxlength="14" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-title="No. Telepon/HP (Whatsapp)">
                                 <div class="form-control-icon">
                                     <i class="bi bi-phone"></i>
                                 </div>
@@ -497,22 +516,26 @@
 
             if(role == 'instance') {
                 $('#no_kk_container, #nik_container, #birth_date_container').hide().attr('required', false)
+                $('#username_container').show().attr('required', true)
                 $('#no_kk').val(generateRandomNumber())
                 $('#nik').val(generateRandomNumber())
-                $('#birth_date').val('').attr('required', false)
+                $('#no_kk, #nik, #birth_date').val('').attr('required', false)
             } else {
-                $('#no_kk_container, #nik_container, #birth_date_container').show().attr('required', true)
+                $('#no_kk_container, #nik_container, #birth_date_container').show()
                 $('#no_kk, #nik, #birth_date').val('').attr('required', true)
             }
         });
 
-        $(".flatpickr").flatpickr({
+        const today = new Date();
+        const date17YearsAgo = new Date(today.setFullYear(today.getFullYear() - 17));
+        $(".flatpickr-birth-date-check").flatpickr({
             dateFormat: "Y-m-d",
-            maxDate: "today",
+            maxDate: date17YearsAgo,
             altInput: true,
             altFormat: "d F Y",
             clickOpens: true,
             disableMobile: "true",
+            defaultDate: date17YearsAgo,
             locale: {
                 firstDayOfWeek: 1,
                 weekdays: {
@@ -598,6 +621,13 @@
                         isValid = false;
                         toastr.warning(`${fieldName} tidak boleh lebih dari ${maxLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
                     }
+
+                    const minLength = $field.attr('minlength');
+                    if (minLength && $field.val().length < minLength) {
+                        isValid = false;
+                        toastr.warning(`${fieldName} tidak boleh kurang dari ${minLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
+                        return;
+                    }
                 });
 
                 const villageId = $('#village-select').val();
@@ -654,6 +684,23 @@
                             className: "custom-larger-toast"
                         });
                         return;
+                    }
+                }
+                
+                if ($('input[name="role"]:checked').val() === 'instance') {
+                    const username = $('input[name="username"]').val();
+                    if (!username) {
+                        isValid = false;
+                        toastr.warning('Username harus diisi', 'Peringatan', {
+                            timeOut: 2500,
+                            className: "custom-larger-toast"
+                        });
+                    } else if (usernameCheck) {
+                        isValid = false;
+                        toastr.error('Username sudah digunakan', 'Gagal!', {
+                            timeOut: 2000,
+                            className: "custom-larger-toast"
+                        });
                     }
                 }
 
@@ -791,6 +838,48 @@
                 passwordInput.type = "password";
             }
         }
+
+        var usernameCheck = false;
+        $('#username_container input[name="username"]').on('keyup change', function() {
+            const username = $(this).val();
+            const usernameRegex = /^(?=.*[a-zA-Z])[a-zA-Z0-9_-]+$/;
+
+            if (username.length >= 3) {
+                if (!usernameRegex.test(username)) {
+                    toastr.error('Username harus mengandung minimal satu huruf dan hanya boleh menggunakan huruf, angka, underscore, atau strip', 'Format Tidak Valid!', {
+                        timeOut: 3000,
+                        className: "custom-larger-toast"
+                    });
+                    usernameCheck = true;
+                    return;
+                }
+
+                $.ajax({
+                    url: "{{ route('cek-username') }}", // Anda perlu membuat route ini
+                    method: 'GET',
+                    data: { username: username },
+                    success: function(response) {
+                        if (response) {
+                            toastr.error('Username sudah digunakan', 'Gagal!', {
+                                timeOut: 2000,
+                                className: "custom-larger-toast"
+                            });
+                            usernameCheck = true;
+                        } else {
+                            toastr.success('Username dapat digunakan', 'Berhasil!', {
+                                timeOut: 2000,
+                                className: "custom-larger-toast"
+                            });
+                            usernameCheck = false;
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        });
+        
 
     </script>
 </body>

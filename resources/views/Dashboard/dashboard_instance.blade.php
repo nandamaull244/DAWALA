@@ -10,7 +10,7 @@
 @section('content')
     <section class="row">
         <div class="col-12 col-lg-12">
-            @include('archive-data.index')
+            @include('instance.pelayanan.index')
         </div>
     </section>
 @endsection

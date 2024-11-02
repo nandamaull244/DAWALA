@@ -37,12 +37,13 @@ class AuthController extends Controller
                 switch ($user->role) {
                     case 'instance':
                         if ($user->registration_status == 'Completed') {
-                            return redirect()->route('instance.pelayanan.index')->with('success', 'Anda berhasil Login sebagai Instansi, ' . $user->instance->name);
+                            return redirect()->route('instance.layanan.index')->with('success', 'Anda berhasil Login sebagai Instansi, ' . $user->instance->name);
+                        } else {
+                            $error = $user->registration_status === 'Rejected' 
+                                ? 'Pengajuan pendaftaran akun ditolak oleh Admin!' 
+                                : 'Akun anda belum disetujui, silakan menunggu admin untuk melakukan verifikasi.';
+                            return redirect()->back()->with('error', $error);
                         }
-                        $error = $user->registration_status === 'Rejected' 
-                            ? 'Pengajuan pendaftaran akun ditolak oleh Admin!' 
-                            : 'Akun anda belum terdaftar sebagai instansi, silakan menunggu admin untuk melakukan verifikasi.';
-                        return redirect()->back()->with('error', $error);
 
                     case 'user':
                         return redirect()->route('user.pelayanan.index')->with('success', 'Selamat Datang di Sistem DAWALA, ' . $user->full_name);
@@ -108,6 +109,7 @@ class AuthController extends Controller
             'address' => 'required|string',
             'no_kk' => 'required|string|digits:16',
             'email' => 'email',
+            'username' => 'nullable|string|max:255',
             'phone_number' => 'required|string',
             'role' => 'required|in:admin,operator,user,instance',
             'password' => 'required|min:8|confirmed',
@@ -135,7 +137,7 @@ class AuthController extends Controller
             $user = User::create([
                 'nik' => $request->nik,
                 'full_name' => $request->full_name,
-                'birth_date' => $request->birth_date,
+                'birth_date' => $request->birth_date ? $request->birth_date : now()->format('Y-m-d'),
                 'gender' => $request->gender,
                 'rt' => $request->rt,
                 'rw' => $request->rw,
@@ -145,6 +147,7 @@ class AuthController extends Controller
                 'district_id' => $request->district_id,
                 'village_id' => $request->village_id,
                 'phone_number' => $request->phone_number,
+                'username' => $request->role === 'instance' ? $request->username : null,
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
                 'registration_status' => $request->role === 'user' ? 'Completed' : 'Process',
@@ -203,5 +206,12 @@ class AuthController extends Controller
         } else {
             return redirect()->back()->with('error', 'Email tidak ditemukan.');
         }
+    }
+
+    public function cekUsername(Request $request)
+    {
+        $username = $request->username;
+    $exists = User::where('username', $username)->exists();
+        return response()->json($exists);
     }
 }
