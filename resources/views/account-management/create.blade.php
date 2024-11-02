@@ -474,7 +474,8 @@ Formulir Registrasi Akun
             $('#no_kk_container, #nik_container, #birth_date_container').hide()
             $('#no_kk').val(generateRandom16Digits())
             $('#nik').val(generateRandom16Digits())
-            $('#no_kk, #nik, #birth_date').val('').attr('required', false)
+            $('#no_kk, #nik, #birth_date').attr('required', false)
+            $('#birth_date').val('')
         } else {
             $('#no_kk_container, #nik_container, #birth_date_container').show()
             $('#no_kk, #nik, #birth_date').val('').attr('required', true)
@@ -482,7 +483,7 @@ Formulir Registrasi Akun
     });
 
     var nikCheck = false;
-    $('#nik').on('keyup change', function() {
+    $('#nik').on('keyup', function() {
         if($('#nik').val().length == 16) {
             $.ajax({
                 url: "{{ route('pelayanan.cekNIK') }}",
@@ -530,19 +531,23 @@ Formulir Registrasi Akun
                     return;
                 }
 
-                const maxLength = $field.attr('maxlength');
-                if (maxLength && $field.val().length > maxLength) {
-                    isValid = false;
-                    toastr.warning(`${fieldName} tidak boleh lebih dari ${maxLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
-                    return;
+                let role = $('[name="role"]:checked').val()
+                if(role != 'instance') {
+                    const maxLength = $field.attr('maxlength');
+                    if (maxLength && $field.val().length > maxLength) {
+                        isValid = false;
+                        toastr.warning(`${fieldName} tidak boleh lebih dari ${maxLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
+                        return;
+                    }
+
+                    const minLength = $field.attr('minlength');
+                    if (minLength && $field.val().length < minLength) {
+                        isValid = false;
+                        toastr.warning(`${fieldName} tidak boleh kurang dari ${minLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
+                        return;
+                    }
                 }
 
-                const minLength = $field.attr('minlength');
-                if (minLength && $field.val().length < minLength) {
-                    isValid = false;
-                    toastr.warning(`${fieldName} tidak boleh kurang dari ${minLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
-                    return;
-                }
             });
 
             const villageId = $('#village-select').val();

@@ -531,17 +531,21 @@ Formulir Edit Data Akun
                     toastr.warning(`${fieldName} harus diisi`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
                 }
 
-                const maxLength = $field.attr('maxlength');
-                if (maxLength && $field.val().length > maxLength) {
-                    isValid = false;
-                    toastr.warning(`${fieldName} tidak boleh lebih dari ${maxLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
-                }
+                let role = $('[name="role"]:checked').val()
+                if(role != 'instance') {
+                    const maxLength = $field.attr('maxlength');
+                    if (maxLength && $field.val().length > maxLength) {
+                        isValid = false;
+                        toastr.warning(`${fieldName} tidak boleh lebih dari ${maxLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
+                        return;
+                    }
 
-                const minLength = $field.attr('minlength');
-                if (minLength && $field.val().length < minLength) {
-                    isValid = false;
-                    toastr.warning(`${fieldName} tidak boleh kurang dari ${minLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
-                    return;
+                    const minLength = $field.attr('minlength');
+                    if (minLength && $field.val().length < minLength) {
+                        isValid = false;
+                        toastr.warning(`${fieldName} tidak boleh kurang dari ${minLength} karakter`, 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
+                        return;
+                    }
                 }
             });
 
