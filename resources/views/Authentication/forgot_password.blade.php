@@ -11,6 +11,14 @@
     <link rel="stylesheet" href="/backend/assets/css/app.css">
     <link rel="stylesheet" href="/backend/assets/css/pages/auth.css">
     <link rel="icon" href="{{ asset('assets') }}/img/logo.png" type="image/x-icon">
+    <style>
+        @media (max-width: 768px) {
+            #auth-left {
+                margin-left: -3.6rem;
+                margin-right: -3.8rem;
+            }
+        }
+    </style>
 </head>
 
 <body>

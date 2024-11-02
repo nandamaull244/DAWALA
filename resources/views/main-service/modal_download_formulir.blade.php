@@ -1,5 +1,5 @@
 <div class="modal fade" id="formulirDownloadModal" tabindex="-1"  aria-labelledby="formulirDownloadModal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="width: 700px;">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="formulirModalLabel">Lihat Formulir</h5>

@@ -145,8 +145,11 @@
     // statistik carousel
     $(document).ready(function(){
         var owl = $(".statistik-carousel").owlCarousel({
+            autoplay: true,
+            smartSpeed: 1500,
+            center: true,
+            dots: false,
             loop: true,
-            margin: 20,
             nav: false, // Disable default nav
             responsive: {
                 0: {

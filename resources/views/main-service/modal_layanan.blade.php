@@ -1,5 +1,5 @@
 <div class="modal fade" id="layananModal" tabindex="-1" aria-labelledby="layananModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="width: 700px;">
+    <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="layananModalLabel">Tambah Pelayanan Baru</h5>

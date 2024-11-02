@@ -136,8 +136,8 @@
         /* Tambahkan CSS responsif */
         @media (max-width: 768px) {
             #auth-left {
-                padding: 1.5rem;
-                margin: 1rem;
+                margin-left: -4rem;
+                margin-right: -5.6rem;
             }
 
             /* Sembunyikan icon pada input */
@@ -204,8 +204,8 @@
 
 <body>
     <div id="auth">
-        <div class="row h-100 justify-content-center align-items-center my-3 my-md-5 mb-5">
-            <div class="col-12 col-lg-8 px-3 px-lg-0">
+        <div class="row h-100 justify-content-center align-items-center my-3 my-md-5 mb-5 w-100">
+            <div class="col-12 col-lg-9 px-3 px-lg-0">
                 <div id="auth-left">
                     <h4 class="auth-title text-center">Registrasi Akun</h4>
                     <p class="auth-subtitle mb-5 text-center">Buat akun untuk urusan pelayanan</p>

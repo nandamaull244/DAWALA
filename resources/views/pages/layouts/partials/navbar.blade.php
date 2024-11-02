@@ -3,7 +3,7 @@
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light">
             <a href="#" class="navbar-brand p-0">
-                <img src="{{ asset('assets') }}/img/logo.png" alt="Logo" style="width: 150px; height: 110px;">
+                <img src="{{ asset('assets') }}/img/logo.png" alt="Logo" style="width: 150px; height: 100px;">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="fa fa-bars"></span>

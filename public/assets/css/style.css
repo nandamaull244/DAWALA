@@ -181,6 +181,16 @@
 }
 
 
+@media (max-width: 768px) {
+    .navbar-light .navbar-brand {
+        max-height: 75px;
+        margin-top: -25px;
+    }
+
+    .header-carousel .header-carousel-item {
+        height: 700px !important;
+    }
+}
 
 
 @media (max-width: 991px) {

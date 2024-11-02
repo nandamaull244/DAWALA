@@ -29,6 +29,12 @@
             #toast-container .toast-message:before {
                 font-size: 24px !important;
             }
+            @media (max-width: 768px) {
+                #auth-left {
+                    margin-left: -3.6rem;
+                    margin-right: -3.8rem;
+                }
+            }
         </style>
     </head>
     <body>

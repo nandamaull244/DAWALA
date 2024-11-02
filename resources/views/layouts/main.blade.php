@@ -45,10 +45,9 @@
                             </div>
                         </div>
                     @endif
-
                 </div>
 
-                <div class="page-content" style="margin: 0 -15px 0 -50px !important;">
+                <div class="page-content" style="margin: 0 -15px 0 -45px !important;">
                     @yield('content')
                 </div>
 

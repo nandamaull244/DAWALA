@@ -169,6 +169,55 @@
                 margin-bottom: 10px;
             }
         }
+
+        @media (max-width: 767px) {
+            .dropdown-menu {
+                width: 100%;
+                max-height: 300px;
+                overflow-y: auto;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+            
+            .btn i {
+                margin-right: 5px;
+            }
+            
+            .row.g-2 {
+                margin: 0 5px;
+            }
+            
+            .row.g-2 > div {
+                padding: 0 5px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .dropdown-menu {
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                width: 90% !important;
+                max-height: 80vh !important;
+                margin: 0 !important;
+                padding: 10px !important;
+                border-radius: 10px !important;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2) !important;
+            }
+
+            .dropdown-item {
+                padding: 12px 15px !important;
+                border-bottom: 1px solid #eee;
+            }
+
+            .dropdown-item:last-child {
+                border-bottom: none;
+            }
+        }
     </style>
     <style>
         #serviceTable_length {
@@ -243,6 +292,172 @@
             color: white;
         }
     </style>
+    <style>
+        /* DataTable Controls Styling */
+        #serviceTable_wrapper {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        /* Length Control */
+        #serviceTable_length {
+            margin: 0 0 15px 0 !important;
+        }
+
+        #serviceTable_length label {
+            display: flex !important;
+            align-items: center;
+            gap: 10px;
+            width: 100% !important;
+            margin: 0 !important;
+        }
+
+        #serviceTable_length select {
+            width: auto !important;
+            min-width: 70px;
+            height: 35px !important;
+            padding: 0 10px;
+            margin: 0 !important;
+        }
+
+        /* Search Control */
+        #serviceTable_filter {
+            margin-bottom: 15px;
+        }
+
+        #serviceTable_filter label {
+            display: flex !important;
+            align-items: center;
+            gap: 10px;
+            width: 100% !important;
+            margin: 0 !important;
+        }
+
+        #serviceTable_filter input {
+            flex: 1;
+            height: 35px !important;
+            padding: 0 10px;
+            margin: 0 !important;
+        }
+
+        /* Info and Pagination */
+        #serviceTable_info {
+            margin: 15px 0 !important;
+            text-align: left;
+        }
+
+        #serviceTable_paginate {
+            margin: 15px 0 !important;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Table Responsive */
+        .table-responsive {
+            margin: 0;
+            border: none;
+        }
+
+        #serviceTable {
+            width: 100% !important;
+            margin: 0;
+        }
+
+        #serviceTable th {
+            white-space: nowrap;
+            text-align: center;
+            vertical-align: middle;
+            padding: 12px 8px;
+        }
+
+        #serviceTable td {
+            vertical-align: middle;
+            padding: 8px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 767px) {
+            .table-container {
+                padding: 0;
+            }
+
+            #serviceTable_length,
+            #serviceTable_filter {
+                width: 100% !important;
+                margin: 10px 0 !important;
+            }
+
+            #serviceTable_length label,
+            #serviceTable_filter label {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-left: 15px !important;
+            }
+
+            #serviceTable_length label {
+                margin-left: 18px !important;
+            }
+
+            #serviceTable_length select {
+                height: 35px !important;
+                padding: 0 10px;
+                margin: 0 !important;
+                width: 90% !important;
+            }
+
+            #serviceTable_filter input {
+                width: 95% !important;
+                margin-left: -8px !important;
+            }
+
+            #serviceTable_info,
+            #serviceTable_paginate {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+                margin: 10px 0 !important;
+            }
+
+            .dataTables_paginate .paginate_button {
+                padding: 5px 10px !important;
+            }
+
+            #serviceTable th,
+            #serviceTable td {
+                min-width: 120px; 
+            }
+
+            /* #serviceTable th:last-child,
+            #serviceTable td:last-child {
+                right: 0;
+                background: white;
+                box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+            }
+
+            #serviceTable th:first-child,
+            #serviceTable td:first-child {
+                left: 0;
+                background: white;
+                box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            } */
+        }
+
+        @media (max-width: 576px) {
+            .dataTables_paginate .paginate_button {
+                padding: 3px 8px !important;
+                font-size: 12px;
+            }
+
+            #serviceTable_length select,
+            #serviceTable_filter input {
+                font-size: 14px;
+            }
+
+            #serviceTable_info {
+                font-size: 12px;
+            }
+        }
+    </style>
 @endpush
 
 @section('page-heading')
@@ -258,112 +473,33 @@
         <div class="card">
             <div class="card-body">
                 <div class="row mb-3">
-                    <div class="col-md-6 col-sm-12 mb-2 mb-md-0 row">
-                        <div class="col-md-3">
-                            <button class="btn btn-secondary w-100 text-white" data-bs-toggle="modal" data-bs-target="#filterModal">
-                                <i class="bi bi-funnel"></i> Filter
-                            </button>
-                        </div>
-                        <div class="col-md-4">
-                            <button class="btn btn-danger w-100" id="reset">
-                                <i class="bi bi-arrow-repeat"></i> Reset Filter
-                            </button>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="dropdown">
-                                <button class="btn btn-info w-100 dropdown-toggle text-white" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-filter"></i> Kategori Pelayanan
+                    <div class="d-block d-md-none mb-2">
+                        <div class="row g-2" style="margin-left: 15px !important;">
+                            <div class="col-6">
+                                <button class="btn btn-secondary w-100 text-white" data-bs-toggle="modal" data-bs-target="#filterModal">
+                                    <i class="bi bi-funnel"></i> Filter
                                 </button>
-                                <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
-                                    <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Fisik" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Fisik">
-                                            <i class="bi bi-person-wheelchair"></i> Disabilitas Fisik
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Netra/Buta" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Netra/Buta">
-                                            <i class="bi bi-person-cane"></i> Disabilitas Netra/Buta
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Rungu/Bicara" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Rungu/Bicara">
-                                            <i class="bi bi-person-hearts"></i> Disabilitas Rungu/Bicara
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Mental/Jiwa" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Mental/Jiwa">
-                                            <i class="bi bi-person-hearts"></i> Disabilitas Mental/Jiwa
-                                        </a>
-                                    </li>   
-                                    <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Fisik dan Mental" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Fisik dan Mental">
-                                            <i class="bi bi-person-hearts"></i> Disabilitas Fisik dan Mental
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Lainnya" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Lainnya">
-                                            <i class="bi bi-person-hearts"></i> Disabilitas Lainnya
-                                        </a>
-                                    </li>
-
-                                    <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Lansia" onclick="categoryFilter(this, 'Categories')" data-value="Lansia">
-                                            <i class="bi bi-person-hearts"></i> Lansia
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="ODGJ" onclick="categoryFilter(this, 'Categories')" data-value="ODGJ">
-                                            <i class="bi bi-person-hearts"></i> ODGJ
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Penduduk Sakit" onclick="categoryFilter(this, 'Categories')" data-value="Penduduk Sakit">
-                                            <i class="bi bi-person-hearts"></i> Penduduk Sakit
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Penduduk Terlantar" onclick="categoryFilter(this, 'Categories')" data-value="Penduduk Terlantar">
-                                            <i class="bi bi-person-hearts"></i> Penduduk Terlantar
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Penduduk Terkena Bencana" onclick="categoryFilter(this, 'Categories')" data-value="Penduduk Terkena Bencana">
-                                            <i class="bi bi-person-hearts"></i> Penduduk Terkena Bencana
-                                        </a>
-                                    </li>
-
-                                </ul>
                             </div>
-                        </div>
-
-                        {{-- @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
-                            <div class="col-md-4">
-                                <div class="dropdown">
-                                <button class="btn btn-success w-100 dropdown-toggle" type="button" id="reportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-file-earmark-text"></i> Laporan
+                            <div class="col-6">
+                                <button class="btn btn-danger w-100" id="reset">
+                                    <i class="bi bi-arrow-repeat"></i> Reset
                                 </button>
-                                <ul class="dropdown-menu" aria-labelledby="reportDropdown">
-                                    <li>
-                                        <a class="dropdown-item" href="#" id="downloadExcel" data-url="{{ route(auth()->user()->role . '.pelayanan.export.excel') }}">
-                                            <i class="bi bi-file-earmark-excel"></i> Download Excel
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" id="btnDownloadPDF" data-bs-toggle="modal" data-bs-target="#selectPaperModal"> 
-                                            <i class="bi bi-file-earmark-pdf"></i> Download PDF
-                                        </a>
-                                    </li>
-                                </ul>
+                            </div>
+                            <div class="col-12">
+                                <div class="dropdown w-100">
+                                    <button class="btn btn-info w-100 dropdown-toggle text-white" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-filter"></i> Kategori
+                                    </button>
+                                    <ul class="dropdown-menu w-100" aria-labelledby="categoryDropdown">
+                                        
+                                    </ul>
                                 </div>
                             </div>
-                        @endif --}}
-
-                    </div>
-                    <div class="col-md-6 col-sm-12">
-                        <div class="col-md-5 float-end">
-                            <a class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#layananModal">
-                                <i class="bi bi-plus-circle"></i> Daftar Pelayanan
-                            </a>
+                            <div class="col-12">
+                                <a class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#layananModal">
+                                    <i class="bi bi-plus-circle"></i> Daftar
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -565,6 +701,24 @@
                 responsive: true,
                 processing: true,
                 serverSide: true,
+                fixedColumns: {
+                    left: 1,
+                    right: 1
+                },
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ data",
+                    zeroRecords: "Data tidak ditemukan",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                    infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+                    infoFiltered: "(difilter dari _MAX_ total data)",
+                    search: "Cari:",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Selanjutnya",
+                        previous: "Sebelumnya"
+                    }
+                },
                 ajax: {
                     url: "{{ route(auth()->user()->role . '.pelayanan.data') }}",
                     method: 'GET',
@@ -582,7 +736,7 @@
                     }
                 },
                 columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, className: 'text-center', width: '5%'},
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, className: 'text-center', width: '2%'},
                     {data: 'name', name: 'name'},
                     {data: 'tanggal', name: 'tanggal'},
                     {data: 'service', name: 'service'},
@@ -614,7 +768,18 @@
                     var $searchInput = $('#search-container input[type="search"]');
                     var searchValue = $searchInput.val();
                     $searchInput.focus().val('').val(searchValue).addClass('hover-effect');
+                    // if (window.innerWidth <= 767) {
+                    //     this.api().columns().every(function(index) {
+                    //         if (index === 0 || index === this.api().columns().nodes().length - 1) {
+                    //             $(this.nodes()).css('position', 'sticky');
+                    //         }
+                    //     });
+                    // }
                 }
+            });
+
+            $(window).resize(function() {
+                table.columns.adjust();
             });
 
             $('#reset').on('click', function() {

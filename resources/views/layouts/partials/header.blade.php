@@ -36,6 +36,10 @@
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 <style>
+    * {
+        font-size: 1.018rem; !important;
+    }
+
     body {
         font-family: Arial, sans-serif;
     }
