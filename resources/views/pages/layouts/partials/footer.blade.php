@@ -80,7 +80,7 @@
         <div class="row g-4 align-items-center">
             <div class="col-md-8 text-center text-md-end mb-md-0">
                 <span class="text-body"><a href="#" class=" text-white"><i
-                            class="fas fa-copyright text-light me-2"></i>DAWALA PEDULI</a> 2024 All right
+                            class="fas fa-copyright text-light me-2"></i>DAWALA PEDULI</a> 2024 All right not
                     reserved.</span>
             </div>
 

@@ -28,7 +28,7 @@
                         <span id="f102-status" class="position-absolute top-0 end-0 translate-middle p-1 @if (!empty($f102)) bg-success @else bg-danger @endif text-white border border-light rounded-circle"></span>
                     </div>
                     <div class="position-relative form-group">
-                        <input type="file" id="f103-input" class="d-none" accept="image/*,.pdf" name="f103_file" required data-exist="{{ !empty($f103) ? 'true' : 'false' }}">
+                        <input type="file" id="f103-input" class="d-none" accept="image/*,.pdf" name="f103_file" data-exist="{{ !empty($f103) ? 'true' : 'false' }}">
                         <label for="f103-input" class="btn btn-outline-primary mb-0">F1.03</label>
                         <span id="f103-status" class="position-absolute top-0 end-0 translate-middle p-1 @if (!empty($f103)) bg-success @else bg-danger @endif text-white border border-light rounded-circle"></span>
                     </div>

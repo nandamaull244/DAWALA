@@ -37,10 +37,15 @@
                                 <label for="district-select">Kecamatan</label>
                                 <div class="input-group">
                                     <select id="district-select" class="form-control" name="district_id" required>
-                                        <option value="" disabled @if (auth()->user()->role != 'user' || !isset(auth()->user()->district_id)) selected @endif>Pilih Kecamatan</option>
-                                        @foreach ($districts as $district)
-                                            <option value="{{ $district->id }}" @if (auth()->user()->role == 'user' && $district->id == auth()->user()->district_id) selected @endif>{{ $district->name }}</option>
-                                        @endforeach
+                                        @if(auth()->user()->role == 'operator')
+                                            <option value="" disabled selected>Pilih Kecamatan</option>
+                                            <option value="{{ auth()->user()->district_id  }}">{{ auth()->user()->district->name }}</option>
+                                        @else
+                                            <option value="" disabled @if(auth()->user()->role != 'user' || !isset(auth()->user()->district_id)) selected @endif>Pilih Kecamatan</option>
+                                            @foreach ($districts as $district)
+                                                <option value="{{ $district->id }}" @if (auth()->user()->role == 'user' && $district->id == auth()->user()->district_id) selected @endif>{{ $district->name }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                     <span class="input-group-text"><i class="bi bi-chevron-down"></i></span>
                                 </div>
