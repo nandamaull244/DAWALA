@@ -233,6 +233,16 @@
             color: #FF0000; /* Warna PDF */
         }
     </style>
+    <style>
+        .dropdown-item.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .dropdown-item.active i {
+            color: white;
+        }
+    </style>
 @endpush
 
 @section('page-heading')
@@ -266,58 +276,58 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
                                     <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Fisik" onclick="selectFilter(this, 'Categories', true)" data-value="Disabilitas Fisik">
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Fisik" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Fisik">
                                             <i class="bi bi-person-wheelchair"></i> Disabilitas Fisik
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Netra/Buta" onclick="selectFilter(this, 'Categories', true)" data-value="Disabilitas Netra/Buta">
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Netra/Buta" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Netra/Buta">
                                             <i class="bi bi-person-cane"></i> Disabilitas Netra/Buta
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Rungu/Bicara" onclick="selectFilter(this, 'Categories', true)" data-value="Disabilitas Rungu/Bicara">
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Rungu/Bicara" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Rungu/Bicara">
                                             <i class="bi bi-person-hearts"></i> Disabilitas Rungu/Bicara
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Mental/Jiwa" onclick="selectFilter(this, 'Categories', true)" data-value="Disabilitas Mental/Jiwa">
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Mental/Jiwa" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Mental/Jiwa">
                                             <i class="bi bi-person-hearts"></i> Disabilitas Mental/Jiwa
                                         </a>
                                     </li>   
                                     <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Fisik dan Mental" onclick="selectFilter(this, 'Categories', true)" data-value="Disabilitas Fisik dan Mental">
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Fisik dan Mental" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Fisik dan Mental">
                                             <i class="bi bi-person-hearts"></i> Disabilitas Fisik dan Mental
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Lainnya" onclick="selectFilter(this, 'Categories', true)" data-value="Disabilitas Lainnya">
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Lainnya" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Lainnya">
                                             <i class="bi bi-person-hearts"></i> Disabilitas Lainnya
                                         </a>
                                     </li>
 
                                     <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Lansia" onclick="selectFilter(this, 'Categories', true)" data-value="Lansia">
+                                        <a class="dropdown-item category-filter" href="#" data-category="Lansia" onclick="categoryFilter(this, 'Categories')" data-value="Lansia">
                                             <i class="bi bi-person-hearts"></i> Lansia
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="ODGJ" onclick="selectFilter(this, 'Categories', true)" data-value="ODGJ">
+                                        <a class="dropdown-item category-filter" href="#" data-category="ODGJ" onclick="categoryFilter(this, 'Categories')" data-value="ODGJ">
                                             <i class="bi bi-person-hearts"></i> ODGJ
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Penduduk Sakit" onclick="selectFilter(this, 'Categories', true)" data-value="Penduduk Sakit">
+                                        <a class="dropdown-item category-filter" href="#" data-category="Penduduk Sakit" onclick="categoryFilter(this, 'Categories')" data-value="Penduduk Sakit">
                                             <i class="bi bi-person-hearts"></i> Penduduk Sakit
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Penduduk Terlantar" onclick="selectFilter(this, 'Categories', true)" data-value="Penduduk Terlantar">
+                                        <a class="dropdown-item category-filter" href="#" data-category="Penduduk Terlantar" onclick="categoryFilter(this, 'Categories')" data-value="Penduduk Terlantar">
                                             <i class="bi bi-person-hearts"></i> Penduduk Terlantar
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item category-filter" href="#" data-category="Penduduk Terkena Bencana" onclick="selectFilter(this, 'Categories', true)" data-value="Penduduk Terkena Bencana">
+                                        <a class="dropdown-item category-filter" href="#" data-category="Penduduk Terkena Bencana" onclick="categoryFilter(this, 'Categories')" data-value="Penduduk Terkena Bencana">
                                             <i class="bi bi-person-hearts"></i> Penduduk Terkena Bencana
                                         </a>
                                     </li>
@@ -673,43 +683,34 @@
             }
         };
 
-        function selectFilter(element, filterType, allowMultiple = false) {
-            const value = $(element).data('value');
-            const currentValues = $(`#selected${filterType}`).val();
-            let newValues;
+        function categoryFilter(button, type, multiple = false) {
+            const $button = $(button);
+            let value = $button.data('value');
+            const $input = $('#selected' + type);
 
-            if (allowMultiple) {
-                // Convert current values to array
-                const valuesArray = currentValues ? currentValues.split(',') : [];
-                
-                if (valuesArray.includes(value)) {
-                    // Remove value if already selected
-                    newValues = valuesArray.filter(v => v !== value).join(',');
-                    $(element).removeClass('btn-primary').addClass('btn-outline-primary');
+            if (multiple) {
+                let selectedValues = $input.val() ? $input.val().split(',') : [];
+              
+                if ($button.hasClass('active')) {
+                    $button.removeClass('active');
+                    selectedValues = selectedValues.filter(v => v !== value);
                 } else {
-                    // Add new value
-                    valuesArray.push(value);
-                    newValues = valuesArray.join(',');
-                    $(element).removeClass('btn-outline-primary').addClass('btn-primary');
+                    $button.addClass('active');
+                    if (!selectedValues.includes(value)) {
+                        selectedValues.push(value);
+                    }
                 }
-            } else {
-                // Single selection mode
-                newValues = currentValues === value ? '' : value;
                 
-                // Update button states
-                $(`.${filterType.toLowerCase()}-btn`).removeClass('btn-primary').addClass('btn-outline-primary');
-                if (newValues) {
-                    $(element).removeClass('btn-outline-primary').addClass('btn-primary');
-                }
+                $input.val(selectedValues.join(','));
+            } else {
+                $('.category-filter').removeClass('active');
+                $button.addClass('active');
+                $input.val(value);
             }
 
-            // Update hidden input
-            $(`#selected${filterType}`).val(newValues);
-            
-            // Reload table with new filters
-            if (table) {
-                table.ajax.reload();
-            }
+            // Trigger table reload
+            $input.trigger('change');
+            table.ajax.reload();
         }
     </script>
 @endpush

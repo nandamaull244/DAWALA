@@ -106,7 +106,7 @@
                 <input type="hidden" id="selectedTime" name="time">
                 <input type="hidden" id="selectedDistricts" name="districts" value="{{ auth()->user()->role == 'operator' ? auth()->user()->district_id : '' }}  ">
                 <input type="hidden" id="selectedServices" name="services[]">
-                <input type="hidden" id="selectedCategories" name="categories[]">
+                <input type="hidden" id="selectedCategories" name="categories">
                 <input type="hidden" id="selectedTypes" name="types[]">
                 <input type="hidden" id="selectedServiceStatuses" name="serviceStatuses[]">
                 <input type="hidden" id="selectedWorkStatuses" name="workStatuses[]">
