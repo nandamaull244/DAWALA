@@ -79,6 +79,14 @@
                             <label for="message_for_user" class="form-label">Pesan untuk Pemohon</label>
                             <textarea class="form-control" id="message_for_user" name="message_for_user" rows="4" placeholder="Masukkan pesan untuk pemohon" required style="font-size: 1.1em;"></textarea>
                         </div>
+                        <div class="form-group">
+                            <label for="user_type" class="form-label">Jenis Pemohon</label>
+                            <select class="form-control" id="user_type" name="user_type" rows="4" required style="font-size: 1.1em;">
+                                <option selected disabled>Pilih Jenis Pemohon</option>
+                                <option value="Member">Member</option>
+                                <option value="Non Member">Non Member</option>
+                            </select>
+                        </div>
                         <input type="hidden" name="working_status" value="Done">
                     </div>
                 </div>

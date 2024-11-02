@@ -708,11 +708,18 @@ class MainServiceController extends Controller
     {
         $service = Service::whereHash($hashedId)->firstOrFail();
         if($service) {
-            $service->update([
+            $payloadWorkingStatus = [
                 'working_status' => 'Done',
-                'service_status' => 'Completed',
+                // 'service_status' => 'Completed',
                 'message_for_user' => $request->message_for_user
-            ]);
+            ];
+
+            if($request->user_type == 'Non Member') {
+                $payloadWorkingStatus['service_status'] = 'Completed';
+                $payloadWorkingStatus['document_recieved_status'] = 'Recieved';
+            }
+
+            $service->update($payloadWorkingStatus);
 
             return response()->json(['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' Informasi Status Pengerjaan berhasil diperbarui!']);
             // return redirectByRole(auth()->user()->role, 'pelayanan.index', ['success' => 'Informasi Status Pengerjaan berhasil diperbarui!']);
