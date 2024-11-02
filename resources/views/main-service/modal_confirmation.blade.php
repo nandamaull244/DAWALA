@@ -86,6 +86,20 @@
                                 </div>
                             </div>
                         @endif
+
+                        <br>
+                        <div id="documentConfirmation">
+                            <div class="form-group">
+                                <label for="completedMessage" class="form-label">Status Dokumen : <span id="documentStatusText" class=""></span></label>
+                                <div class="row" id="document-confirmation-button">
+                                    <div class="d-flex gap-2 mb-3 justify-content-center" >
+                                        <button type="button" class="btn btn-outline-danger w-50" style="margin:0 !important;" id="btnNotRecieved">Belum Diterima</button>
+                                        <button type="button" class="btn btn-outline-success w-50" id="btnRecieved">Sudah Terima</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     <input type="hidden" name="status" id="confirmationStatus">
                 </div>
                 <div class="modal-footer">
@@ -159,7 +173,7 @@
                 const message_for_user = button.data('message_for_user');
 
                 $('#completedMessage').text(message_for_user);
-                $('#workingStatusText').removeClass('text-danger text-warning text-success text-secondary')
+                // $('#workingStatusText').removeClass('text-danger text-warning text-success text-secondary')
 
                 switch(workingStatus) {
                     case '-':
@@ -174,6 +188,51 @@
                     case 'Completed':
                         $('#workingStatusText').addClass('text-success').text('Selesai');
                     break;
+                }
+                
+                const documentRecievedStatus = button.data('document_recieved_status');
+                if(documentRecievedStatus == 'Recieved') {
+                    $('#document-confirmation-button').hide();
+                    switch(documentRecievedStatus) {
+                        case 'Not Yet Recieved':
+                            $('#documentStatusText').addClass('text-danger').text('Belum Diterima');
+                        break;
+                        case 'Recieved':
+                            $('#documentStatusText').addClass('text-success').text('Sudah Diterima');
+                        break;
+                    }
+                } else {
+                    $('#btnRecieved').off('click').on('click', function(e) {
+                        e.preventDefault();
+                        sendDocumentConfirmation(id, 'Recieved');
+                    });
+
+                    $('#btnNotRecieved').off('click').on('click', function(e) {
+                        e.preventDefault();
+                        sendDocumentConfirmation(id, 'Not Yet Recieved');
+                    });
+
+                    @if(auth()->user()->role == 'user') 
+                        function sendDocumentConfirmation(id, status) {
+                            $.ajax({
+                                url: `{{ route('user.pelayanan.document-confirmation') }}`,
+                                type: 'POST',
+                                data: {
+                                    id: id,
+                                    document_recieved_status: status,
+                                    _token: '{{ csrf_token() }}' 
+                                },
+                                success: function(response) {
+                                    $('#confirmationModal').modal('hide');
+                                    toastr.success(response.success, 'Berhasil');
+                                    table.ajax.reload();
+                                },
+                                error: function(xhr, status, error) {
+                                    toastr.error("Gagal memperbarui status dokumen", 'Gagal');
+                                }
+                            });
+                        }
+                    @endif
                 }
 
                 const reason = button.data('reason');

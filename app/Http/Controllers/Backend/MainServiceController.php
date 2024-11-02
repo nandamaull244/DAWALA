@@ -178,9 +178,6 @@ class MainServiceController extends Controller
             $query->where('user_id', auth()->user()->id);
         }
 
-        
-       
-
         if ($request->filled('search') && $request->search['value']) {
             $searchValue = $request->search['value'];
             $query->where(function($q) use ($searchValue) {
@@ -228,10 +225,11 @@ class MainServiceController extends Controller
                                                                         data-service_status="'. $row->service_status .'"
                                                                         data-visit_schedule="'. $row->visit_schedule .'" 
                                                                         data-working_status="'. $row->working_status .'"
-                                                                        data-message_for_user="'. $row->message_for_user .'"
+                                                                        data-message_for_user="'. $row->message_for_user .'" 
+                                                                        data-document_recieved_status="'. $row->document_recieved_status .'"
                                                                         style="cursor: pointer;"><i class="bi bi-person-check fs-5"></i></a>';
 
-                if(auth()->user()->role != 'user' && auth()->user()->role != 'instance') {
+                if(auth()->user()->role != 'user' && auth()->user()->role != 'instance' && $row->service_status != 'Not Yet') {
                     $actionBtn .= '<a class="btn btn-outline-primary" data-bs-toggle="modal" 
                                                                         data-bs-target="#workingStatusModal" 
                                                                         data-id="'.$hashedId.'" 
@@ -747,6 +745,22 @@ class MainServiceController extends Controller
             return response()->json(['error' => 'Data Pelayanan Tidak Ditemukan']);
         }
     }
+
+    public function documentConfirmation(Request $request)
+    {
+        $service = Service::whereHash($request->id)->firstOrFail();
+        if($service) {
+            $service->update([
+                'document_recieved_status' => $request->document_recieved_status,
+                'service_status' => 'Completed'
+            ]);
+
+            return response()->json(['success' => 'Status Dokumen ' . ($service->service_list->service_name) . ' berhasil diperbarui!']);
+        }  else {
+            return response()->json(['error' => 'Data Pelayanan Tidak Ditemukan']);
+        }
+    }
+
 
     public function exportExcel(Request $request)
     {

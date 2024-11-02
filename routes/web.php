@@ -110,6 +110,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:client', 'checkRole:use
     Route::get('/service/data', [MainServiceController::class, 'getData'])->name('pelayanan.data');
     Route::get('/service/cekNIK', [MainServiceController::class, 'cekNIK'])->name('pelayanan.cekNIK');
     Route::post('/service/request-again', [MainServiceController::class, 'requestAgain'])->name('pelayanan.request-again');
+    Route::post('/service/document-confirmation', [MainServiceController::class, 'documentConfirmation'])->name('pelayanan.document-confirmation');
 });
 
 
