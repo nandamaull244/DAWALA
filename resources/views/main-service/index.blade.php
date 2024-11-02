@@ -259,6 +259,72 @@
                                 <i class="bi bi-arrow-repeat"></i> Reset Filter
                             </button>
                         </div>
+                        <div class="col-md-5">
+                            <div class="dropdown">
+                                <button class="btn btn-info w-100 dropdown-toggle text-white" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-filter"></i> Kategori Pelayanan
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Fisik" onclick="selectFilter(this, 'Categories', true)" data-value="Disabilitas Fisik">
+                                            <i class="bi bi-person-wheelchair"></i> Disabilitas Fisik
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Netra/Buta" onclick="selectFilter(this, 'Categories', true)" data-value="Disabilitas Netra/Buta">
+                                            <i class="bi bi-person-cane"></i> Disabilitas Netra/Buta
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Rungu/Bicara" onclick="selectFilter(this, 'Categories', true)" data-value="Disabilitas Rungu/Bicara">
+                                            <i class="bi bi-person-hearts"></i> Disabilitas Rungu/Bicara
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Mental/Jiwa" onclick="selectFilter(this, 'Categories', true)" data-value="Disabilitas Mental/Jiwa">
+                                            <i class="bi bi-person-hearts"></i> Disabilitas Mental/Jiwa
+                                        </a>
+                                    </li>   
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Fisik dan Mental" onclick="selectFilter(this, 'Categories', true)" data-value="Disabilitas Fisik dan Mental">
+                                            <i class="bi bi-person-hearts"></i> Disabilitas Fisik dan Mental
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Lainnya" onclick="selectFilter(this, 'Categories', true)" data-value="Disabilitas Lainnya">
+                                            <i class="bi bi-person-hearts"></i> Disabilitas Lainnya
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Lansia" onclick="selectFilter(this, 'Categories', true)" data-value="Lansia">
+                                            <i class="bi bi-person-hearts"></i> Lansia
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="ODGJ" onclick="selectFilter(this, 'Categories', true)" data-value="ODGJ">
+                                            <i class="bi bi-person-hearts"></i> ODGJ
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Penduduk Sakit" onclick="selectFilter(this, 'Categories', true)" data-value="Penduduk Sakit">
+                                            <i class="bi bi-person-hearts"></i> Penduduk Sakit
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Penduduk Terlantar" onclick="selectFilter(this, 'Categories', true)" data-value="Penduduk Terlantar">
+                                            <i class="bi bi-person-hearts"></i> Penduduk Terlantar
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Penduduk Terkena Bencana" onclick="selectFilter(this, 'Categories', true)" data-value="Penduduk Terkena Bencana">
+                                            <i class="bi bi-person-hearts"></i> Penduduk Terkena Bencana
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
 
                         {{-- @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
                             <div class="col-md-4">
@@ -606,5 +672,44 @@
                 $('#desa').append('<option value="">Pilih Desa</option>');
             }
         };
+
+        function selectFilter(element, filterType, allowMultiple = false) {
+            const value = $(element).data('value');
+            const currentValues = $(`#selected${filterType}`).val();
+            let newValues;
+
+            if (allowMultiple) {
+                // Convert current values to array
+                const valuesArray = currentValues ? currentValues.split(',') : [];
+                
+                if (valuesArray.includes(value)) {
+                    // Remove value if already selected
+                    newValues = valuesArray.filter(v => v !== value).join(',');
+                    $(element).removeClass('btn-primary').addClass('btn-outline-primary');
+                } else {
+                    // Add new value
+                    valuesArray.push(value);
+                    newValues = valuesArray.join(',');
+                    $(element).removeClass('btn-outline-primary').addClass('btn-primary');
+                }
+            } else {
+                // Single selection mode
+                newValues = currentValues === value ? '' : value;
+                
+                // Update button states
+                $(`.${filterType.toLowerCase()}-btn`).removeClass('btn-primary').addClass('btn-outline-primary');
+                if (newValues) {
+                    $(element).removeClass('btn-outline-primary').addClass('btn-primary');
+                }
+            }
+
+            // Update hidden input
+            $(`#selected${filterType}`).val(newValues);
+            
+            // Reload table with new filters
+            if (table) {
+                table.ajax.reload();
+            }
+        }
     </script>
 @endpush
