@@ -7,21 +7,21 @@ use App\Models\User;
 use App\Models\Service;
 use App\Models\Village;
 use App\Models\District;
+use App\Models\Instance;
+use Barryvdh\DomPDF\PDF;
 use App\Helpers\CRUDHelper;
 use App\Models\ServiceForm;
 use App\Models\ServiceList;
-use App\Models\Instance;
-use App\Models\InstanceUsers;
+use Illuminate\Support\Str;
 use App\Models\Notification;
 use App\Models\ServiceImage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Models\InstanceUsers;
+use App\Exports\ServicesExport;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ServicesExport;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Exceptions\BadRequestHttpException;
 use Illuminate\Http\Exceptions\AccessDeniedHttpException;
@@ -162,6 +162,12 @@ class MainServiceController extends Controller
                             ELSE NULL 
                             END ASC"); 
 
+        if (auth()->user()->role == 'instance') {
+            $instance = Instance::where('user_id', auth()->user()->id)->first();
+            $instanceUsers = $instance->instanceUsers;
+            $query->whereIn('user_id', $instanceUsers->pluck('user_id'));
+        }
+
         if (auth()->user()->role == 'operator') {
             $query->whereHas('user', function($q) {
                 $q->where('district_id', auth()->user()->district_id);
@@ -172,12 +178,8 @@ class MainServiceController extends Controller
             $query->where('user_id', auth()->user()->id);
         }
 
-        if (auth()->user()->role == 'instance') {
-            $instanceId = Instance::where('user_id', auth()->user()->id)->value('id');
-            $query->whereHas('user.instance.instanceUsers', function($q) use ($instanceId) {
-                $q->where('instance_id', $instanceId);
-            });
-        }
+        
+       
 
         if ($request->filled('search') && $request->search['value']) {
             $searchValue = $request->search['value'];

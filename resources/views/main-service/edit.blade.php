@@ -103,7 +103,7 @@
 
                             <div class="form-group">
                                 <label for="birth_date">Tanggal Lahir</label>
-                                <input type="date" class="form-control flatpickr-birth-date" id="birth_date" name="birth_date" value="{{ $service->user->birth_date ?? '' }}" placeholder="-" required>
+                                <input type="date" class="form-control flatpickr-birth-date-check" id="birth_date" name="birth_date" value="{{ $service->user->birth_date ?? '' }}" placeholder="-" required>
                             </div>
 
                             <div class="row">
@@ -126,14 +126,14 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="latitude">Latitude</label>
-                                        <input type="text" class="form-control geolocation-input" id="latitude" name="latitude" required readonly value="{{ $service->latitude ?? '' }}">
+                                        <input type="text" class="form-control geolocation-input" id="latitude" name="latitude" required value="{{ $service->latitude ?? '' }}">
                                     </div>
                                 </div>
         
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="longitude">Longitude</label>
-                                        <input type="text" class="form-control geolocation-input" id="longitude" name="longitude" required readonly value="{{ $service->longitude ?? '' }}">
+                                        <input type="text" class="form-control geolocation-input" id="longitude" name="longitude" required value="{{ $service->longitude ?? '' }}">
                                     </div>
                                 </div>
                             </div>

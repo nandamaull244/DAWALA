@@ -96,7 +96,7 @@
 
                             <div class="form-group">
                                 <label for="birth_date">Tanggal Lahir</label>
-                                <input type="date" class="form-control flatpickr-birth-date" id="birth_date" name="birth_date" value="@if (auth()->user()->role == 'user') {{ auth()->user()->birth_date }} @endif" placeholder="-" required>
+                                <input type="date" class="form-control flatpickr-birth-date-check" id="birth_date" name="birth_date" value="@if (auth()->user()->role == 'user') {{ auth()->user()->birth_date }} @endif" placeholder="-" required>
                             </div>
 
                             <div class="row">
@@ -119,14 +119,14 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="latitude">Latitude</label>
-                                        <input type="text" class="form-control geolocation-input" id="latitude" name="latitude" required readonly>
+                                        <input type="text" class="form-control geolocation-input" id="latitude" name="latitude" required>
                                     </div>
                                 </div>
         
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="longitude">Longitude</label>
-                                        <input type="text" class="form-control geolocation-input" id="longitude" name="longitude" required readonly>
+                                        <input type="text" class="form-control geolocation-input" id="longitude" name="longitude" required>
                                     </div>
                                 </div>
                             </div>

@@ -13,7 +13,7 @@
                         </div> --}}
                         <div class="col-md-4 mb-2 mb-md-0">
                             <label for="startDate" class="form-label text-start"><b>Tanggal Awal</b></label>
-                            <input type="date" class="form-control flatpickr" id="startDate" readonly value="{{ date('Y-m-01') }}">
+                            <input type="date" class="form-control flatpickr" id="startDate" readonly>
                         </div>
 
                         <div class="col-md-4">
