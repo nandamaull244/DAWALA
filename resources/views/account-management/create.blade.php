@@ -474,11 +474,11 @@ Formulir Registrasi Akun
             $('#no_kk_container, #nik_container, #birth_date_container').hide()
             $('#no_kk').val(generateRandom16Digits())
             $('#nik').val(generateRandom16Digits())
-            $('#no_kk, #nik, #birth_date').attr('required', false)
+            $('#no_kk, #nik, #birth_date').attr('required', false).removeAttr('minlength', 'maxlength')
             $('#birth_date').val('')
         } else {
             $('#no_kk_container, #nik_container, #birth_date_container').show()
-            $('#no_kk, #nik, #birth_date').val('').attr('required', true)
+            $('#no_kk, #nik, #birth_date').val('').attr('required', true).attr('minlength', '16').attr('maxlength', '16')
         }
     });
 
@@ -532,7 +532,7 @@ Formulir Registrasi Akun
                 }
 
                 let role = $('[name="role"]:checked').val()
-                if(role != 'instance') {
+                if(role != 'instance' && (fieldName == 'NIK' || fieldName == 'No Kartu Keluarga')) {
                     const maxLength = $field.attr('maxlength');
                     if (maxLength && $field.val().length > maxLength) {
                         isValid = false;
