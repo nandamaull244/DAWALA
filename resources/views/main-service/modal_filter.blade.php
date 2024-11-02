@@ -67,15 +67,6 @@
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <p class="text-start mb-2"><b>Kategori Layanan</b></p>
-                    <div class="d-flex flex-wrap gap-2">
-                        <button class="btn btn-outline-primary type-btn" data-value="Disabilitas" onclick="selectFilter(this, 'Categories', true)">Disabilitas</button>
-                        <button class="btn btn-outline-primary type-btn" data-value="ODGJ" onclick="selectFilter(this, 'Categories', true)">ODGJ</button>
-                        <button class="btn btn-outline-primary type-btn" data-value="Lansia" onclick="selectFilter(this, 'Categories', true)">Lansia</button>
-                        <button class="btn btn-outline-primary type-btn" data-value="Penduduk" onclick="selectFilter(this, 'Categories', true)">Penduduk Sakit, Terlantar, Terkena Bencana</button>
-                    </div>
-                </div>
 
                 <div class="mb-3">
                     <p class="text-start mb-2"><b>Tipe Layanan</b></p>
