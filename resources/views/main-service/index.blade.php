@@ -474,7 +474,7 @@
             <div class="card-body">
                 <div class="row mb-3">
                     <div class="d-block d-md-none mb-2">
-                        <div class="row g-2" style="margin-left: 15px !important;">
+                        <div class="row g-1">
                             <div class="col-6">
                                 <button class="btn btn-secondary w-100 text-white" data-bs-toggle="modal" data-bs-target="#filterModal">
                                     <i class="bi bi-funnel"></i> Filter
@@ -490,8 +490,63 @@
                                     <button class="btn btn-info w-100 dropdown-toggle text-white" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="bi bi-filter"></i> Kategori
                                     </button>
-                                    <ul class="dropdown-menu w-100" aria-labelledby="categoryDropdown">
-                                        
+                                    <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+                                        <li>
+                                            <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Fisik" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Fisik">
+                                                <i class="bi bi-person-wheelchair"></i> Disabilitas Fisik
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Netra/Buta" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Netra/Buta">
+                                                <i class="bi bi-person-cane"></i> Disabilitas Netra/Buta
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Rungu/Bicara" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Rungu/Bicara">
+                                                <i class="bi bi-person-hearts"></i> Disabilitas Rungu/Bicara
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Mental/Jiwa" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Mental/Jiwa">
+                                                <i class="bi bi-person-hearts"></i> Disabilitas Mental/Jiwa
+                                            </a>
+                                        </li>   
+                                        <li>
+                                            <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Fisik dan Mental" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Fisik dan Mental">
+                                                <i class="bi bi-person-hearts"></i> Disabilitas Fisik dan Mental
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Lainnya" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Lainnya">
+                                                <i class="bi bi-person-hearts"></i> Disabilitas Lainnya
+                                            </a>
+                                        </li>
+    
+                                        <li>
+                                            <a class="dropdown-item category-filter" href="#" data-category="Lansia" onclick="categoryFilter(this, 'Categories')" data-value="Lansia">
+                                                <i class="bi bi-person-hearts"></i> Lansia
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item category-filter" href="#" data-category="ODGJ" onclick="categoryFilter(this, 'Categories')" data-value="ODGJ">
+                                                <i class="bi bi-person-hearts"></i> ODGJ
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item category-filter" href="#" data-category="Penduduk Sakit" onclick="categoryFilter(this, 'Categories')" data-value="Penduduk Sakit">
+                                                <i class="bi bi-person-hearts"></i> Penduduk Sakit
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item category-filter" href="#" data-category="Penduduk Terlantar" onclick="categoryFilter(this, 'Categories')" data-value="Penduduk Terlantar">
+                                                <i class="bi bi-person-hearts"></i> Penduduk Terlantar
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item category-filter" href="#" data-category="Penduduk Terkena Bencana" onclick="categoryFilter(this, 'Categories')" data-value="Penduduk Terkena Bencana">
+                                                <i class="bi bi-person-hearts"></i> Penduduk Terkena Bencana
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -500,6 +555,95 @@
                                     <i class="bi bi-plus-circle"></i> Daftar
                                 </a>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-none d-md-flex col-md-12">
+                    <div class="col-md-6 col-sm-12 mb-2 mb-md-0 row">
+                        <div class="col-md-3">
+                            <button class="btn btn-secondary w-100 text-white" data-bs-toggle="modal" data-bs-target="#filterModal">
+                                <i class="bi bi-funnel"></i> Filter
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-danger w-100" id="reset">
+                                <i class="bi bi-arrow-repeat"></i> Reset Filter
+                            </button>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="dropdown">
+                                <button class="btn btn-info w-100 dropdown-toggle text-white" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-filter"></i> Kategori Pelayanan
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Fisik" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Fisik">
+                                            <i class="bi bi-person-wheelchair"></i> Disabilitas Fisik
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Netra/Buta" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Netra/Buta">
+                                            <i class="bi bi-person-cane"></i> Disabilitas Netra/Buta
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Rungu/Bicara" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Rungu/Bicara">
+                                            <i class="bi bi-person-hearts"></i> Disabilitas Rungu/Bicara
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Mental/Jiwa" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Mental/Jiwa">
+                                            <i class="bi bi-person-hearts"></i> Disabilitas Mental/Jiwa
+                                        </a>
+                                    </li>   
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Fisik dan Mental" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Fisik dan Mental">
+                                            <i class="bi bi-person-hearts"></i> Disabilitas Fisik dan Mental
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Disabilitas Lainnya" onclick="categoryFilter(this, 'Categories')" data-value="Disabilitas Lainnya">
+                                            <i class="bi bi-person-hearts"></i> Disabilitas Lainnya
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Lansia" onclick="categoryFilter(this, 'Categories')" data-value="Lansia">
+                                            <i class="bi bi-person-hearts"></i> Lansia
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="ODGJ" onclick="categoryFilter(this, 'Categories')" data-value="ODGJ">
+                                            <i class="bi bi-person-hearts"></i> ODGJ
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Penduduk Sakit" onclick="categoryFilter(this, 'Categories')" data-value="Penduduk Sakit">
+                                            <i class="bi bi-person-hearts"></i> Penduduk Sakit
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Penduduk Terlantar" onclick="categoryFilter(this, 'Categories')" data-value="Penduduk Terlantar">
+                                            <i class="bi bi-person-hearts"></i> Penduduk Terlantar
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Penduduk Terkena Bencana" onclick="categoryFilter(this, 'Categories')" data-value="Penduduk Terkena Bencana">
+                                            <i class="bi bi-person-hearts"></i> Penduduk Terkena Bencana
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-sm-12">
+                        <div class="col-md-5 float-end">
+                            <a class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#layananModal">
+                                <i class="bi bi-plus-circle"></i> Daftar Pelayanan
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -736,7 +880,7 @@
                     }
                 },
                 columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, className: 'text-center', width: '2%'},
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, className: 'text-center', width: '5%'},
                     {data: 'name', name: 'name'},
                     {data: 'tanggal', name: 'tanggal'},
                     {data: 'service', name: 'service'},

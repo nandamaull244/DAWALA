@@ -1,5 +1,5 @@
 <div class="modal fade" id="formulirModal" tabindex="-1"  aria-labelledby="formulirModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="width: 700px;">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="formulirModalLabel">Pilih Formulir</h5>
@@ -11,6 +11,7 @@
                         $forms = $service->service_form->pluck('form_path', 'form_type')->toArray();
                         $f101 = $forms['F1.01'] ?? '';
                         $f102 = $forms['F1.02'] ?? '';
+                        $f102 = $forms['F1.03'] ?? '';
                         $f104 = $forms['F1.04'] ?? '';
                     @endphp
                 @endif
@@ -25,6 +26,11 @@
                         <input type="file" id="f102-input" class="d-none" accept="image/*,.pdf" name="f102_file" required data-exist="{{ !empty($f102) ? 'true' : 'false' }}">
                         <label for="f102-input" class="btn btn-outline-primary mb-0">F1.02</label>
                         <span id="f102-status" class="position-absolute top-0 end-0 translate-middle p-1 @if (!empty($f102)) bg-success @else bg-danger @endif text-white border border-light rounded-circle"></span>
+                    </div>
+                    <div class="position-relative form-group">
+                        <input type="file" id="f103-input" class="d-none" accept="image/*,.pdf" name="f103_file" required data-exist="{{ !empty($f103) ? 'true' : 'false' }}">
+                        <label for="f103-input" class="btn btn-outline-primary mb-0">F1.03</label>
+                        <span id="f103-status" class="position-absolute top-0 end-0 translate-middle p-1 @if (!empty($f103)) bg-success @else bg-danger @endif text-white border border-light rounded-circle"></span>
                     </div>
                     <div class="position-relative form-group">
                         <input type="file" id="f104-input" class="d-none" accept="image/*,.pdf" name="f104_file" data-exist="{{ !empty($f104) ? 'true' : 'false' }}">
