@@ -37,7 +37,7 @@
                         <p class="text-muted">NIK: {{ Auth::user()->nik }}</p>
                     @endif
                     @if (Auth::user()->role == 'operator')
-                        <p class="text-muted">Kecamatan: {{ Auth::user()->village->district->name }}</p>
+                        <p class="text-muted">Kecamatan: {{ Auth::user()->district->name }}</p>
                     @endif
                 </div>
             </div>
