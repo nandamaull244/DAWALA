@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Service;
+use App\Models\District;
+use App\Models\Village;
 
 class ReportController extends Controller
 {
@@ -14,7 +17,22 @@ class ReportController extends Controller
      */
     public function index()
     {
-        return view('report.index');
+        $services = Service::whereNull('deleted_at')
+        ->where('working_status', '!=', 'Done')
+        ->whereNotIn('service_status', ['Rejected', 'Completed'])
+        ->get();
+
+    foreach ($services as $service) {
+        $lateStatus = getLateWorkingStatus($service->created_at);
+        if (isset($lateStatus['true'])) {
+            $service->update(['working_status' => 'Late']);
+        }
+    }
+
+    $districts = District::orderBy('name', 'asc')->get();   
+    $villages = Village::orderBy('name', 'asc')->get();
+
+    return view('report.index', compact('services', 'districts', 'villages'));
     }
 
     /**
