@@ -91,22 +91,7 @@ class MainServiceController extends Controller
         }
 
         if ($request->filled('categories')) {
-            $categories = []; 
-
-            if (str_contains($request->categories, 'Disabilitas')) {
-                $categories = array_merge($categories, ['Disabilitas Fisik', 'Disabilitas Netra/Buta', 'Disabilitas Rungu/Bicara', 'Disabilitas Mental/Jiwa', 'Disabilitas Fisik dan Mental', 'Disabilitas Lainnya']);
-            } 
-            if (str_contains($request->categories, 'Lansia')) {
-                $categories = array_merge($categories, ['Lansia']);
-            } 
-            if (str_contains($request->categories, 'ODGJ')) {
-                $categories = array_merge($categories, ['ODGJ']);
-            } 
-            if (str_contains($request->categories, 'Penduduk')) {
-                $categories = array_merge($categories, ['Penduduk Sakit', 'Penduduk Terlantar', 'Penduduk Terkena Bencana']);
-            }
-
-            $query->whereIn('service_category', $categories);
+            $query->where('service_category', $request->categories);
         }
 
         if ($request->filled('types')) {
