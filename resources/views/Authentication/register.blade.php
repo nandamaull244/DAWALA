@@ -411,7 +411,8 @@
                                     data-title="Username" 
                                     pattern="^(?=.*[a-zA-Z])[a-zA-Z0-9_-]+$"
                                     title="Username harus mengandung minimal satu huruf dan hanya boleh menggunakan huruf, angka, underscore (_), atau strip (-)"
-                                   >
+                                    minlength="3"
+                                    maxlength="20">
                                 <div class="form-control-icon">
                                     <i class="bi bi-person"></i>
                                 </div>
@@ -519,10 +520,12 @@
                 $('#no_kk').val(randomNumber)
                 $('#nik').val(randomNumber)
                 $('#no_kk, #nik, #birth_date').val('').attr('required', false)
+                $('#username').attr('minlength', 3).attr('maxlength', 20)
             } else {
                 $('#no_kk_container, #nik_container, #birth_date_container').show()
                 $('#no_kk, #nik, #birth_date').val('').attr('required', true)
-                $('#username').attr('required', false)
+                $('#username_container').attr('required', false)
+                $('#username').removeAttr('minlength').removeAttr('maxlength')
             }
         });
 
