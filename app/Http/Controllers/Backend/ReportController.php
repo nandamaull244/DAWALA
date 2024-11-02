@@ -100,4 +100,27 @@ class ReportController extends Controller
     {
         //
     }
+
+    public function getData(Request $request)
+    {
+        $query = Service::query();
+
+        if ($request->start_date) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+
+        if ($request->end_date) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+
+        if ($request->time) {
+            $query->when($request->time == 'Terbaru', function($q) {
+                return $q->orderBy('created_at', 'desc');
+            })->when($request->time == 'Terlama', function($q) {
+                return $q->orderBy('created_at', 'asc');
+            });
+        }
+
+        // ... rest of your query logic ...
+    }
 }

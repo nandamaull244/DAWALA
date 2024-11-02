@@ -260,7 +260,7 @@
                             </button>
                         </div>
 
-                        @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
+                        {{-- @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
                             <div class="col-md-4">
                                 <div class="dropdown">
                                 <button class="btn btn-success w-100 dropdown-toggle" type="button" id="reportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -280,7 +280,7 @@
                                 </ul>
                                 </div>
                             </div>
-                        @endif
+                        @endif --}}
 
                     </div>
                     <div class="col-md-6 col-sm-12">
