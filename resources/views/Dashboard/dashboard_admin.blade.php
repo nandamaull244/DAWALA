@@ -139,7 +139,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Jumlah Pengajuan yang Belum Diproses Berdasarkan Kecamatan</h4>
+                            <h4>Jumlah Pengajuan yang Masuk dan Selesai Berdasarkan Kecamatan</h4>
                         </div>
                         <div class="card-body">
                             <div id="chart-profile-visit"></div>
@@ -183,16 +183,14 @@
             events: @json($data['visit_schedule']),
             eventColor: '#435ebe',
             eventTextColor: '#ffffff',
-            // Kustomisasi ukuran dan tampilan
             height: 'auto',
-            contentHeight: 500, // Mengatur tinggi calendar
+            contentHeight: 500, 
             eventDisplay: 'block',
             eventTimeFormat: {
                 hour: '2-digit',
                 minute: '2-digit',
                 meridiem: false
             },
-            // Kustomisasi style event
             eventDidMount: function(info) {
                 info.el.style.fontSize = '11px';         // Ukuran font lebih kecil
                 info.el.style.padding = '2px 5px';       // Padding lebih kecil
@@ -200,13 +198,11 @@
                 info.el.style.lineHeight = '1.2';        // Line height lebih kecil
                 info.el.style.borderRadius = '3px';      // Border radius lebih kecil
             },
-            // Kustomisasi header
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'dayGridMonth,dayGridWeek'
             },
-            // Kustomisasi view
             views: {
                 dayGridMonth: {
                     dayMaxEventRows: 4,    // Maksimal 4 event per hari
@@ -240,22 +236,10 @@
     }
 
     var optionsProfileVisit = {
-            series: [{
-            name: 'PRODUCT A',
-            data: [44, 55, 41, 67, 22, 43]
-        }, {
-            name: 'PRODUCT B',
-            data: [13, 23, 20, 8, 13, 27]
-        }, {
-            name: 'PRODUCT C',
-            data: [11, 17, 15, 15, 21, 14]
-        }, {
-            name: 'PRODUCT D',
-            data: [21, 7, 25, 13, 22, 8]
-        }],
-            chart: {
+        series: @json($data['chart_data']['series']), 
+        chart: {
             type: 'bar',
-            height: 500,
+            height: 520,
             stacked: true,
             toolbar: {
                 show: true
@@ -268,9 +252,9 @@
             breakpoint: 480,
             options: {
                 legend: {
-                position: 'bottom',
-                offsetX: -10,
-                offsetY: 0
+                    position: 'bottom',
+                    offsetX: -10,
+                    offsetY: 0
                 }
             }
         }],
@@ -282,20 +266,26 @@
                 borderRadiusWhenStacked: 'last', 
                 dataLabels: {
                 total: {
-                    enabled: true,
-                    style: {
-                    fontSize: '13px',
-                    fontWeight: 900
+                        enabled: true,
+                        style: {
+                            fontSize: '13px',
+                            fontWeight: 900
+                        }
                     }
-                }
                 }
             },
         },
         xaxis: {
-            type: 'datetime',
-            categories: ['01/01/2011 GMT', '01/02/2011 GMT', '01/03/2011 GMT', '01/04/2011 GMT',
-                '01/05/2011 GMT', '01/06/2011 GMT'
-            ],
+            type: 'category',
+            categories: @json($data['chart_data']['categories']),
+        },
+        yaxis: {
+            decimalsInFloat: 0, 
+            labels: {
+                formatter: function (value) {
+                    return Math.round(value); // Membulatkan nilai
+                }
+            }
         },
         legend: {
             position: 'right',
@@ -303,7 +293,7 @@
         },
         fill: {
             opacity: 1
-        }
+        },
     };
 
     var chartProfileVisit = new ApexCharts(document.querySelector("#chart-profile-visit"), optionsProfileVisit);

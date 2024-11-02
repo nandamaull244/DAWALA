@@ -36,7 +36,7 @@ class DashboardController extends Controller
         $data['document_recieved_visit'] = (clone $baseQuery)->where('document_recieved_status', 'Not Yet Recieved')->where('working_status', 'Done')->where('service_status', 'Process')->count();
         $data['completed_visit'] = (clone $baseQuery)->where('service_status', 'Completed')->where('document_recieved_status', 'Recieved')->count();
 
-        $data['services_by_district'] = District::withCount(['user' => function($query) {
+        $data['by_district_not_yet'] = District::withCount(['user' => function($query) {
                                             $query->whereHas('services', function($q) {
                                                 $q->where('service_status', 'Not Yet')->whereNull('deleted_at');
                                             });
@@ -49,6 +49,34 @@ class DashboardController extends Controller
                                                 'total' => $district->user_count
                                             ];
                                         });
+
+        $data['by_district_completed'] = District::withCount(['user' => function($query) {
+                                            $query->whereHas('services', function($q) {
+                                                $q->where('service_status', 'Completed')->where('working_status', 'Done')->where('document_recieved_status', 'Recieved')->whereNull('deleted_at');
+                                            });
+                                        }])
+                                        ->orderBy('name', 'asc')
+                                        ->get()
+                                        ->map(function($district) {
+                                            return (object) [
+                                                'name' => $district->name,
+                                                'total' => $district->user_count
+                                            ];
+                                        });  
+
+        $data['chart_data'] = [
+            'categories' => $data['by_district_not_yet']->pluck('name')->toArray(),
+            'series' => [
+                [
+                    'name' => 'Masuk',
+                    'data' => $data['by_district_not_yet']->pluck('total')->toArray()
+                ],
+                [
+                    'name' => 'Selesai',
+                    'data' => $data['by_district_completed']->pluck('total')->toArray()
+                ]
+            ]
+        ];
 
         $data['visit_schedule'] = Service::where('working_status', 'Process')
                                     ->whereNotNull('visit_schedule')

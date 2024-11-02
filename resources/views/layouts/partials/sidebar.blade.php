@@ -1,5 +1,5 @@
 <div id="sidebar" class="active">
-    <div class="sidebar-wrapper active" style="width: 270px !important; max-width: 270px !important;">
+    <div class="sidebar-wrapper active" style="width: 260px !important; max-width: 260px !important;">
         <div class="sidebar-header">
             <div class="d-flex justify-content-between">
                 <div class="logo">
