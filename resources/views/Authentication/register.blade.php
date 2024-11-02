@@ -216,15 +216,14 @@
                             <div class="form-group">
                                 <label for="sub-category-select">Pilih kategori akun</label>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="role" id="perorangan" selected 
-                                        value="user" onclick="setRole('user')" required>
+                                    <input class="form-check-input" type="radio" name="role" id="perorangan" value="user" required>
                                     <label class="form-check-label" for="perorangan">Perorangan/Untuk Diri Sendiri</label>
                                     @error('role')
                                         <span>{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="role" id="instance" value="instance" onclick="setRole('instance')" required>
+                                    <input class="form-check-input" type="radio" name="role" id="instance" value="instance" required>
                                     <label class="form-check-label" for="instance">Instansi/Lembaga</label>
                                     @error('role')
                                         <span>{{ $message }}</span>
@@ -516,27 +515,18 @@
             const randomNumber = generateRandomNumber();
 
             if(role == 'instance') {
-                $('#no_kk_container, #nik_container, #birth_date_container').hide();
-                $('#username_container').show();
-                
-                // Set random numbers
-                $('#nik, #no_kk').val(randomNumber);
-                
-                // Update required attributes
-                $('#no_kk, #nik, #birth_date').prop('required', false);
-                $('#username').prop('required', true);
+                $('#no_kk_container, #nik_container, #birth_date_container').hide().attr('required', false)
+                $('#username_container').show().attr('required', true)
+                $('#no_kk').val(randomNumber)
+                $('#nik').val(randomNumber)
+                $('#no_kk, #nik, #birth_date').val('').attr('required', false)
             } else {
-                $('#no_kk_container, #nik_container, #birth_date_container').show();
-                $('#username_container').hide();
-                
-                // Clear values for user role
-                $('#nik, #no_kk').val('');
-                
-                // Update required attributes
-                $('#no_kk, #nik, #birth_date').prop('required', true);
-                $('#username').prop('required', false);
+                $('#no_kk_container, #nik_container, #birth_date_container').show()
+                $('#no_kk, #nik, #birth_date').val('').attr('required', true)
             }
         });
+
+        
 
         const today = new Date();
         const date17YearsAgo = new Date(today.setFullYear(today.getFullYear() - 17));
@@ -612,10 +602,10 @@
             $('#register-form').on('submit', function(event) {
                 event.preventDefault();
                 let isValid = true;
-                const role = $('input[name="role"]:checked').val();
+                const selectedRole = $('input[name="role"]:checked').val();
 
                 // Jika role instance, set NIK dan KK dengan random number sebelum validasi
-                if (role === 'instance') {
+                if (selectedRole === 'instance') {
                     const randomNumber = generateRandomNumber();
                     $('#nik, #no_kk').val(randomNumber);
                 }
@@ -625,7 +615,7 @@
                     let fieldName = $field.data('title');
                     
                     // Skip validasi untuk NIK dan KK jika role instance
-                    if (role === 'instance' && (fieldName === 'NIK' || fieldName === 'No Kartu Keluarga')) {
+                    if (selectedRole === 'instance' && (fieldName === 'NIK' || fieldName === 'No Kartu Keluarga')) {
                         return true; // continue ke iterasi berikutnya
                     }
 
@@ -669,20 +659,20 @@
                 }
 
                 const birthDateStr = $('#birth_date').val();
-                const role = $('input[name="role"]:checked').val();
                 const password = $('#password').val();
                 const passwordConfirmation = $('#password_confirmation').val();
+                
                 if(password !== passwordConfirmation) {
                     isValid = false;
                     toastr.error('Password tidak cocok', 'Gagal!', { timeOut: 2000, className: "custom-larger-toast" });
                 }
 
-                if (role === 'instance') {
+                if (selectedRole === 'instance') {
                     if (isValid) this.submit();
                     return;
                 }
 
-                if (role === 'user') {
+                if (selectedRole === 'user') {
                     if (!birthDateStr) {
                         toastr.error('Tanggal lahir harus diisi', 'Gagal!', {
                             timeOut: 3000,
@@ -733,7 +723,7 @@
 
                 if (isValid) {
                     // Pastikan NIK dan KK terisi untuk role instance sebelum submit
-                    if (role === 'instance') {
+                    if (selectedRole === 'instance') {
                         const randomNumber = generateRandomNumber();
                         $('#nik, #no_kk').val(randomNumber);
                     }
@@ -806,6 +796,8 @@
         });
 
         function setRole(role) {
+            if (typeof role === 'undefined') return;
+            
             document.getElementById('registration_status').value = role === 'user' ? 'completed' : 'process';
             
             // Get DOM elements
@@ -813,6 +805,7 @@
             const userInput = document.getElementById('perorangan');
             const operatorInput = document.getElementById('instance');
             const instansiInput = document.getElementById('instansi-select-group');
+            const usernameContainer = document.getElementById('username_container');
 
             // Handle display and requirements based on role
             if (role === 'user') {
@@ -821,6 +814,7 @@
                 userInput.required = true;
                 operatorInput.required = false;
                 instansiInput.style.display = 'none';
+                usernameContainer.style.display = 'none';
                 
                 // Reset instansi input if it exists
                 const instansiInputField = instansiInput.querySelector('input[name="instansi"]');
@@ -828,13 +822,29 @@
                     instansiInputField.required = false;
                     instansiInputField.value = '';
                 }
-            } else {
+            } else if (role === 'instance') {
                 // Instance role settings
                 subCategory.style.display = 'block';
                 userInput.required = false;
                 operatorInput.required = true;
+                usernameContainer.style.display = 'block';
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial state based on default selected radio button
+            const defaultRole = document.querySelector('input[name="role"]:checked');
+            if (defaultRole) {
+                setRole(defaultRole.value);
+            }
+            
+            // Add change event listener to radio buttons
+            document.querySelectorAll('input[name="role"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    setRole(this.value);
+                });
+            });
+        });
 
         document.getElementById('sub-category-select').addEventListener('change', function() {
             const selectedValue = this.value;
