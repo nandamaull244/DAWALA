@@ -283,7 +283,7 @@
             decimalsInFloat: 0, 
             labels: {
                 formatter: function (value) {
-                    return Math.round(value); // Membulatkan nilai
+                    return Math.round(value); 
                 }
             }
         },
@@ -294,6 +294,7 @@
         fill: {
             opacity: 1
         },
+        colors: ['#00663a', '#0164eb']
     };
 
     var chartProfileVisit = new ApexCharts(document.querySelector("#chart-profile-visit"), optionsProfileVisit);
