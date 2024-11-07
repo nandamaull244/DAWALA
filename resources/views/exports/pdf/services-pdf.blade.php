@@ -41,20 +41,20 @@
         <thead>
             <tr>
                 <th>NO</th>
-                {{-- <th>NAMA</th> --}}
+                <th>NAMA</th>
                 <th>TANGGAL PENGAJUAN</th>
                 <th>JENIS PELAYANAN</th>
                 <th>KATEGORI LAYANAN</th>
-                {{-- <th>TIPE LAYANAN</th> --}}
-                {{-- <th>TANGGAL LAHIR</th> --}}
-                {{-- <th>ALAMAT</th> --}}
-                {{-- <th>RT</th> --}}
-                {{-- <th>RW</th> --}}
+                <th>TIPE LAYANAN</th>
+                <th>TANGGAL LAHIR</th> 
+                <th>ALAMAT</th>
+                <th>RT</th>
+                <th>RW</th>
                 <th>KECAMATAN</th>
                 <th>DESA/KELURAHAN</th>
-                {{-- <th>NO HP</th> --}}
-                {{-- <th>ALASAN PENGAJUAN</th> --}}
-                {{-- <th>STATUS PENGERJAAN</th> --}}
+                <th>NO HP</th>
+                <th>ALASAN PENGAJUAN</th>
+                <th>STATUS PENGERJAAN</th>
                 <th>STATUS PELAYANAN</th>
             </tr>
         </thead>
@@ -63,20 +63,20 @@
                 @foreach($services as $index => $service)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        {{-- <td>{{ $service->user->full_name }}</td> --}}
+                        <td>{{ $service->user->full_name }}</td>
                         <td>{{ getFlatpickrDate(date('Y-m-d', strtotime($service->created_at))) }}</td>
                         <td>{{ $service->service_list->service_name }}</td>
                         <td>{{ $service->service_category }}</td>
-                        {{-- <td>{{ $service->service_type }}</td> --}}
-                        {{-- <td>{{ getFlatpickrDate($service->user->birth_date) }}</td> --}}
-                        {{-- <td>{{ $service->user->address }}</td> --}}
-                        {{-- <td>{{ $service->user->rt }}</td>
-                        <td>{{ $service->user->rw }}</td> --}}
+                        <td>{{ $service->service_type }}</td>
+                        <td>{{ getFlatpickrDate($service->user->birth_date) }}</td>
+                        <td>{{ $service->user->address }}</td>
+                        <td>{{ $service->user->rt }}</td>
+                        <td>{{ $service->user->rw }}</td>
                         <td>{{ $service->user->district->name }}</td>
                         <td>{{ $service->user->village->name }}</td>
-                        {{-- <td>{{ $service->user->phone_number }}</td> --}}
-                        {{-- <td>{{ $service->reason }}</td> --}}
-                        {{-- <td>
+                        <td>{{ $service->user->phone_number }}</td>
+                        <td>{{ $service->reason }}</td>
+                        <td>
                             @switch($service->working_status)
                                 @case('Not Yet')
                                     Menunggu
@@ -93,7 +93,7 @@
                                 @default
                                     {{ $service->working_status }}
                             @endswitch
-                        </td> --}}
+                        </td>
                         <td>
                             @switch($service->service_status)
                                 @case('Not Yet')
@@ -116,7 +116,7 @@
                 @endforeach
             @else 
                 <tr>
-                    <td colspan="7" class="text-center">Tidak ada data</td>
+                    <td colspan="16" class="text-center">Tidak ada data</td>
                 </tr>
             @endif
         </tbody>

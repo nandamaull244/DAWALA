@@ -263,7 +263,7 @@
                     
                         <div class="filter-item col-md-1">
                             <label>&nbsp;</label>
-                            <button class="btn btn-danger w-100" onclick="resetFilters()">Reset</button>
+                            <button type="button" class="btn btn-danger w-100" id="reset">Reset</button>
                         </div>
                         @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
                             <div class="filter-item col-md-2">
@@ -461,7 +461,7 @@
 
             $('#reset').on('click', function() {
                 const today = "{{ date('Y-m-d') }}";
-                $('#startDate, #endDate').val('');
+                $('#start_date, #end_date').val('');
                 table.ajax.reload();
             });
 
