@@ -765,6 +765,12 @@ class MainServiceController extends Controller
                     END ASC") 
                 ->orderBy('created_at', 'desc'); 
 
+            if (auth()->user()->role == 'operator') {
+                $query->whereHas('user', function($q) {
+                    $q->where('district_id', auth()->user()->district_id);
+                });
+            }
+
             if ($request->filled('search')) {
                 $searchValue = $request->search;
                 $query->where(function($q) use ($searchValue) {
@@ -800,6 +806,12 @@ class MainServiceController extends Controller
                     ELSE NULL 
                     END ASC") 
                 ->orderBy('created_at', 'desc'); 
+            
+            if (auth()->user()->role == 'operator') {
+                $query->whereHas('user', function($q) {
+                    $q->where('district_id', auth()->user()->district_id);
+                });
+            }
 
             if ($request->filled('search')) {
                 $searchValue = $request->search;
