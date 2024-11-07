@@ -36,6 +36,8 @@ class CRUDHelper
             $image->storeAs('public/uploads/' . $folder, $filename);
         }
 
+        chmod($fullPath, 0777);
+
         return [
             'image_type' => $imageType,
             'image_path' => $path,
@@ -85,6 +87,8 @@ class CRUDHelper
 
             Storage::put('public/' . $path, $pdf->output());
         }
+
+        chmod(storage_path('app/public/' . $path), 0777);
 
         return [
             'form_type' => $formType,
