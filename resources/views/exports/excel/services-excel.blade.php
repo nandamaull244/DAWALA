@@ -31,9 +31,9 @@
             <th nowrap class="text-center">DESA/KELURAHAN</th>
             <th nowrap class="text-center">NO HP</th> 
             <th nowrap class="text-center">ALASAN PENGAJUAN</th> 
-            <th nowrap class="text-center">FOTO BUKTI KETERBATASAN</th>
+            {{-- <th nowrap class="text-center">FOTO BUKTI KETERBATASAN</th>
             <th nowrap class="text-center">FOTO KTP</th>
-            <th nowrap class="text-center">FOTO KK</th> 
+            <th nowrap class="text-center">FOTO KK</th>  --}}
             <th nowrap class="text-center">STATUS PENGERJAAN</th> 
             <th nowrap class="text-center">STATUS PELAYANAN</th>
         </tr>
@@ -62,7 +62,7 @@
                     <td class="text-center">{{ $service->user->village->name }}</td>
                     <td class="text-center">{{ $service->user->phone_number }}</td>
                     <td class="text-center">{{ $service->reason }}</td>
-                    <td class="text-center">
+                    {{-- <td class="text-center">
                         @if ($evidence || $evidence_odgj)
                             <img src="{{ asset('storage/' . $evidence->image_path) }}" alt="Bukti Keterbatasan">
                             <br>
@@ -84,7 +84,7 @@
                         @else 
                             -
                         @endif
-                    </td>
+                    </td> --}}
                     <td class="text-center">
                         @switch($service->working_status)
                             @case('Not Yet')
