@@ -360,7 +360,8 @@
                     kecamatan: $('#selectedDistricts').val(),
                     desa: $('#desa').val(),
                     service_statuses: $('#selectedServiceStatuses').val(),
-                    work_statuses: $('#selectedWorkStatuses').val()
+                    work_statuses: $('#selectedWorkStatuses').val(),
+                    user_district: "{{ auth()->user()->district }}",
                 };
 
                 $.ajax({
