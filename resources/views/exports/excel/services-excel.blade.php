@@ -6,7 +6,7 @@
 <table border="1">
     <thead>
         <tr>
-            <td colspan="16" rowspan="3" style="text-align: center; vertical-align: middle;">
+            <td colspan="7" rowspan="3" style="text-align: center; vertical-align: middle;">
                 @if ($startDate && $endDate)
                     <h3>Laporan Pelayanan Periode {{ $startDate ?? '-' }} s/d {{ $endDate ?? '-' }}</h3>
                 @else 
@@ -22,19 +22,19 @@
             <th nowrap class="text-center">TANGGAL PENGAJUAN</th>
             <th nowrap class="text-center">JENIS PELAYANAN</th>
             <th nowrap class="text-center">KATEGORI LAYANAN</th>
-            <th nowrap class="text-center">TIPE LAYANAN</th>
-            <th nowrap class="text-center">TANGGAL LAHIR</th>
-            <th nowrap class="text-center">ALAMAT</th>
-            <th nowrap class="text-center">RT</th>
+            <th nowrap class="text-center">TIPE LAYANAN</th> 
+            <th nowrap class="text-center">TANGGAL LAHIR</th> 
+            <th nowrap class="text-center">ALAMAT</th> 
+            <th nowrap class="text-center">RT</th> 
             <th nowrap class="text-center">RW</th>
             <th nowrap class="text-center">KECAMATAN</th>
             <th nowrap class="text-center">DESA/KELURAHAN</th>
-            <th nowrap class="text-center">NO HP</th>
-            <th nowrap class="text-center">ALASAN PENGAJUAN</th>
-            {{-- <th nowrap class="text-center">FOTO BUKTI KETERBATASAN</th>
+            <th nowrap class="text-center">NO HP</th> 
+            <th nowrap class="text-center">ALASAN PENGAJUAN</th> 
+            <th nowrap class="text-center">FOTO BUKTI KETERBATASAN</th>
             <th nowrap class="text-center">FOTO KTP</th>
-            <th nowrap class="text-center">FOTO KK</th> --}}
-            <th nowrap class="text-center">STATUS PENGERJAAN</th>
+            <th nowrap class="text-center">FOTO KK</th> 
+            <th nowrap class="text-center">STATUS PENGERJAAN</th> 
             <th nowrap class="text-center">STATUS PELAYANAN</th>
         </tr>
     </thead>
@@ -62,7 +62,7 @@
                     <td class="text-center">{{ $service->user->village->name }}</td>
                     <td class="text-center">{{ $service->user->phone_number }}</td>
                     <td class="text-center">{{ $service->reason }}</td>
-                    {{-- <td class="text-center">
+                    <td class="text-center">
                         @if ($evidence || $evidence_odgj)
                             <img src="{{ asset('storage/' . $evidence->image_path) }}" alt="Bukti Keterbatasan">
                             <br>
@@ -84,7 +84,7 @@
                         @else 
                             -
                         @endif
-                    </td> --}}
+                    </td>
                     <td class="text-center">
                         @switch($service->working_status)
                             @case('Not Yet')

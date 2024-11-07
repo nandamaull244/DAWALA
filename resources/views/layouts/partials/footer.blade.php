@@ -66,6 +66,18 @@
                 }
             ],
         });
+
+        $(".flatpickr-max-date").flatpickr({
+            dateFormat: "Y-m-d",
+            allowInput: true,
+            altInput: true,
+            altFormat: "d F Y",
+            locale: "id",
+            disableMobile: "true",
+            defaultDate: "today",
+            maxDate: "today"
+        });
+
         var birthDate = "";
         @if (auth()->user()->role == 'user') 
             var birthDate = "{{ auth()->user()->birth_date }}";

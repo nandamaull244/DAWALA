@@ -8,7 +8,6 @@ use App\Models\Service;
 use App\Models\Village;
 use App\Models\District;
 use App\Models\Instance;
-use Barryvdh\DomPDF\PDF;
 use App\Helpers\CRUDHelper;
 use App\Models\ServiceForm;
 use App\Models\ServiceList;
@@ -26,6 +25,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Exceptions\BadRequestHttpException;
 use Illuminate\Http\Exceptions\AccessDeniedHttpException;
 
+use PDF;
 
 class MainServiceController extends Controller 
 {
@@ -141,9 +141,15 @@ class MainServiceController extends Controller
 
     public function getData(Request $request)
     {
-        $query = Service::with(['user', 'user.district', 'user.village', 'user.instance', 'user.instance.instanceUsers'])
-                        ->orderByRaw("working_status = 'Late' DESC")
-                        ->orderBy('created_at', 'DESC');
+        $query = Service::with(['user', 'user.district', 'user.village', 'user.instance', 'user.instance.instanceUsers']);
+                        
+
+        if ($request->filled('page') && $request->page == 'report') {
+            $query->orderBy('created_at', 'DESC');
+        } else{
+            $query->orderByRaw("working_status = 'Late' DESC")
+                  ->orderBy('created_at', 'DESC');
+        }
 
         if (auth()->user()->role == 'instance') {
             $instance = Instance::where('user_id', auth()->user()->id)->first();
@@ -773,13 +779,11 @@ class MainServiceController extends Controller
             $query = $this->applyFilters($query, $request);
             $services = $query->get();
             
-            $startDate = $request->filled('start_date') ? 
-                date('d/m/Y', strtotime($request->start_date)) : null;
-            $endDate = $request->filled('end_date') ? 
-                date('d/m/Y', strtotime($request->end_date)) : null;
+            $startDate = $request->filled('start_date') ? getFlatpickrDate($request->start_date) : null;
+            $endDate = $request->filled('end_date') ? getFlatpickrDate($request->end_date) : null;
 
             // . str_replace(' ', '_', getFlatpickrDate(date('Y-m-d'))) .
-            $filename = 'Laporan_Pelayanan.xlsx';
+            $filename = 'Laporan_Pelayanan_' . date('d-m-Y', strtotime($request->start_date)) . '_' . date('d-m-Y', strtotime($request->end_date)) . '.xlsx';
 
             return Excel::download(new ServicesExport($services, $startDate, $endDate), $filename);
         } catch (\Exception $e) {
@@ -811,18 +815,14 @@ class MainServiceController extends Controller
             $query = $this->applyFilters($query, $request);
             $services = $query->get();
             
-            $startDate = $request->filled('start_date') ? 
-                date('d/m/Y', strtotime($request->start_date)) : null;
-            $endDate = $request->filled('end_date') ? 
-                date('d/m/Y', strtotime($request->end_date)) : null;
-
+            $startDate = $request->filled('start_date') ? getFlatpickrDate($request->start_date) : null;
+            $endDate = $request->filled('end_date') ? getFlatpickrDate($request->end_date) : null;
 
             $pdf = PDF::loadView('exports.pdf.services-pdf', [
                 'services' => $services,
                 'startDate' => $startDate,
                 'endDate' => $endDate
             ]);
-
 
             $pdf->setPaper($request->paper, $request->orientation);
             
@@ -834,7 +834,7 @@ class MainServiceController extends Controller
             ]);
 
             // $getDate = str_replace(' ', '_', getFlatpickrDate(date('Y-m-d')));
-            $filename = 'Laporan_Pelayanan_' . ucfirst($request->paper) . '.pdf';
+            $filename = 'Laporan_Pelayanan_' . ucfirst($request->paper) . '_' . date('d-m-Y', strtotime($request->start_date)) . '_' . date('d-m-Y', strtotime($request->end_date)) . '.pdf';
             
             return $pdf->download($filename);
         } catch (\Exception $e) {

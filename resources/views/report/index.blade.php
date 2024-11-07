@@ -208,7 +208,7 @@
             margin-top: -68px !important;
         }
     </style>
-    <style>
+    <style>`
         .dropdown-item {
             display: flex;
             align-items: center;
@@ -253,25 +253,25 @@
                     <div class="filter-container col-md-12 form-group">
                         <div class="filter-item col-md-2-5">
                             <label for="start_date">Tanggal Awal</label>
-                            <input type="text" id="start_date" name="start_date" class="form-control flatpickr-date" placeholder="Pilih tanggal awal">
+                            <input type="text" id="start_date" name="start_date" class="form-control flatpickr-max-date" placeholder="Pilih tanggal awal">
                         </div>
                     
                         <div class="filter-item col-md-2-5">
                             <label for="end_date">Tanggal Akhir</label>
-                            <input type="text" id="end_date" name="end_date" class="form-control flatpickr-date" placeholder="Pilih tanggal akhir">
+                            <input type="text" id="end_date" name="end_date" class="form-control flatpickr-min-date" placeholder="Pilih tanggal akhir">
                         </div>
                     
                         <div class="filter-item col-md-1">
                             <label>&nbsp;</label>
-                            <button class="btn btn-danger w-100" onclick="resetFilters()">Reset</button>
+                            <button type="button" class="btn btn-danger w-100" id="reset">Reset</button>
                         </div>
-                        <div class="filter-item col-md-1"></div>
                         @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
-                            
-                                <div class="dropdown">
+                            <div class="filter-item col-md-2">
+                                <label>&nbsp;</label>
                                 <button class="btn btn-success w-100 dropdown-toggle" type="button" id="reportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-file-earmark-text"></i> Laporan
                                 </button>
+
                                 <ul class="dropdown-menu" aria-labelledby="reportDropdown">
                                     <li>
                                         <a class="dropdown-item" href="#" id="downloadExcel" data-url="{{ route(auth()->user()->role . '.pelayanan.export.excel') }}">
@@ -287,11 +287,6 @@
                             </div>
                         @endif
                     </div>
-
-                       
-
-                    </div>
-                  
                 </div>
 
                 <div class="table-container">
@@ -308,17 +303,16 @@
                             <thead>
                                 <tr>
                                     <th class="text-center" nowrap>No</th>
-                                        <th class="text-center" nowrap>Tanggal Pengajuan</th>
-                                        <th class="text-center" nowrap>Jenis Pelayanan</th>
-                                        <th class="text-center" nowrap>Kategori Layanan</th>
-                                        <th class="text-center" nowrap>Tipe Layanan</th>
-                                        <th class="text-center" nowrap>Kecamatan</th>
-                                        <th class="text-center" nowrap>Desa/Kelurahan</th>
-                                        {{-- <th class="text-center" nowrap>Aksi</th> --}}
+                                    <th class="text-center" nowrap>Tanggal Pengajuan</th>
+                                    <th class="text-center" nowrap>Jenis Pelayanan</th>
+                                    <th class="text-center" nowrap>Kategori Layanan</th>
+                                    <th class="text-center" nowrap>Tipe Layanan</th>
+                                    <th class="text-center" nowrap>Kecamatan</th>
+                                    <th class="text-center" nowrap>Desa/Kelurahan</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Data akan diisi oleh DataTables -->
+
                             </tbody>
                         </table>
                     </div>
@@ -342,29 +336,18 @@
     <script src="https://npmcdn.com/flatpickr/dist/l10n/id.js"></script>
     <script>
         $(document).ready(function() {
-
-           
-
-            
-
             // Handle Excel download
             $('#downloadExcel').click(function(e) {
                 e.preventDefault();
+                const url = $(this).data('url')
                 
                 const filters = {
                     start_date: $('#start_date').val(),
                     end_date: $('#end_date').val(),
-                    time: $('#time').val(),
-                    categories: $('#selectedCategories').val(),
-                    types: $('#selectedTypes').val(),
-                    kecamatan: $('#selectedDistricts').val(),
-                    desa: $('#desa').val(),
-                    service_statuses: $('#selectedServiceStatuses').val(),
-                    work_statuses: $('#selectedWorkStatuses').val()
                 };
 
                 $.ajax({
-                    url: "{{ route('admin.pelayanan.export.excel') }}",
+                    url: url,
                     method: 'POST',
                     data: filters,
                     headers: {
@@ -398,23 +381,17 @@
             // Handle PDF download
             $('#downloadPDF').click(function(e) {
                 e.preventDefault();
-                
+                const url = $(this).data('url')
+
                 const filters = {
-                    start_date: $('#startDate').val(),
-                    end_date: $('#endDate').val(),
-                    time: $('#selectedTime').val(),
-                    categories: $('#selectedCategories').val(),
-                    types: $('#selectedTypes').val(),
-                    kecamatan: $('#selectedDistricts').val(),
-                    desa: $('#desa').val(),
-                    service_statuses: $('#selectedServiceStatuses').val(),
-                    work_statuses: $('#selectedWorkStatuses').val(),
+                    start_date: $('#start_date').val(),
+                    end_date: $('#end_date').val(),
                     paper: $('#paper').val(),
                     orientation: $('#orientation').val(),
                 };
 
                 $.ajax({
-                    url: "{{ route('admin.pelayanan.export.pdf') }}",
+                    url: url,
                     method: 'POST',
                     data: filters,
                     headers: {
@@ -457,13 +434,7 @@
                     data: function(d) {
                         d.start_date = $('#start_date').val();
                         d.end_date = $('#end_date').val();
-                        d.time = $('#time').val();
-                        d.categories = $('#selectedCategories').val();
-                        d.types = $('#selectedTypes').val();
-                        d.kecamatan = $('#selectedDistricts').val();
-                        d.desa = $('#desa').val();
-                        d.service_statuses = $('#selectedServiceStatuses').val();
-                        d.work_statuses = $('#selectedWorkStatuses').val();
+                        d.page = 'report';
                     }
                 },
                 columns: [
@@ -474,7 +445,6 @@
                     {data: 'service_type', name: 'service_type'},
                     {data: 'district', name: 'district'},
                     {data: 'village', name: 'village'},
-                    // {data: 'action', name: 'action', orderable: false, searchable: false, width: '25%'}
                 ],
                 order: [[1, 'asc']],
                 drawCallback: function(settings) {
@@ -490,39 +460,12 @@
             });
 
             $('#reset').on('click', function() {
-                $('#selectedTime, #selectedCategories, #selectedTypes, #selectedDistricts, #selectedServiceStatuses, #selectedWorkStatuses').val('');
-                
-                $('#kecamatan, #desa').val('').trigger('change');
-                
                 const today = "{{ date('Y-m-d') }}";
-                // $('#startDate')[0]._flatpickr.setDate(today);
-                // $('#endDate')[0]._flatpickr.setDate(today);
-
-                $('#startDate, #endDate').val('');
-                
-                $('.time-btn, .category-btn, .type-btn, .service-status-btn, .work-status-btn')
-                    .removeClass('btn-primary')
-                    .addClass('btn-outline-primary');
-                
-                table.ajax.reload();
-                $('#filterModal').modal('hide');
-            });
-            
-            $('.category-btn, .type-btn, .service-status-btn, .work-status-btn').on('click', function() {
+                $('#start_date, #end_date').val('');
                 table.ajax.reload();
             });
 
-            $(document).on('change', '#kecamatan', function() {
-                selectDistricts(this);
-                table.ajax.reload();
-            });
-
-            $(document).on('change', '.time-select', function() {
-                selectTime(this);
-                table.ajax.reload();
-            });
-
-            $(document).on('change', '#desa, #startDate, #endDate', function() {
+            $('#start_date, #end_date').change(function(){
                 table.ajax.reload();
             });
 
@@ -554,39 +497,5 @@
                 $('#desa').append('<option value="">Pilih Desa</option>');
             }
         };
-
-        $(document).ready(function() {
-            // Initialize Flatpickr for date inputs
-            flatpickr(".flatpickr-date", {
-                dateFormat: "Y-m-d",
-                allowInput: true,
-                altInput: true,
-                altFormat: "d F Y",
-                locale: "id"
-            });
-
-            // Time filter change handler
-            $('#time').on('change', function() {
-                table.ajax.reload();
-            });
-
-            // Date filter change handlers
-            $('#start_date, #end_date').on('change', function() {
-                table.ajax.reload();
-            });
-        });
-
-        // Reset filter function
-        function resetFilters() {
-            // Reset date inputs
-            $('#start_date')[0]._flatpickr.clear();
-            $('#end_date')[0]._flatpickr.clear();
-            
-            // Reset time select
-            $('#time').val('');
-            
-            // Reload the table
-            $('#serviceTable').DataTable().ajax.reload();
-        }
     </script>
 @endpush

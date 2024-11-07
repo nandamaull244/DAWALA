@@ -102,12 +102,12 @@
                     <div class="filter-container col-md-12 form-group">
                         <div class="filter-item col-md-2-5">
                             <label for="start_date">Tanggal Awal</label>
-                            <input type="text" id="start_date" name="start_date" class="form-control flatpickr-date" placeholder="Pilih tanggal awal">
+                            <input type="text" id="start_date" name="start_date" class="form-control flatpickr-max-date" placeholder="Pilih tanggal awal">
                         </div>
                     
                         <div class="filter-item col-md-2-5">
                             <label for="end_date">Tanggal Akhir</label>
-                            <input type="text" id="end_date" name="end_date" class="form-control flatpickr-date" placeholder="Pilih tanggal akhir">
+                            <input type="text" id="end_date" name="end_date" class="form-control flatpickr-min-date" placeholder="Pilih tanggal akhir">
                         </div>
                     
                         <div class="filter-item col-md-2">

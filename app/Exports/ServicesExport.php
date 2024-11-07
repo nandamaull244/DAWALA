@@ -40,7 +40,7 @@ class ServicesExport implements FromView, ShouldAutoSize, WithStyles
         }
 
         $lastRow = $sheet->getHighestRow();
-        $lastColumn = 'P'; 
+        $lastColumn = 'G'; 
 
         $borderStyle = [
             'borders' => [

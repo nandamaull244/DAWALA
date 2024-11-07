@@ -12,5 +12,9 @@ yarn-error.log
 /.idea
 /.vscode
 /public
+.env.pull
+.env.local
 .env
+/storage.env.example
 /storage
+/public

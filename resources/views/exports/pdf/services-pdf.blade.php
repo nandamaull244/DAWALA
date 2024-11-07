@@ -46,7 +46,7 @@
                 <th>JENIS PELAYANAN</th>
                 <th>KATEGORI LAYANAN</th>
                 <th>TIPE LAYANAN</th>
-                <th>TANGGAL LAHIR</th>
+                <th>TANGGAL LAHIR</th> 
                 <th>ALAMAT</th>
                 <th>RT</th>
                 <th>RW</th>
