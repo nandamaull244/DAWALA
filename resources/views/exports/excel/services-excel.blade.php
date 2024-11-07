@@ -6,7 +6,7 @@
 <table border="1">
     <thead>
         <tr>
-            <td colspan="7" rowspan="3" style="text-align: center; vertical-align: middle;">
+            <td colspan="16" rowspan="3" style="text-align: center; vertical-align: middle;">
                 @if ($startDate && $endDate)
                     <h3>Laporan Pelayanan Periode {{ $startDate ?? '-' }} s/d {{ $endDate ?? '-' }}</h3>
                 @else 
