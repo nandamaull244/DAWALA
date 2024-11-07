@@ -928,7 +928,7 @@
 
             $('.reset').on('click', function(e) {
                 e.preventDefault();
-                $('#selectedTime, #selectedCategories, #selectedTypes, #selectedDistricts, #selectedServiceStatuses, #selectedWorkStatuses').val('');
+                $('#selectedTime, #selectedCategories, #selectedTypes, #selectedDistricts, #selectedServices, #selectedServiceStatuses, #selectedWorkStatuses').val('');
                 
                 $('#kecamatan, #desa').val('').trigger('change');
                 
