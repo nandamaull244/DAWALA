@@ -364,7 +364,7 @@
                 };
 
                 $.ajax({
-                    url: "{{ route('admin.pelayanan.export.excel') }}",
+                    url: "{{ (auth()->user()->role == 'admin' || auth()->user()->role == 'operator') ? route(auth()->user()->role . '.pelayanan.export.excel') : '' }}",
                     method: 'POST',
                     data: filters,
                     headers: {
@@ -414,7 +414,7 @@
                 };
 
                 $.ajax({
-                    url: "{{ route('admin.pelayanan.export.pdf') }}",
+                    url: "{{ (auth()->user()->role == 'admin' || auth()->user()->role == 'operator') ? route(auth()->user()->role . '.pelayanan.export.pdf') : '' }}",
                     method: 'POST',
                     data: filters,
                     headers: {
