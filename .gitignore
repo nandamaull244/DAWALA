@@ -14,3 +14,7 @@ yarn-error.log
 /public
 .env.pull
 .env.local
+.env
+.env.example
+/storage
+/public
