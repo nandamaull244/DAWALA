@@ -13,12 +13,12 @@
                         </div> --}}
                         <div class="col-md-4 mb-2 mb-md-0">
                             <label for="startDate" class="form-label text-start"><b>Tanggal Awal</b></label>
-                            <input type="date" class="form-control flatpickr" id="startDate" readonly>
+                            <input type="date" class="form-control flatpickr-max-date" id="startDate" readonly>
                         </div>
 
                         <div class="col-md-4">
                             <label for="endDate" class="form-label text-start"><b>Tanggal Akhir</b></label>
-                            <input type="date" class="form-control flatpickr" id="endDate" readonly>
+                            <input type="date" class="form-control flatpickr-min-date" id="endDate" readonly>
                         </div>
 
                         <div class="col-md-4">
