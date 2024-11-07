@@ -481,7 +481,7 @@
                                 </button>
                             </div>
                             <div class="col-6">
-                                <button class="btn btn-danger w-100" id="reset">
+                                <button class="btn btn-danger w-100 reset" id="reset">
                                     <i class="bi bi-arrow-repeat"></i> Reset
                                 </button>
                             </div>
@@ -567,7 +567,7 @@
                             </button>
                         </div>
                         <div class="col-md-4">
-                            <button class="btn btn-danger w-100" id="reset">
+                            <button class="btn btn-danger w-100 reset" id="reset">
                                 <i class="bi bi-arrow-repeat"></i> Reset Filter
                             </button>
                         </div>
@@ -926,7 +926,8 @@
                 table.columns.adjust();
             });
 
-            $('#reset').on('click', function() {
+            $('.reset').on('click', function(e) {
+                e.preventDefault();
                 $('#selectedTime, #selectedCategories, #selectedTypes, #selectedDistricts, #selectedServiceStatuses, #selectedWorkStatuses').val('');
                 
                 $('#kecamatan, #desa').val('').trigger('change');
