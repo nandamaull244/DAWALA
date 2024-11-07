@@ -361,7 +361,8 @@
                     desa: $('#desa').val(),
                     service_statuses: $('#selectedServiceStatuses').val(),
                     work_statuses: $('#selectedWorkStatuses').val(),
-                    user_district: "{{ auth()->user()->district }}",
+                    user_district: "{{ auth()->user()->role == 'operator' ? auth()->user()->district : '' }}",
+                    user_role: "{{ auth()->user()->role }}"
                 };
 
                 $.ajax({
