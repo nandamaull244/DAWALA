@@ -21,7 +21,15 @@ class CRUDHelper
         $filename = Str::random(15) . strtotime(date('Y-m-d')) . '.' . $image->getClientOriginalExtension();
         $path = 'uploads/' . $folder . '/' . $filename;
 
-        Storage::makeDirectory('public/uploads/' . $folder);
+        $fullStoragePath = storage_path('app/public/uploads/' . $folder);
+
+        $folderPermission = 0777;
+        $filePermission = 0644;
+
+        if (!file_exists($fullStoragePath)) {
+            Storage::makeDirectory('public/uploads/' . $folder);
+            chmod($fullStoragePath, $folderPermission);
+        }
 
         if ($image->getSize() > 4 * 1024 * 1024) {
             $img = Image::make($image->getRealPath());
@@ -34,7 +42,10 @@ class CRUDHelper
             $img->save($fullPath, 80);
         } else {
             $image->storeAs('public/uploads/' . $folder, $filename);
+            $fullPath = storage_path('app/public/' . $path);
         }
+
+        chmod($fullPath, $filePermission);
 
         return [
             'image_type' => $imageType,
@@ -50,7 +61,7 @@ class CRUDHelper
         }
     }
 
-    public static function processAndStoreFormImage(UploadedFile $form, string $inputName, string $formType, string $userName, ?string $oldFormPath = null): array
+    public static function processAndStoreFormImage(UploadedFile $form, string $folder, string $formType, string $userName, ?string $oldFormPath = null): array
     {
         if ($oldFormPath && Storage::exists('public/' . $oldFormPath)) {
             Storage::delete('public/' . $oldFormPath);
@@ -61,13 +72,14 @@ class CRUDHelper
         $filename = Str::slug($formType . '_' . $author . '_' . getFlatpickrDate(date('Y-m-d')) . '-' . date('H:i:s') . rand(1, 10));
         $originalExtension = $form->getClientOriginalExtension();
 
-        Storage::makeDirectory('public/uploads/' . $inputName);
+        Storage::makeDirectory('public/uploads/' . $folder);
+        chmod(storage_path('app/public/uploads/' . $folder), 0777);
         
         $filename .= '.pdf';
-        $path = 'uploads/' . $inputName . '/' . $filename;
+        $path = 'uploads/' . $folder . '/' . $filename;
         
         if (strtolower($originalExtension) == 'pdf') {
-            Storage::putFileAs('public/uploads/' . $inputName, $form, $filename);
+            Storage::putFileAs('public/uploads/' . $folder, $form, $filename);
         } else {
             $img = Image::make($form->getRealPath());
             $img->resize(1200, null, function ($constraint) {
@@ -86,9 +98,17 @@ class CRUDHelper
             Storage::put('public/' . $path, $pdf->output());
         }
 
+        if(chmod(storage_path('app/public/' . $path), 0777)) {
+            $msg = 'chmod success';
+        } else {
+            $msg = 'chmod failed';
+        }
+        
+
         return [
             'form_type' => $formType,
             'form_path' => $path,
+            'msg' => $msg
         ];
     }
 }

@@ -104,6 +104,7 @@ class ArticleController extends Controller
                 $filename = Str::random(12) . strtotime(date('dmY')) . '.' . $image->getClientOriginalExtension();
 
                 Storage::makeDirectory('public/uploads/articles');
+                chmod(storage_path('app/public/uploads/articles'), 0777);
 
                 if ($image->getSize() > 5 * 1024 * 1024) { 
                     $img = Image::make($image->getRealPath());
@@ -204,6 +205,8 @@ class ArticleController extends Controller
                     $image->storeAs('public/uploads/articles', $filename);
                 }
 
+                chmod(storage_path('app/public/uploads/articles'), 0777);
+
                 $article->image_name = 'uploads/articles/' . $filename;
                 $article->original_name = $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension();
             }
@@ -231,6 +234,7 @@ class ArticleController extends Controller
             return redirectByRole(auth()->user()->role, 'article.index', ['error' => 'Data Artikel Tidak Ditemukan']);
         } else {
             $article->delete();
+            chmod(storage_path('app/public/uploads/articles'), 0777);
             return response()->json(['success' => 'Artikel "' . $article->title . '" berhasil dihapus!']);
         }
     }
