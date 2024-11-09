@@ -20,9 +20,9 @@
                         <div class="col-md-6 col-lg-6 col-xl-3">
                             <div class="footer-item">
                                 <h4 class="text-white mb-4">Menu</h4>
-                                <a href="#"><i class="fas fa-angle-right me-2"></i> Tentang DAWALA</a>
-                                <a href="#"><i class="fas fa-angle-right me-2"></i> Visi Misi</a>
-                                <a href="#"><i class="fas fa-angle-right me-2"></i> Tim DAWALA</a>
+                                <a href="{{ url('/tentang') }}"><i class="fas fa-angle-right me-2"></i> Tentang DAWALA</a>
+                                <a href="{{ url('/visi-misi') }}"><i class="fas fa-angle-right me-2"></i> Visi Misi</a>
+                                <a href="{{ url('/tim-dawala') }}"><i class="fas fa-angle-right me-2"></i> Tim DAWALA</a>
                                 <a href="{{ url('/layanan') }}"><i class="fas fa-angle-right me-2"></i> Layanan</a>
                                 <a href="{{ url('/FAQ') }}"><i class="fas fa-angle-right me-2"></i> FAQ's</a>
 
@@ -37,7 +37,7 @@
                                                 class="fa fa-phone-alt"></i></a>
                                         <a class="btn btn-md-square rounded-circle me-3" href="#"><i
                                                 class="fab fa-youtube"></i></a>
-                                        <a class="btn btn-md-square rounded-circle me-3" href="#"><i
+                                        <a class="btn btn-md-square rounded-circle me-3" href="https://www.instagram.com/dawalapeduli?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><i
                                                 class="fab fa-instagram"></i></a>
                                         <a class="btn btn-md-square rounded-circle me-0" href="#"><i
                                                 class="fab fa-tiktok"></i></a>
