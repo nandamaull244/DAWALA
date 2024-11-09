@@ -191,6 +191,11 @@
             width: 70px !important; 
             height: 35px !important;
             margin: -5px 5px 5px 5px !important;
+            z-index: -100;
+        }
+
+        input[type="search"] {
+            z-index: -100 !important;
         }
 
         #serviceTable_filter label {
@@ -208,23 +213,24 @@
             margin-top: -68px !important;
         }
     </style>
-    <style>`
+    <style>
         .dropdown-item {
             display: flex;
             align-items: center;
             gap: 8px;
             padding: 8px 16px;
+            z-index: 1000;
+            background-color: #fff;
         }
-        
+/*         
         .dropdown-item:hover {
-            background-color: #f8f9fa;
-        }
+            background-color: #fff;
+        } */
         
         .dropdown-item i {
             font-size: 1.1em;
         }
         
-        /* Warna ikon spesifik */
         .bi-file-earmark-excel {
             color: #217346; /* Warna Excel */
         }
@@ -261,10 +267,6 @@
                             <input type="text" id="end_date" name="end_date" class="form-control flatpickr-min-date" placeholder="Pilih tanggal akhir">
                         </div>
                     
-                        <div class="filter-item col-md-1">
-                            <label>&nbsp;</label>
-                            <button type="button" class="btn btn-danger w-100" id="reset">Reset</button>
-                        </div>
                         @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
                             <div class="filter-item col-md-2">
                                 <label>&nbsp;</label>
@@ -272,13 +274,13 @@
                                     <i class="bi bi-file-earmark-text"></i> Laporan
                                 </button>
 
-                                <ul class="dropdown-menu" aria-labelledby="reportDropdown">
-                                    <li>
+                                <ul class="dropdown-menu" aria-labelledby="reportDropdown" style="z-index: 1000; background-color: #fff;">
+                                    <li style="z-index: 1000; background-color: #fff;">
                                         <a class="dropdown-item" href="#" id="downloadExcel" data-url="{{ route(auth()->user()->role . '.pelayanan.export.excel') }}">
                                             <i class="bi bi-file-earmark-excel"></i> Download Excel
                                         </a>
                                     </li>
-                                    <li>
+                                    <li style="z-index: 1000; background-color: #928787 !important;">
                                         <a class="dropdown-item" href="#" id="btnDownloadPDF" data-bs-toggle="modal" data-bs-target="#selectPaperModal"> 
                                             <i class="bi bi-file-earmark-pdf"></i> Download PDF
                                         </a>
@@ -286,6 +288,10 @@
                                 </ul>
                             </div>
                         @endif
+                        <div class="filter-item col-md-1">
+                            <label>&nbsp;</label>
+                            <button type="button" class="btn btn-danger w-100" id="reset">Reset</button>
+                        </div>
                     </div>
                 </div>
 
