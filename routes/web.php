@@ -35,6 +35,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'checkRole:adm
     Route::patch('/service/working-status/{id}', [MainServiceController::class, 'workingStatus'])->name('pelayanan.working-status');
     Route::post('/service/export/excel', [MainServiceController::class, 'exportExcel'])->name('pelayanan.export.excel');
     Route::post('/service/export/pdf', [MainServiceController::class, 'exportPDF'])->name('pelayanan.export.pdf');
+    Route::patch('/service/update-visit-schedule/{id}', [MainServiceController::class, 'updateVisitSchedule'])->name('pelayanan.update-visit-schedule');
 
     // ARTICLES -->
     Route::resource('/article', ArticleController::class);
@@ -73,6 +74,7 @@ Route::group(['prefix' => 'operator', 'middleware' => ['auth:admin', 'checkRole:
     Route::get('/service/data', [MainServiceController::class, 'getData'])->name('pelayanan.data');
     Route::get('/service/cekNIK', [MainServiceController::class, 'cekNIK'])->name('pelayanan.cekNIK');
     Route::patch('/service/working-status/{id}', [MainServiceController::class, 'workingStatus'])->name('pelayanan.working-status');
+    Route::patch('/service/update-visit-schedule/{id}', [MainServiceController::class, 'updateVisitSchedule'])->name('pelayanan.update-visit-schedule');
 
     Route::post('/service/export/excel', [MainServiceController::class, 'exportExcel'])->name('pelayanan.export.excel');
     Route::post('/service/export/pdf', [MainServiceController::class, 'exportPDF'])->name('pelayanan.export.pdf');

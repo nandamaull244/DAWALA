@@ -694,6 +694,17 @@ class MainServiceController extends Controller
         }
     }
 
+    public function updateVisitSchedule(Request $request, $hashedId) {
+        $service = Service::whereHash($hashedId)->firstOrFail();
+        if($service) {
+            $service->update(['visit_schedule' => $request->visit_schedule]);
+            $service->update();
+            return response()->json(['success' => 'Jadwal kunjungan berhasil diperbarui!']);
+        } else {
+            return response()->json(['success' => 'Jadwal kunjungan gagal diperbarui']);
+        }
+    }
+
     public function workingStatus(Request $request, $hashedId) 
     {
         $service = Service::whereHash($hashedId)->firstOrFail();

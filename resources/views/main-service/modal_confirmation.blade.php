@@ -323,6 +323,29 @@
                         sendServiceRequestAgain(id);
                     });
                 @endif
+
+                @if(auth()->user()->role == 'admin' || auth()->user()->role == 'operator') 
+                    $('#visit_schedule').change(function() {
+                        const url = `{{ route(auth()->user()->role . '.pelayanan.update-visit-schedule', ':id') }}`.replace(':id', id);
+                        let val = $(this).val();
+                        $.ajax({
+                            url: url,
+                            type: 'PATCH',
+                            data: {
+                                id: id,
+                                visit_schedule: val,
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                toastr.success(response.success, 'Berhasil');
+                                table.ajax.reload();
+                            },
+                            error: function(xhr, status, error) {
+                                toastr.error("Gagal memperbarui jadwal kunjungan", 'Gagal');
+                            }
+                        })
+                    })
+                @endif
             });
 
             @if(auth()->user()->role == 'user' || auth()->user()->role == 'instance')
