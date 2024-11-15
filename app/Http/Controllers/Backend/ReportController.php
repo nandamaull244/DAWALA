@@ -22,17 +22,17 @@ class ReportController extends Controller
         ->whereNotIn('service_status', ['Rejected', 'Completed'])
         ->get();
 
-    foreach ($services as $service) {
-        $lateStatus = getLateWorkingStatus($service->created_at);
-        if (isset($lateStatus['true'])) {
-            $service->update(['working_status' => 'Late']);
+        foreach ($services as $service) {
+            $lateStatus = getLateWorkingStatus($service->created_at);
+            if (isset($lateStatus['true'])) {
+                $service->update(['working_status' => 'Late']);
+            }
         }
-    }
 
-    $districts = District::orderBy('name', 'asc')->get();   
-    $villages = Village::orderBy('name', 'asc')->get();
+        $districts = District::orderBy('name', 'asc')->get();   
+        $villages = Village::orderBy('name', 'asc')->get();
 
-    return view('report.index', compact('services', 'districts', 'villages'));
+         return view('report.index', compact('services', 'districts', 'villages'));
     }
 
     /**

@@ -880,7 +880,7 @@
                     }
                 },
                 columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, className: 'text-center', width: '5%'},
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, sortable: false, className: 'text-center', width: '5%'},
                     {data: 'name', name: 'name'},
                     {data: 'tanggal', name: 'tanggal'},
                     {data: 'service', name: 'service'},
@@ -902,7 +902,6 @@
                     {data: 'service_status', name: 'service_status', orderable: false, searchable: false},
                     {data: 'action', name: 'action', orderable: false, searchable: false, width: '25%'},
                 ],
-                order: [[1, 'asc']],
                 drawCallback: function(settings) {
                     $('#search-container').html($('.dataTables_filter').detach());
                     $('#pagination-container').html($('.dataTables_paginate').detach());
@@ -931,13 +930,31 @@
                 $('#selectedTime, #selectedCategories, #selectedTypes, #selectedDistricts, #selectedServices, #selectedServiceStatuses, #selectedWorkStatuses').val('');
                 
                 $('#kecamatan, #desa').val('').trigger('change');
-                
-                const today = "{{ date('Y-m-d') }}";
-                // $('#startDate')[0]._flatpickr.setDate(today);
-                // $('#endDate')[0]._flatpickr.setDate(today);
-
                 $('#startDate, #endDate').val('');
-                
+         
+                var today = new Date();
+                var firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); 
+
+                $('#startDate').flatpickr({
+                    dateFormat: "Y-m-d",
+                    allowInput: true,
+                    altInput: true,
+                    altFormat: "d F Y",
+                    locale: "id",
+                    disableMobile: true,
+                    defaultDate: firstDayOfMonth  
+                });
+
+                $('#endDate').flatpickr({
+                    dateFormat: "Y-m-d",
+                    allowInput: true,
+                    altInput: true,
+                    altFormat: "d F Y",
+                    locale: "id",
+                    disableMobile: true,
+                    defaultDate: today 
+                });
+
                 $('.time-btn, .category-btn, .type-btn, .service-status-btn, .work-status-btn')
                     .removeClass('btn-primary')
                     .addClass('btn-outline-primary');
