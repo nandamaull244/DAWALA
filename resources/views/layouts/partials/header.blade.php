@@ -23,7 +23,7 @@
 <link rel="stylesheet" href="/backend/assets/css/bootstrap.css">
 <link rel="stylesheet" href="/backend/assets/vendors/sweetalert2/sweetalert2.min.css">
 <!-- fevicon -->
-<link rel="icon" href="{{ asset('assets') }}/img/logo.png" type="image/gif" />
+<link rel="icon" href="{{ asset('assets') }}/img/sugih.png" type="image/gif" />
 
 <link rel="stylesheet" href="/backend/assets/vendors/iconly/bold.css">
 
