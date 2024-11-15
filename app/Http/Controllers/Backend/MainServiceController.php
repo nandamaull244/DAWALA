@@ -398,7 +398,6 @@ class MainServiceController extends Controller
             $userData = [
                 'nik' => $request->nik,
                 'full_name' => $request->full_name,
-                'password' => bcrypt($request->full_name . '12345'),
                 'phone_number' => $request->phone_number,
                 'birth_date' => $request->birth_date,
                 'address' => $request->address,
@@ -429,6 +428,7 @@ class MainServiceController extends Controller
                     ]);
                 }
             } else {
+                $userData['password'] = bcrypt($request->full_name . '12345');
                 $user = User::create($userData);
             }
             
