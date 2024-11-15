@@ -142,13 +142,8 @@ class MainServiceController extends Controller
     {
         $query = Service::with(['user', 'user.district', 'user.village', 'user.instance', 'user.instance.instanceUsers']);
 
-        if(!$request->filled('time')) {
-            if ($request->filled('page') && $request->page == 'report') {
-                $query->orderBy('created_at', 'ASC');
-            } else{
-                $query->orderByRaw("working_status = 'Late' ASC")
-                      ->orderBy('created_at', 'ASC');
-            }
+        if ($request->filled('page') && $request->page == 'report') {
+            $query->orderBy('created_at', 'ASC');
         }
 
         if (auth()->user()->role == 'instance') {
@@ -166,6 +161,14 @@ class MainServiceController extends Controller
         if (auth()->user()->role == 'user') {
             $query->where('user_id', auth()->user()->id);
         }
+
+        $query->orderByRaw("
+            CASE 
+                WHEN working_status = 'Late' THEN 1
+                WHEN working_status = 'Process' THEN 2
+                ELSE 3
+            END
+        ");
 
         if ($request->filled('search') && $request->search['value']) {
             $searchValue = $request->search['value'];
@@ -767,7 +770,13 @@ class MainServiceController extends Controller
     {
         try {
             $query = Service::with(['user', 'user.district', 'user.village', 'service_image'])
-                ->orderByRaw("working_status = 'Late' ASC");
+                    ->orderByRaw("
+                        CASE 
+                            WHEN working_status = 'Late' THEN 1
+                            WHEN working_status = 'Process' THEN 2
+                            ELSE 3
+                        END
+                    ");
 
             if (auth()->user()->role == 'operator') {
                 $query->whereHas('user', function($q) {
@@ -805,7 +814,13 @@ class MainServiceController extends Controller
     {
         try {
             $query = Service::with(['user', 'user.district', 'user.village', 'service_image', 'service_list'])
-                ->orderByRaw("working_status = 'Late' ASC");
+                ->orderByRaw("
+                    CASE 
+                        WHEN working_status = 'Late' THEN 1
+                        WHEN working_status = 'Process' THEN 2
+                        ELSE 3
+                    END
+                ");
             
             if (auth()->user()->role == 'operator') {
                 $query->whereHas('user', function($q) {

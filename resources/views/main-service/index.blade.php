@@ -921,6 +921,20 @@
                 }
             });
 
+            $('#expand').click(function() {
+                if($(this).hasClass('btn-outline-primary')) {
+                    for(let i = 8; i < 21; i ++) {
+                        table.column(i).visible(true)
+                    }
+                    $(this).removeClass('btn-outline-primary').addClass('btn-primary').text('Normal')
+                } else {
+                    for(let i = 8; i < 21; i ++) {
+                        table.column(i).visible(false)
+                    }
+                    $(this).removeClass('btn-primary').addClass('btn-outline-primary').text('Ekspansi')
+                }
+            })
+
             $(window).resize(function() {
                 table.columns.adjust();
             });
