@@ -30,6 +30,8 @@
 
 <script>
     $(document).ready(function() {
+        var today = new Date();
+
         flatpickr.localize(flatpickr.l10ns.id);
         $(".flatpickr").flatpickr({
             dateFormat: "Y-m-d",
@@ -39,6 +41,16 @@
             locale: "id",
             disableMobile: "true",
             defaultDate: ""
+        });
+
+        $(".flatpickr-first-day-in-month").flatpickr({
+            dateFormat: "Y-m-d",
+            allowInput: true,
+            altInput: true,
+            altFormat: "d F Y",
+            locale: "id",
+            disableMobile: "true",
+            defaultDate: today.setDate(1)
         });
 
         $(".flatpickr-date").flatpickr({
@@ -97,7 +109,6 @@
             },
         });
 
-        const today = new Date();
         const date17YearsAgo = new Date(today.setFullYear(today.getFullYear() - 17));
         $(".flatpickr-birth-date-check").flatpickr({
             dateFormat: "Y-m-d",

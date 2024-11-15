@@ -31,9 +31,6 @@ class ArticleController extends Controller
         $start_date = Carbon::parse($request->start_date)->toDateString();
         $end_date = Carbon::parse($request->end_date)->toDateString();
         
-        $query->whereDate('created_at', '>=', $start_date)
-              ->whereDate('created_at', '<=', $end_date);
-
         if ($request->has('time')) {
             if ($request->time == 'Terbaru') {
                 $query->orderBy('created_at', 'desc');
@@ -41,6 +38,9 @@ class ArticleController extends Controller
                 $query->orderBy('created_at', 'asc');
             }
         }
+        
+        $query->whereDate('created_at', '>=', $start_date)
+              ->whereDate('created_at', '<=', $end_date);
 
         return DataTables::of($query->get())
             ->addIndexColumn()
