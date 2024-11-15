@@ -186,7 +186,6 @@
 
             window.resetFilters = function() {
                 $('#start_date, #end_date').val('');
-
                 $('#time').val('').trigger('change');
 
                 var today = new Date();

@@ -80,8 +80,7 @@ class MainServiceController extends Controller
         }
 
         if ($request->filled('time')) {
-            $order = $request->time;
-            $query->orderBy('id', $order);
+            $query->orderBy('id', $request->time);
         }        
 
         if ($request->filled('services')) {
@@ -142,13 +141,14 @@ class MainServiceController extends Controller
     public function getData(Request $request)
     {
         $query = Service::with(['user', 'user.district', 'user.village', 'user.instance', 'user.instance.instanceUsers']);
-                        
 
-        if ($request->filled('page') && $request->page == 'report') {
-            $query->orderBy('created_at', 'DESC');
-        } else{
-            $query->orderByRaw("working_status = 'Late' DESC")
-                  ->orderBy('created_at', 'DESC');
+        if(!$request->filled('time')) {
+            if ($request->filled('page') && $request->page == 'report') {
+                $query->orderBy('created_at', 'ASC');
+            } else{
+                $query->orderByRaw("working_status = 'Late' ASC")
+                      ->orderBy('created_at', 'ASC');
+            }
         }
 
         if (auth()->user()->role == 'instance') {
@@ -407,8 +407,6 @@ class MainServiceController extends Controller
                 'registration_status' => 'Completed',
                 'role' => 'user'
             ];
-
-
 
             if(auth()->user()->role == 'user'){
                 $user = User::find(auth()->user()->id);
@@ -760,10 +758,9 @@ class MainServiceController extends Controller
         try {
             $query = Service::with(['user', 'user.district', 'user.village', 'service_image'])
                 ->orderByRaw("CASE 
-                    WHEN working_status = 'Late' THEN created_at 
+                    WHEN working_status = 'Late' 
                     ELSE NULL 
-                    END ASC") 
-                ->orderBy('created_at', 'desc'); 
+                    END ASC");
 
             if (auth()->user()->role == 'operator') {
                 $query->whereHas('user', function($q) {
@@ -802,10 +799,9 @@ class MainServiceController extends Controller
         try {
             $query = Service::with(['user', 'user.district', 'user.village', 'service_image', 'service_list'])
                 ->orderByRaw("CASE 
-                    WHEN working_status = 'Late' THEN created_at 
+                    WHEN working_status = 'Late'
                     ELSE NULL 
-                    END ASC") 
-                ->orderBy('created_at', 'desc'); 
+                    END ASC");
             
             if (auth()->user()->role == 'operator') {
                 $query->whereHas('user', function($q) {
