@@ -752,15 +752,11 @@ class MainServiceController extends Controller
         }
     }
 
-
     public function exportExcel(Request $request)
     {
         try {
             $query = Service::with(['user', 'user.district', 'user.village', 'service_image'])
-                ->orderByRaw("CASE 
-                    WHEN working_status = 'Late' 
-                    ELSE NULL 
-                    END ASC");
+                ->orderByRaw("working_status = 'Late' ASC");
 
             if (auth()->user()->role == 'operator') {
                 $query->whereHas('user', function($q) {
@@ -798,10 +794,7 @@ class MainServiceController extends Controller
     {
         try {
             $query = Service::with(['user', 'user.district', 'user.village', 'service_image', 'service_list'])
-                ->orderByRaw("CASE 
-                    WHEN working_status = 'Late'
-                    ELSE NULL 
-                    END ASC");
+                ->orderByRaw("working_status = 'Late' ASC");
             
             if (auth()->user()->role == 'operator') {
                 $query->whereHas('user', function($q) {
@@ -842,7 +835,7 @@ class MainServiceController extends Controller
             ]);
 
             // $getDate = str_replace(' ', '_', getFlatpickrDate(date('Y-m-d')));
-            $filename = 'Laporan_Pelayanan_' . ucfirst($request->paper) . '_' . date('d-m-Y', strtotime($request->start_date)) . '_' . date('d-m-Y', strtotime($request->end_date)) . '.pdf';
+            $filename = 'Laporan_Pelayanan_' . ucfirst($request->paper) . '_' . ucfirst($request->orientation) . '_' .  date('d-m-Y', strtotime($request->start_date)) . '_' . date('d-m-Y', strtotime($request->end_date)) . '.pdf';
             
             return $pdf->download($filename);
         } catch (\Exception $e) {
