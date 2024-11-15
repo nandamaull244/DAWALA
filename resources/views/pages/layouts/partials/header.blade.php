@@ -12,7 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:slnt,wght@-10..0,100..900&display=swap"
         rel="stylesheet">
     <!-- fevicon -->
-    <link rel="icon" href="{{ asset('assets') }}/img/sugih.png" type="image/gif" />
+    <link rel="icon" href="{{ asset('assets') }}/img/24.png" type="image/gif" />
     <!-- Icon Font Stylesheet -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">

@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="/backend/assets/vendors/bootstrap-icons/bootstrap-icons.css">
         <link rel="stylesheet" href="/backend/assets/css/app.css">
         <link rel="stylesheet" href="/backend/assets/css/pages/auth.css">
-        <link rel="icon" href="{{ asset('assets') }}/img/sugih.png" type="image/x-icon">
+        <link rel="icon" href="{{ asset('assets') }}/img/24.png" type="image/x-icon">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
         <style>
             #toast-container .toast {
