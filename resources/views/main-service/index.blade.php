@@ -229,15 +229,11 @@
             height: 35px !important;
             margin: -5px 5px 5px 5px !important;
         }
-        
+
         #serviceTable_length label {
             display: flex !important;
             margin: 0.75rem 0.75rem 0.2rem 0.75rem !important;
             width: 25% !important;
-        }
-
-        #serviceTable_filter {
-            margin-top: 2.2rem !important;
         }
 
         #serviceTable_filter select {
@@ -660,10 +656,6 @@
                         <div id="search-container"></div>
                     </div>
 
-                    <div class="flex-row-reverse bd-highlight d-flex" id="expand_container" style="margin: -10px 0;">
-                        <a class="btn btn-outline-primary" id="expand" style="cursor: pointer">Ekspansi</a>
-                    </div>
-
                     <!-- Table -->
                     <div class="table-responsive">
                         <table id="serviceTable" class="table table-bordered table-hover">
@@ -896,19 +888,19 @@
                     {data: 'service_type', name: 'service_type'},
                     {data: 'birth_date', name: 'birth_date'},
                     {data: 'address', name: 'address'},
-                    {data: 'rt', name: 'rt', visible: false},
-                    {data: 'rw', name: 'rw', visible: false},
-                    {data: 'district', name: 'district', visible: false},
-                    {data: 'village', name: 'village', visible: false},
-                    {data: 'phone_number', name: 'phone_number', visible: false},
-                    {data: 'reason', name: 'reason', visible: false},
-                    {data: 'evidence_of_disability_image', name: 'evidence_of_disability_image', orderable: false, searchable: false, visible: false},
-                    {data: 'ktp_image', name: 'ktp_image', orderable: false, searchable: false, visible: false},
-                    {data: 'kk_image', name: 'kk_image', orderable: false, searchable: false, visible: false},
-                    {data: 'formulir', name: 'formulir', orderable: false, searchable: false, visible: false},
-                    {data: 'working_status', name: 'working_status', orderable: false, searchable: false, visible: false},
-                    {data: 'service_status', name: 'service_status', orderable: false, searchable: false, visible: false},
-                    {data: 'action', name: 'action', orderable: false, searchable: false, visible: false, width: '25%'},
+                    {data: 'rt', name: 'rt'},
+                    {data: 'rw', name: 'rw'},
+                    {data: 'district', name: 'district'},
+                    {data: 'village', name: 'village'},
+                    {data: 'phone_number', name: 'phone_number'},
+                    {data: 'reason', name: 'reason'},
+                    {data: 'evidence_of_disability_image', name: 'evidence_of_disability_image', orderable: false, searchable: false},
+                    {data: 'ktp_image', name: 'ktp_image', orderable: false, searchable: false},
+                    {data: 'kk_image', name: 'kk_image', orderable: false, searchable: false},
+                    {data: 'formulir', name: 'formulir', orderable: false, searchable: false},
+                    {data: 'working_status', name: 'working_status', orderable: false, searchable: false},
+                    {data: 'service_status', name: 'service_status', orderable: false, searchable: false},
+                    {data: 'action', name: 'action', orderable: false, searchable: false, width: '25%'},
                 ],
                 drawCallback: function(settings) {
                     $('#search-container').html($('.dataTables_filter').detach());
@@ -928,20 +920,6 @@
                     // }
                 }
             });
-
-            $('#expand').click(function() {
-                if($(this).hasClass('btn-outline-primary')) {
-                    for(let i = 8; i < 20; i ++) {
-                        table.column(i).visible(true)
-                    }
-                    $(this).removeClass('btn-outline-primary').addClass('btn-primary').text('Normal')
-                } else {
-                    for(let i = 8; i < 20; i ++) {
-                        table.column(i).visible(false)
-                    }
-                    $(this).removeClass('btn-primary').addClass('btn-outline-primary').text('Ekspansi')
-                }
-            })
 
             $(window).resize(function() {
                 table.columns.adjust();
