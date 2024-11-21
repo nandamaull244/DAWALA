@@ -217,7 +217,7 @@
                                     @if($article->image_name)
                                         <img src="{{ asset('storage/' . $article->image_name) }}" class="img-fluid rounded-top" alt="{{ $article->title }}" style="width: 100%; height: 350px; object-fit: cover;">
                                     @else
-                                        <img src="{{ asset('assets/img/logo.png') }}" class="img-fluid rounded-top" alt="No Image" style="width: 100%; height: 350px; object-fit: cover;">
+                                        <img src="{{ asset('assets/img/logo.png') }}" class="img-fluid rounded-top" alt="No Image" style="width: 216%; height: 150px; object-fit: cover;">
                                     @endif
                                 </div>
                                 <div class="dokumentasi-content p-4">

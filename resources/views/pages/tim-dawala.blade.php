@@ -17,7 +17,7 @@
             <div class="owl-carousel team-carousel">
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/team-1.jpg" class="img-fluid rounded-top w-100" alt="">
+                        <img src="{{ asset('assets') }}/img/yudi.jpeg" class="img-fluid rounded-top w-100" alt="">
                         <div class="team-icon">
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-twitter"></i></a>
@@ -32,7 +32,7 @@
                 </div>
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/team-1.jpg" class="img-fluid rounded-top w-100" alt="">
+                        <img src="{{ asset('assets') }}/img/arie.jpeg" class="img-fluid rounded-top w-100" alt="">
                         <div class="team-icon">
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-twitter"></i></a>
@@ -47,7 +47,7 @@
                 </div>
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/team-2.jpg" class="img-fluid rounded-top w-100" alt="">
+                        <img src="{{ asset('assets') }}/img/agus.jpeg" class="img-fluid rounded-top w-100" alt="">
                         <div class="team-icon">
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-twitter"></i></a>
@@ -62,7 +62,7 @@
                 </div>
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/team-3.jpg" class="img-fluid rounded-top w-100" alt="">
+                        <img src="{{ asset('assets') }}/img/sandika.jpeg" class="img-fluid rounded-top w-100" alt="">
                         <div class="team-icon">
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-twitter"></i></a>
@@ -77,7 +77,7 @@
                 </div>
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/team-4.jpg" class="img-fluid rounded-top w-100" alt="">
+                        <img src="{{ asset('assets') }}/img/della.jpeg" class="img-fluid rounded-top w-100" alt="">
                         <div class="team-icon">
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-twitter"></i></a>
@@ -87,6 +87,21 @@
                     </div>
                     <div class="team-title p-4">
                         <h4 class="mb-0">Della Riyagung</h4>
+                        <p class="mb-0">Bendahara</p>
+                    </div>
+                </div>
+                <div class="team-item">
+                    <div class="team-img">
+                        <img src="{{ asset('assets') }}/img/iwan.jpeg" class="img-fluid rounded-top w-100" alt="">
+                        <div class="team-icon">
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href=""><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <div class="team-title p-4">
+                        <h4 class="mb-0">Iwan Gunawan</h4>
                         <p class="mb-0">Bendahara</p>
                     </div>
                 </div>
