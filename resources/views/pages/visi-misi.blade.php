@@ -86,119 +86,99 @@
                 kepedulian dan empati.
             </p>
         </div>
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.2s">
+        <div class="row g-6">
+            <div class="owl-carousel team-carousel">
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/team-1.jpg" class="img-fluid rounded-top w-100"
-                            alt="">
+                        <img src="{{ asset('assets') }}/img/yudi.jpeg" class="img-fluid rounded-top w-100" style="height: 450px;" alt="">
                         <div class="team-icon">
-                           
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="https://www.youtube.com/@dawalapeduli"><i
-                                    class="fab fa-youtube"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="https://www.instagram.com/dawalapeduli?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><i
-                                    class="fab fa-instagram"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href="https://wa.me/6281387295920"><i
-                                    class="fa fa-phone-alt"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href=""><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                     <div class="team-title p-4">
-                        <h4 class="mb-0">Yudi Nugraha</h4>
-                        <p class="mb-0">Kepala Bagian DISDUKCAPIL Cianjur</p>
+                        <h4 class="mb-0">Yudi Nugraha,S.AP</h4>
+                        <p class="mb-0">Kepala Bidang Pelayanan Pendaftaran Penduduk</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.2s">
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/team-1.jpg" class="img-fluid rounded-top w-100"
-                            alt="">
+                        <img src="{{ asset('assets') }}/img/arie.jpeg" class="img-fluid rounded-top w-100" style="height: 450px;" alt="">
                         <div class="team-icon">
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i
-                                    class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i
-                                    class="fab fa-twitter"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i
-                                    class="fab fa-linkedin-in"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href=""><i
-                                    class="fab fa-instagram"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href=""><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                     <div class="team-title p-4">
-                        <h4 class="mb-0">Ari Julian Umbara</h4>
-                        <p class="mb-0">IT support</p>
+                        <h4 class="mb-0">Arie Julian Umbara</h4>
+                        <p class="mb-0">Tim Dawala</p>
+                        <br>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.4s">
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/team-2.jpg" class="img-fluid rounded-top w-100"
-                            alt="">
+                        <img src="{{ asset('assets') }}/img/agus.jpeg" class="img-fluid rounded-top w-100" style="height: 450px;" alt="">
                         <div class="team-icon">
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i
-                                    class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i
-                                    class="fab fa-twitter"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i
-                                    class="fab fa-linkedin-in"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href=""><i
-                                    class="fab fa-instagram"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href=""><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                     <div class="team-title p-4">
                         <h4 class="mb-0">Agus Merdekawanto</h4>
-                        <p class="mb-0">Sekertaris</p>
+                        <p class="mb-0">Tim Dawala</p>
+                        <br>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.6s">
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/team-3.jpg" class="img-fluid rounded-top w-100"
-                            alt="">
+                        <img src="{{ asset('assets') }}/img/sandika.jpeg" class="img-fluid rounded-top w-100" style="height: 450px;" alt="">
                         <div class="team-icon">
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i
-                                    class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i
-                                    class="fab fa-twitter"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i
-                                    class="fab fa-linkedin-in"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href=""><i
-                                    class="fab fa-instagram"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href=""><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                     <div class="team-title p-4">
                         <h4 class="mb-0">Sandika</h4>
-                        <p class="mb-0">Humas</p>
+                        <p class="mb-0">Tim Dawala</p>
+                        <br>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.8s">
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/team-4.jpg" class="img-fluid rounded-top w-100"
-                            alt="">
+                        <img src="{{ asset('assets') }}/img/della.jpeg" class="img-fluid rounded-top w-100" style="height: 450px;" alt="">
                         <div class="team-icon">
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i
-                                    class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i
-                                    class="fab fa-twitter"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i
-                                    class="fab fa-linkedin-in"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href=""><i
-                                    class="fab fa-instagram"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href=""><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                     <div class="team-title p-4">
                         <h4 class="mb-0">Della Riyagung</h4>
-                        <p class="mb-0">Bendahara</p>
+                        <p class="mb-0">Tim Dawala</p>
+                        <br>
+                    </div>
+                </div>
+                <div class="team-item">
+                    <div class="team-img">
+                        <img src="{{ asset('assets') }}/img/iwan.jpeg" class="img-fluid rounded-top w-100" style="height: 450px;" alt="">
+                        <div class="team-icon">
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href=""><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <div class="team-title p-4">
+                        <h4 class="mb-0">Iwan Gunawan,S.H</h4>
+                        <p class="mb-0">Analis Kebijakan</p>
+                        <br>
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
 </div>
 <!-- Team End -->

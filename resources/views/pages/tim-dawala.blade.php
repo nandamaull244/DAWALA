@@ -17,7 +17,7 @@
             <div class="owl-carousel team-carousel">
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/yudi.jpeg" class="img-fluid rounded-top w-100" style="height: 250px;" alt="">
+                        <img src="{{ asset('assets') }}/img/yudi.jpeg" class="img-fluid rounded-top w-100" style="height: 450px;" alt="">
                         <div class="team-icon">
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-linkedin-in"></i></a>
@@ -31,7 +31,7 @@
                 </div>
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/arie.jpeg" class="img-fluid rounded-top w-100" style="height: 250px;" alt="">
+                        <img src="{{ asset('assets') }}/img/arie.jpeg" class="img-fluid rounded-top w-100" style="height: 450px;" alt="">
                         <div class="team-icon">
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-linkedin-in"></i></a>
@@ -41,11 +41,12 @@
                     <div class="team-title p-4">
                         <h4 class="mb-0">Arie Julian Umbara</h4>
                         <p class="mb-0">Tim Dawala</p>
+                        <br>
                     </div>
                 </div>
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/agus.jpeg" class="img-fluid rounded-top w-100" style="height: 250px;" alt="">
+                        <img src="{{ asset('assets') }}/img/agus.jpeg" class="img-fluid rounded-top w-100" style="height: 450px;" alt="">
                         <div class="team-icon">
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-linkedin-in"></i></a>
@@ -55,11 +56,12 @@
                     <div class="team-title p-4">
                         <h4 class="mb-0">Agus Merdekawanto</h4>
                         <p class="mb-0">Tim Dawala</p>
+                        <br>
                     </div>
                 </div>
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/sandika.jpeg" class="img-fluid rounded-top w-100" style="height: 250px;" alt="">
+                        <img src="{{ asset('assets') }}/img/sandika.jpeg" class="img-fluid rounded-top w-100" style="height: 450px;" alt="">
                         <div class="team-icon">
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-linkedin-in"></i></a>
@@ -69,11 +71,12 @@
                     <div class="team-title p-4">
                         <h4 class="mb-0">Sandika</h4>
                         <p class="mb-0">Tim Dawala</p>
+                        <br>
                     </div>
                 </div>
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/della.jpeg" class="img-fluid rounded-top w-100" style="height: 250px;" alt="">
+                        <img src="{{ asset('assets') }}/img/della.jpeg" class="img-fluid rounded-top w-100" style="height: 450px;" alt="">
                         <div class="team-icon">
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-linkedin-in"></i></a>
@@ -83,11 +86,12 @@
                     <div class="team-title p-4">
                         <h4 class="mb-0">Della Riyagung</h4>
                         <p class="mb-0">Tim Dawala</p>
+                        <br>
                     </div>
                 </div>
                 <div class="team-item">
                     <div class="team-img">
-                        <img src="{{ asset('assets') }}/img/iwan.jpeg" class="img-fluid rounded-top w-100" style="height: 250px;" alt="">
+                        <img src="{{ asset('assets') }}/img/iwan.jpeg" class="img-fluid rounded-top w-100" style="height: 450px;" alt="">
                         <div class="team-icon">
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-facebook-f"></i></a>
                             <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i class="fab fa-linkedin-in"></i></a>
@@ -97,6 +101,7 @@
                     <div class="team-title p-4">
                         <h4 class="mb-0">Iwan Gunawan,S.H</h4>
                         <p class="mb-0">Analis Kebijakan</p>
+                        <br>
                     </div>
                 </div>
             </div>
