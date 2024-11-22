@@ -152,6 +152,7 @@
                                         <option value="Penduduk Sakit">Penduduk Sakit</option>
                                         <option value="Penduduk Terlantar">Penduduk Terlantar</option>
                                         <option value="Penduduk Terkena Bencana">Penduduk Terkena Bencana</option>
+                                        <option value="Berhadapan Hukum">Berhadapan Hukum</option>
                                     </select>
                                     <span class="input-group-text"><i class="bi bi-chevron-down"></i></span>
                                 </div>

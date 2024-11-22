@@ -48,7 +48,7 @@
                                     </ul>
                                 </div>
                             <div class="text-center mt-4">
-                                <a href="https://wa.me/6285179959654?text=Halo%20saya%20ingin%20menggunakan%20layanan%20cepat%20Dawala." class="btn btn-success rounded-pill py-2 px-4">Hubungi Kami</a>
+                                <a href="https://wa.me/6281387295920?text=Halo%20saya%20ingin%20menggunakan%20layanan%20cepat%20Dawala." class="btn btn-success rounded-pill py-2 px-4">Hubungi Kami</a>
                             </div>
                             </div>
                         </div>

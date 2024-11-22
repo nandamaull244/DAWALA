@@ -633,6 +633,11 @@
                                             <i class="bi bi-person-hearts"></i> Penduduk Terkena Bencana
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item category-filter" href="#" data-category="Berhadapan Hukum" onclick="categoryFilter(this, 'Categories')" data-value="Berhadapan Hukum">
+                                            <i class="bi bi-person-hearts"></i> Berhadapan Hukum
+                                        </a>
+                                    </li>
 
                                 </ul>
                             </div>

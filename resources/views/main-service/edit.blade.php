@@ -146,7 +146,8 @@
                                             $categories = [
                                                 'Disabilitas Fisik', 'Disabilitas Netra/Buta', 'Disabilitas Rungu/Bicara',
                                                 'Disabilitas Mental/Jiwa', 'Disabilitas Fisik dan Mental', 'Disabilitas Lainnya', 
-                                                'Lansia', 'ODGJ', 'Penduduk Sakit', 'Penduduk Terlantar', 'Penduduk Terkena Bencana'
+                                                'Lansia', 'ODGJ', 'Penduduk Sakit', 'Penduduk Terlantar', 'Penduduk Terkena Bencana',
+                                                'Berhadapan Hukum'
                                             ];
                                         @endphp
                                         @foreach($categories as $category)

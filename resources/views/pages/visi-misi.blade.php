@@ -93,14 +93,13 @@
                         <img src="{{ asset('assets') }}/img/team-1.jpg" class="img-fluid rounded-top w-100"
                             alt="">
                         <div class="team-icon">
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i
-                                    class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i
-                                    class="fab fa-twitter"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href=""><i
-                                    class="fab fa-linkedin-in"></i></a>
-                            <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href=""><i
+                           
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="https://www.youtube.com/@dawalapeduli"><i
+                                    class="fab fa-youtube"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="https://www.instagram.com/dawalapeduli?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><i
                                     class="fab fa-instagram"></i></a>
+                            <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href="https://wa.me/6281387295920"><i
+                                    class="fa fa-phone-alt"></i></a>
                         </div>
                     </div>
                     <div class="team-title p-4">

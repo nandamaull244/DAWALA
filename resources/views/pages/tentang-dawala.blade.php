@@ -19,14 +19,13 @@
 
                         <div class="row g-3">
                             <div class="tentang-btn d-flex">
-                                <a class="btn btn-md-square rounded-circle me-3" href="#"><i
+                                <a class="btn btn-md-square rounded-circle me-3" href="https://wa.me/6281387295920"><i
                                         class="fa fa-phone-alt"></i></a>
-                                <a class="btn btn-md-square rounded-circle me-3" href="#"><i
+                                <a class="btn btn-md-square rounded-circle me-3" href="https://www.youtube.com/@dawalapeduli"><i
                                         class="fab fa-youtube"></i></a>
-                                <a class="btn btn-md-square rounded-circle me-3" href="#"><i
+                                <a class="btn btn-md-square rounded-circle me-3" href="https://www.instagram.com/dawalapeduli?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><i
                                         class="fab fa-instagram"></i></a>
-                                <a class="btn btn-md-square rounded-circle me-0" href="#"><i
-                                        class="fab fa-tiktok"></i></a>
+                          
                             </div>
                         </div>
                     </div>
