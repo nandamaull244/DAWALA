@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([
             'nik' => $this->generateNIK(),
             'username' => 'admindawala',
-            'password' => Hash::make('dawala2024'),
+            'password' => Hash::make('Dawala2024!'),
             'full_name' => 'Admin DAWALA',
             'birth_date' => $faker->date('Y-m-d'),
             'gender' => $faker->randomElement(['Laki-Laki', 'Perempuan']),
