@@ -153,7 +153,6 @@
             }
         });
 
-
         toastr.options = {
             "closeButton": true,
             "progressBar": true,

@@ -103,7 +103,7 @@
 
                             <div class="form-group">
                                 <label for="birth_date">Tanggal Lahir</label>
-                                <input type="date" class="form-control flatpickr-birth-date-check" id="birth_date" name="birth_date" value="{{ $service->user->birth_date ?? '' }}" placeholder="-" required>
+                                <input type="date" class="form-control flatpickr-birth-date-check" id="birth_date" name="birth_date"  placeholder="-" required>
                             </div>
 
                             <div class="row">
@@ -169,6 +169,7 @@
                                 <label for="reason">Alasan Pengajuan (Opsional)</label>
                                 <input type="text" class="form-control" id="reason" name="reason" value="{{ $service->reason ?? '' }}">
                             </div>
+
                             <div class="form-group">
                                 <label for="service_type">Tipe Pelayanan</label>
                                 <div class="input-group">
@@ -237,11 +238,20 @@
     <script>
         $('#reason').focus();
 
-        // @if ($pelayanan == null)
-        //     window.location.href = "{{ route('admin.pelayanan.index') }}";
-        // @endif
-
+        
         $(document).ready(function() {
+            const flatpickrInstance = $(".flatpickr-birth-date-check")[0]._flatpickr;
+
+            const birth_date = '{{ $service->user->birth_date }}';
+            const newDefaultDate = new Date(birth_date)
+            flatpickrInstance.set('defaultDate', newDefaultDate);
+
+            flatpickrInstance.jumpToDate(newDefaultDate);
+            flatpickrInstance.setDate(newDefaultDate);
+
+            $('#birth_date').trigger('change')
+
+            
             function updateODGJField() {
                 var isODGJ = $('#service_category').val() === 'ODGJ';
                 $('#evidence_of_disability_odgj_image').toggle(isODGJ);
