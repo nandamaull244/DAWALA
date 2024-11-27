@@ -428,7 +428,7 @@ class MainServiceController extends Controller
                     ]);
                 }
             } else {
-                $userData['password'] = bcrypt($request->full_name . '12345');
+                $userData['password'] = bcrypt($request->nik);
                 $user = User::create($userData);
             }
             
