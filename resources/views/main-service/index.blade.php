@@ -667,26 +667,26 @@
                             <thead>
                                 <tr>
                                     <th class="text-center" nowrap>No</th>
-                                        <th class="text-center" nowrap>Nama</th>
-                                        <th class="text-center" nowrap>Tanggal Pengajuan</th>
-                                        <th class="text-center" nowrap>Jenis Pelayanan</th>
-                                        <th class="text-center" nowrap>Kategori Layanan</th>
-                                        <th class="text-center" nowrap>Tipe Layanan</th>
-                                        <th class="text-center" nowrap>Tanggal Lahir</th>
-                                        <th class="text-center" nowrap>Alamat</th>
-                                        <th class="text-center" nowrap>Rt</th>
-                                        <th class="text-center" nowrap>Rw</th>
-                                        <th class="text-center" nowrap>Kecamatan</th>
-                                        <th class="text-center" nowrap>Desa/Kelurahan</th>
-                                        <th class="text-center" nowrap>No Hp</th>
-                                        <th class="text-center" nowrap>Alasan Pengajuan</th>
-                                        <th class="text-center" nowrap>Foto Bukti Keterbatasan</th>
-                                        <th class="text-center" nowrap>Foto Ktp</th>
-                                        <th class="text-center" nowrap>Foto Kk</th>
-                                        <th class="text-center" nowrap>Formulir</th>
-                                        <th class="text-center" nowrap>Status Pengerjaan</th>
-                                        <th class="text-center" nowrap>Status Pelayanan</th>
-                                        <th class="text-center" nowrap>Aksi</th>
+                                    <th class="text-center" nowrap>Nama</th>
+                                    <th class="text-center" nowrap>Tanggal Pengajuan</th>
+                                    <th class="text-center" nowrap>Jenis Pelayanan</th>
+                                    <th class="text-center" nowrap>Kategori Layanan</th>
+                                    <th class="text-center" nowrap>Tipe Layanan</th>
+                                    <th class="text-center" nowrap>Tanggal Lahir</th>
+                                    <th class="text-center" nowrap>Alamat</th>
+                                    <th class="text-center" nowrap>Rt</th>
+                                    <th class="text-center" nowrap>Rw</th>
+                                    <th class="text-center" nowrap>Kecamatan</th>
+                                    <th class="text-center" nowrap>Desa/Kelurahan</th>
+                                    <th class="text-center" nowrap>No Hp</th>
+                                    <th class="text-center" nowrap>Alasan Pengajuan</th>
+                                    <th class="text-center" nowrap>Foto Bukti Keterbatasan</th>
+                                    <th class="text-center" nowrap>Foto Ktp</th>
+                                    <th class="text-center" nowrap>Foto Kk</th>
+                                    <th class="text-center" nowrap>Formulir</th>
+                                    <th class="text-center" nowrap>Status Pengerjaan</th>
+                                    <th class="text-center" nowrap>Status Pelayanan</th>
+                                    <th class="text-center" nowrap>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>

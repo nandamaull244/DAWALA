@@ -233,7 +233,9 @@ class MainServiceController extends Controller
                 return $actionBtn;
             })            
             ->addColumn('name', function($row) {
-                return $row->user->full_name;
+                $html = $row->user->full_name;
+                $html .= '<small class="badge text-primary" style="margin-left: -10px;">Pengaju : ' . $row->createdBy->full_name . '</small>'; 
+                return $html;
             })
             ->addColumn('service', function($row) {
                 return $row->service_list->service_name;
@@ -435,6 +437,7 @@ class MainServiceController extends Controller
             $service_list = ServiceList::where('service_name', $request->service)->first();
             $service = new Service();  
             $service->user_id = $user->id;
+            $service->created_by = auth()->user()->id;
             $service->service_list_id = $service_list->id;
             $service->service_type = $request->service_type;
             $service->service_category = $request->service_category;

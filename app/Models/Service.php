@@ -22,6 +22,11 @@ class Service extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
     public function approvalBy()
     {
         return $this->belongsTo(User::class, 'approval_by', 'id');
