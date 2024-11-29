@@ -70,7 +70,7 @@ Formulir Registrasi Akun
                                             <i class="bi bi-card-text"></i>
                                         </div>
                                     </div>
-                                    @error('no_kk')
+                                    @error('instance_name')
                                         <span>{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -268,6 +268,29 @@ Formulir Registrasi Akun
                                     @enderror
                                 </div>
                             </div>
+                            <div class="col-md-6" id="username_container">
+                                <div class="mb-4 form-group">
+                                   <label for="username">Username</label>
+                                   <div class="form-group position-relative has-icon-left mb-4 form-group">
+                                    <input type="text" 
+                                    class="form-control form-control-md" 
+                                    data-title="Username" 
+                                    name="username" 
+                                    id="username" 
+                                    value="{{ old('username') }}"
+                                    pattern=".*[a-zA-Z].*"
+                                    title="Username harus mengandung minimal satu huruf"
+                                    placeholder="Username harus mengandung minimal satu huruf!!"
+                                    required>
+                                       <div class="form-control-icon">
+                                           <i class="bi bi-person"></i>
+                                       </div>
+                                   </div>
+                                   @error('username')
+                                       <span>{{ $message }}</span>
+                                   @enderror
+                               </div>
+                            </div>
 
                             <div class="col-md-6">
                                 <!-- rw -->
@@ -385,13 +408,20 @@ Formulir Registrasi Akun
             const selectedType = $(this).val();
             const $instanceNameGroup = $('#instance_name_group');
             const $instanceNameInput = $('#instance_name');
+            const $username = $('#username_container');
+            const $usernameInput = $('#username');
+
+            
             
             const showInstanceTypes = ['Intansi, Yayasan', 'Intansi, Instansi', 'Intansi, Lembaga'];
             const isShowInstance = showInstanceTypes.includes(selectedType);
             
             if (isShowInstance) {
                 $instanceNameGroup.show();
+                $username.show();
+                $usernameInput.prop('required', true);
                 $instanceNameInput.prop('required', true);
+             
                 
                 const placeholders = {
                     'Intansi, Yayasan': 'Masukkan nama yayasan',
@@ -402,6 +432,8 @@ Formulir Registrasi Akun
                 $instanceNameInput.attr('placeholder', placeholders[selectedType] || '');
             } else {
                 $instanceNameGroup.hide();
+                $username.hide();
+                $usernameInput.prop('required', false);
                 $instanceNameInput.prop('required', false);
                 $instanceNameInput.val('').attr('placeholder', '');
             }
@@ -606,6 +638,15 @@ Formulir Registrasi Akun
                     return;
                 }
             }
+            // const username = $('#username').val();
+            // const usernameContainer = $('#username_container');
+
+            // // Check if username is visible and contains only numbers
+            // if (usernameContainer.is(':visible') && /^\d+$/.test(username)) {
+            //     isValid = false;
+            //     toastr.warning('Username harus mengandung minimal satu huruf', 'Peringatan', { timeOut: 2500, className: "custom-larger-toast" });
+            // }
+            
 
             if (isValid) this.submit();
         });
