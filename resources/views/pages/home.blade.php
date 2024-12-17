@@ -17,7 +17,7 @@
                                 </p>
                                 <div class="d-flex justify-content-center justify-content-md-start flex-shrink-0 mb-4">
                                     <a class="btn btn-success rounded-pill py-3 px-4 px-md-5 me-2" href="{{ url('/auth/register') }}">Daftar DAWALA</a>
-                                    <a class="btn btn-light rounded-pill py-3 px-4 px-md-5 ms-2" href="#"><i class="fas fa-play-circle me-2"></i> Tutorial Video</a>
+                                    <a class="btn btn-light rounded-pill py-3 px-4 px-md-5 ms-2" href="#tutorial"><i class="fas fa-play-circle me-2"></i> Tutorial Video</a>
                                 </div>
 
                                 {{-- <div class="d-flex justify-content-center justify-content-md-start flex-shrink-0 mb-2">
@@ -237,6 +237,80 @@
         </div>
     </div>
     <!-- Dokumentasi End -->
+        <!-- tutorial start -->
+    <section id="tutorial">
+        <div class="container-fluid dokumentasi py-5">
+            <div class="container py-5">
+                <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
+                    <h4 class="text-primary">Tutorial</h4>
+                    <h1 class="display-4 mb-4">Cara penggunaan DAWALA PEDULI</h1>
+                    <p class="mb-0">Di bawah ini beberapa video yang Anda dapat lihat untuk cara penggunaan dari website DAWALA PEDULI
+                    </p>
+                </div>
+                <div class="row g-4 justify-content-center">
+                    <div class="row g-4 justify-content-center">
+                        <div class="owl-carousel dokumentasi-carousel">
+                            <!-- Video 1 -->
+                            <div class="dokumentasi-item">
+                                <div class="dokumentasi-img">
+                                    <!-- Thumbnail -->
+                                    <a data-bs-toggle="modal" data-bs-target="#videoModal1">
+                                        <img src="{{ asset('assets') }}/videos/thumbnails/perorangan.png" class="video-thumbnail" alt="Video 1" style="cursor: pointer; width: 100%; height: 350px; object-fit: cover;">
+                                    </a>
+                                </div>
+                            </div>
+                    
+                            <!-- Video 2 -->
+                            <div class="dokumentasi-item">
+                                <div class="dokumentasi-img">
+                                    <!-- Thumbnail -->
+                                    <a data-bs-toggle="modal" data-bs-target="#videoModal2">
+                                        <img src="{{ asset('assets') }}/videos/thumbnails/kolektif.png" class="video-thumbnail" alt="Video 1" style="cursor: pointer; width: 100%; height: 350px; object-fit: cover;">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+        <!-- Modal Video 1 -->
+<div class="modal fade" id="videoModal1" tabindex="-1" aria-labelledby="videoModalLabel1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="videoModalLabel1">Tutorial Daftar Kolektif</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <video id="video1" controls class="w-100">
+                    <source src="{{ asset('assets') }}/videos/daftar_kolektif.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Video 2 -->
+<div class="modal fade" id="videoModal2" tabindex="-1" aria-labelledby="videoModalLabel2" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="videoModalLabel2">Tutorial Daftar Perorangan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <video id="video2" controls class="w-100">
+                    <source src="{{ asset('assets') }}/videos/daftar_perorangan.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </div>
+</div>
+        <!-- tutorial End -->
     <!-- FAQs Start -->
     <div class="container-fluid faq-section bg-light py-5">
         <div class="container py-5">
@@ -459,6 +533,7 @@
         </div>
     </div>
     @include('pages.modal_tiket')
+
 @endsection
 
 @push('scripts')
@@ -522,5 +597,29 @@
             }
             return num.toString();
         }
+
+        // Play video when modal is opened
+        $('#videoModal1').on('shown.bs.modal', function () {
+            var video = document.getElementById('video1');
+            video.play(); // Play video automatically
+        });
+
+        $('#videoModal1').on('hidden.bs.modal', function () {
+            var video = document.getElementById('video1');
+            video.pause();
+            video.currentTime = 0; // Reset video to start
+        });
+
+        $('#videoModal2').on('shown.bs.modal', function () {
+            var video = document.getElementById('video2');
+            video.play(); // Play video automatically
+        });
+
+        $('#videoModal2').on('hidden.bs.modal', function () {
+            var video = document.getElementById('video2');
+            video.pause();
+            video.currentTime = 0; // Reset video to start
+        });
     </script>
+  
 @endpush

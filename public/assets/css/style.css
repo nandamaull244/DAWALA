@@ -1,4 +1,3 @@
-
 /*** Spinner Start ***/
 #spinner {
     opacity: 0;
@@ -666,8 +665,6 @@
 }
 
 .dokumentasi .dokumentasi-item .dokumentasi-img {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
     position: relative;
     overflow: hidden;
 }
@@ -692,6 +689,7 @@
     background: rgba(1, 95, 201, .2);
     transition: 0.5s;
     z-index: 1;
+    pointer-events: none;
 }
 
 .dokumentasi .dokumentasi-item:hover .dokumentasi-img::after {
@@ -707,6 +705,12 @@
     color: var(--bs-white);
     background: #0164eb;
     z-index: 9;
+}
+.video-thumbnail {
+    cursor: pointer;
+    object-fit: cover;
+    width: 100%;
+    height: 350px;
 }
 
 .dokumentasi .dokumentasi-item .dokumentasi-content {
