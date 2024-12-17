@@ -280,12 +280,12 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="videoModalLabel1">Tutorial Daftar Kolektif</h5>
+                <h5 class="modal-title" id="videoModalLabel1">Tutorial Daftar Perorangan</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <video id="video1" controls class="w-100">
-                    <source src="{{ asset('assets') }}/videos/daftar_kolektif.mp4" type="video/mp4">
+                    <source src="{{ asset('assets') }}/videos/daftar_perorangan.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
@@ -298,12 +298,12 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="videoModalLabel2">Tutorial Daftar Perorangan</h5>
+                <h5 class="modal-title" id="videoModalLabel2">Tutorial Daftar Kolektif</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <video id="video2" controls class="w-100">
-                    <source src="{{ asset('assets') }}/videos/daftar_perorangan.mp4" type="video/mp4">
+                    <source src="{{ asset('assets') }}/videos/daftar_kolektif.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
