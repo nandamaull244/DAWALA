@@ -857,7 +857,7 @@
                 language: {
                     lengthMenu: "Tampilkan _MENU_ data",
                     zeroRecords: "Data tidak ditemukan",
-                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                    info: "Menampilkan _START_ s/d _END_ dari _TOTAL_ data",
                     infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
                     infoFiltered: "(difilter dari _MAX_ total data)",
                     search: "Cari:",
@@ -915,7 +915,7 @@
 
                     var $searchInput = $('#search-container input[type="search"]');
                     var searchValue = $searchInput.val();
-                    $searchInput.focus().val('').val(searchValue).addClass('hover-effect');
+                    // $searchInput.focus().val('').val(searchValue).addClass('hover-effect');
                     // if (window.innerWidth <= 767) {
                     //     this.api().columns().every(function(index) {
                     //         if (index === 0 || index === this.api().columns().nodes().length - 1) {
@@ -925,6 +925,10 @@
                     // }
                 }
             });
+
+            setInterval(function() {
+                table.ajax.reload(null, false);
+            }, 25000);
 
             $('#expand').click(function() {
                 if($(this).hasClass('btn-outline-primary')) {

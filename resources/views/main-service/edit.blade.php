@@ -222,9 +222,10 @@
                         </div>
                     </div>
                     
+                    <input type="hidden" name="edit_type" value="{{ $edit_type ?? '' }}">
                     <div class="card-footer">
                         <div class="col-12 d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary me-1 mb-1">Simpan</button>
+                            <button type="submit" class="btn btn-primary me-1 mb-1">{{ $edit_type == 'ajukan' ? 'Ajukan Kembali' : 'Simpan' }}</button>
                         </div>
                     </div>
                 </div>

@@ -536,7 +536,9 @@ class MainServiceController extends Controller
         $service_list = ServiceList::where('id', $service->service_list_id)->first();
         $pelayanan = $service_list->service_name;
         $districts = District::orderBy('name', 'asc')->get();
-        return view('main-service.edit', compact('service', 'pelayanan', 'districts'));
+
+        $edit_type = request('edittype') ?? '';
+        return view('main-service.edit', compact('edit_type', 'service', 'pelayanan', 'districts'));
     }
 
     /**
@@ -567,6 +569,16 @@ class MainServiceController extends Controller
             $user->update($userData);
 
             $updateService = $request->only(['reason', 'service_type', 'service_category', 'latitude', 'longitude']);
+            if ($request->edit_type == 'ajukan') {
+                $updateService = array_merge($updateService, [
+                    'working_status' => 'Not Yet',
+                    'service_status' => 'Not Yet',
+                    'message_for_user' => null,
+                    'approval_by' => null,
+                    'rejected_reason' => null
+                ]);
+            }
+
             $service->update($updateService);
 
             // IMAGE
@@ -733,24 +745,6 @@ class MainServiceController extends Controller
         }  else {
             return response()->json(['error' => 'Data Pelayanan Tidak Ditemukan']);
             // return redirectByRole(auth()->user()->role, 'pelayanan.index', ['error' => 'Data Pelayanan Tidak Ditemukan']);
-        }
-    }
-
-    public function requestAgain(Request $request)
-    {
-        $service = Service::whereHash($request->id)->firstOrFail();
-        if($service) {
-            $service->update([
-                'working_status' => 'Not Yet',
-                'service_status' => 'Not Yet',
-                'message_for_user' => null,
-                'approval_by' => null,
-                'rejected_reason' => null
-            ]);
-
-            return response()->json(['success' => 'Pengajuan ' . ($service->service_list->service_name) . ' berhasil dikirim ulang!']);
-        }  else {
-            return response()->json(['error' => 'Data Pelayanan Tidak Ditemukan']);
         }
     }
 

@@ -106,7 +106,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary" id="btnRequestAgain" style="display: none;">Ajukan Pengajuan Lagi</button>
+                    <a href="" target="_blank" class="btn btn-primary" id="btnRequestAgain" style="display: none;">Ajukan Pengajuan Lagi</a>
                     <button type="submit" class="btn btn-primary" id="btnSubmit" style="display: none;">Submit</button>
                 </div>
             </form>
@@ -175,7 +175,7 @@
                 const message_for_user = button.data('message_for_user');
 
                 $('#completedMessage').text(message_for_user);
-                // $('#workingStatusText').removeClass('text-danger text-warning text-success text-secondary')
+                $('#workingStatusText').removeClass('text-danger text-warning text-success text-secondary')
 
                 switch(workingStatus) {
                     case '-':
@@ -285,7 +285,8 @@
                         $('#rejected').show();
                         $('#alasanTolakContainer').show();
                         $('#alasan_tolak').val(reason);
-                        $('#btnRequestAgain').show();
+
+                        $('#btnRequestAgain').show().attr('href', '{{ route(auth()->user()->role .'.pelayanan.edit', ':id') }}'.replace(':id', id) + `?edittype=${"ajukan"}`);
                     } else if (serviceStatus === 'Completed' || serviceStatus === 'Process') {
                         $('#approved').show();
                         $('#visitScheduleContainer').show();
@@ -317,12 +318,12 @@
                     }
                 }
 
-                @if(auth()->user()->role == 'user' || auth()->user()->role == 'instance')
-                    $('#btnRequestAgain').off('click').on('click', function(e) {
-                        e.preventDefault()
-                        sendServiceRequestAgain(id);
-                    });
-                @endif
+                // @if(auth()->user()->role == 'user' || auth()->user()->role == 'instance')
+                //     $('#btnRequestAgain').off('click').on('click', function(e) {
+                //         e.preventDefault()
+                //         requestAgain(id);
+                //     });
+                // @endif
 
                 @if(auth()->user()->role == 'admin' || auth()->user()->role == 'operator') 
                     $('#visit_schedule').change(function() {
@@ -348,26 +349,26 @@
                 @endif
             });
 
-            @if(auth()->user()->role == 'user' || auth()->user()->role == 'instance')
-                function sendServiceRequestAgain(id) {
-                    $.ajax({
-                        url: `{{ route(auth()->user()->role . '.pelayanan.request-again') }}`,
-                        type: 'POST',
-                        data: {
-                            id: id,
-                            _token: '{{ csrf_token() }}' 
-                        },
-                        success: function(response) {
-                            $('#confirmationModal').modal('hide');
-                            toastr.success(response.success, 'Berhasil');
-                            table.ajax.reload();
-                        },
-                        error: function(xhr, status, error) {
-                            toastr.error("Gagal mengirim permintaan ulang", 'Gagal');
-                        }
-                    });
-                }
-            @endif
+            // @if(auth()->user()->role == 'user' || auth()->user()->role == 'instance')
+            //     function requestAgain(id) {
+            //         $.ajax({
+            //             url: `{{ route(auth()->user()->role . '.pelayanan.request-again') }}`,
+            //             type: 'POST',
+            //             data: {
+            //                 id: id,
+            //                 _token: '{{ csrf_token() }}' 
+            //             },
+            //             success: function(response) {
+            //                 $('#confirmationModal').modal('hide');
+            //                 toastr.success(response.success, 'Berhasil');
+            //                 table.ajax.reload();
+            //             },
+            //             error: function(xhr, status, error) {
+            //                 toastr.error("Gagal mengirim permintaan ulang", 'Gagal');
+            //             }
+            //         });
+            //     }
+            // @endif
 
             $('#confirmationForm').on('submit', function(e) {
                 e.preventDefault();
