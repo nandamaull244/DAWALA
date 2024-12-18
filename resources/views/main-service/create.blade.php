@@ -101,7 +101,7 @@
 
                             <div class="form-group">
                                 <label for="birth_date">Tanggal Lahir</label>
-                                <input type="date" class="form-control flatpickr-birth-date-check" id="birth_date" name="birth_date" value="@if (auth()->user()->role == 'user') {{ auth()->user()->birth_date }} @endif" placeholder="-" required>
+                                <input type="date" class="form-control flatpickr-birth-date-check" id="birth_date" name="birth_date" value="" placeholder="-" required>
                             </div>
 
                             <div class="row">
@@ -244,6 +244,18 @@
         // @endif
 
         $(document).ready(function() {
+            @if(auth()->user()->role == 'user')
+                const flatpickrInstance = $(".flatpickr-birth-date-check")[0]._flatpickr;
+
+                const birth_date = "{{ auth()->user()->birth_date }}";
+                const newDefaultDate = new Date(birth_date)
+                flatpickrInstance.set('defaultDate', newDefaultDate);
+
+                flatpickrInstance.jumpToDate(newDefaultDate);
+                flatpickrInstance.setDate(newDefaultDate);
+            @endif
+
+            $('#birth_date').trigger('change')
             $('#service_category').change(function() {
                 var isODGJ = $(this).val() === 'ODGJ';
                 $('#evidence_of_disability_odgj_image').toggle(isODGJ);
