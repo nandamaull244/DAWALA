@@ -33,7 +33,7 @@
                     </div>
                     <div class="position-relative form-group">
                         <input type="file" id="f103-input" class="d-none" accept="image/*,.pdf" name="f103_file" data-exist="{{ isset($f103) ? 'true' : 'false' }}">
-                        <label for="f103-input" class="btn btn-outline-primary mb-0">F1.03</label>
+                        <label for="f103-input" class="btn btn-outline-primary mb-0">Surat Keterangan Domisili</label>
                         <span id="f103-status" class="position-absolute top-0 end-0 translate-middle p-1 @if (isset($f103)) bg-success @else bg-danger @endif text-white border border-light rounded-circle"></span>
                     </div>
                     <div class="position-relative form-group">
@@ -46,7 +46,7 @@
                 <ul class="mt-3">
                     <li>F1.01 : Jika data/dokumen hilang/rusak (pernah memiliki data/dokumen yang tercatat di disduk)</li>
                     <li style="color: red;">F1.02 : Wajib untuk semua layanan</li>
-                    <li style="color: red;">F1.03 : Jika pindah alamat</li>
+                    <li style="color: red;">Surat Keterangan Domisili : Jika pindah alamat</li>
                     <li>F1.04 : Jika tidak memiliki data/dokumen sama sekali</li>
                 </ul>
             </div>
