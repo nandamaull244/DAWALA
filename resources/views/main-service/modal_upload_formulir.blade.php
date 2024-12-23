@@ -46,7 +46,7 @@
                 <ul class="mt-3">
                     <li>F1.01 : Jika data/dokumen hilang/rusak (pernah memiliki data/dokumen yang tercatat di disduk)</li>
                     <li style="color: red;">F1.02 : Wajib untuk semua layanan</li>
-                    <li style="color: red;">F1.03 : Jika pindah alamat</li>
+                    <li style="color: red;">Surat Keterangan Domisili : Jika pindah alamat</li>
                     <li>F1.04 : Jika tidak memiliki data/dokumen sama sekali</li>
                 </ul>
             </div>

@@ -197,7 +197,7 @@
                                         <i class="bi bi-file-earmark-pdf"></i> F1.02
                                     </a>
                                     <a href="{{ asset('/backend/documents/formulir/Formulir-F1.03.pdf') }}" class="btn btn-primary me-2" download="F1.03(Pendaftaran_Perpindahan_Penduduk).pdf">
-                                        <i class="bi bi-file-earmark-pdf"></i> F1.03
+                                        <i class="bi bi-file-earmark-pdf"></i> Surat Keterangan Domisili
                                     </a>
                                     <a href="{{ asset('/backend/documents/formulir/Formulir-F1.04.pdf') }}" class="btn btn-primary me-2" download="F1.04.pdf">
                                         <i class="bi bi-file-earmark-pdf"></i> F1.04
@@ -211,7 +211,7 @@
                                         <small>F1.02 : Wajib untuk semua layanan</small>
                                     </li>
                                     <li>
-                                        <small class="text-danger mt-1 d-block">F1.03 : Jika pindah alamat</small>
+                                        <small class="text-danger mt-1 d-block">Surat Keterangan Domisili : Jika pindah alamat</small>
                                     </li>
                                     <li>
                                         <small class="text-danger mt-1 d-block">F1.04 : khusus untuk penduduk yang tidak memiliki data atau dokumen sama sekali</small>
