@@ -416,6 +416,7 @@ class MainServiceController extends Controller
                 $user = User::find(auth()->user()->id);
                 $user->update($userData);
             } elseif(auth()->user()->role == 'instance') {
+                $userData['password'] = bcrypt($request->nik);
                 $user = User::create($userData);
                 $instance = Instance::where('user_id', auth()->user()->id)->first();
                 if(!$instance) { 
