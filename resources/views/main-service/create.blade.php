@@ -124,14 +124,14 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="latitude">Latitude</label>
-                                        <input type="text" class="form-control geolocation-input" id="latitude" name="latitude" required>
+                                        <input type="text" class="form-control geolocation-input" id="latitude" name="latitude" >
                                     </div>
                                 </div>
         
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="longitude">Longitude</label>
-                                        <input type="text" class="form-control geolocation-input" id="longitude" name="longitude" required>
+                                        <input type="text" class="form-control geolocation-input" id="longitude" name="longitude" >
                                     </div>
                                 </div>
                             </div>
