@@ -411,7 +411,7 @@ class UserController extends Controller
                 return $row->village ? $row->village->name : '-';
             })
             ->editColumn('birth_date', function($row) {
-                return getFlatpickrDate($row->birth_date);
+                return $row->birth_date ? getFlatpickrDate($row->birth_date) : '-';
             })
             ->editColumn('registration_type', function($row) {
                 $instaceName = optional($row->instance)->name ?? '';
