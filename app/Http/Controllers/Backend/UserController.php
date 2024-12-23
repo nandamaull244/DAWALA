@@ -1,16 +1,19 @@
 <?php
 
 namespace App\Http\Controllers\Backend;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\Request;
-use App\Models\District;
-use App\Models\Village;
 use App\Models\User;
+use App\Models\Service;
+use App\Models\Village;
+use App\Models\District;
 use App\Models\Instance;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
+
 class UserController extends Controller
 {
     /**
@@ -385,50 +388,59 @@ class UserController extends Controller
 
     public function getData(Request $request)
     {
-        $query = User::with(['district', 'village'])
-            ->where('role', '!=', 'admin')
-            ->whereIn('registration_status', ['Completed', 'Rejected']);
+        $adminOperator = User::select('id')->whereIn('registration_type', ['Admin', 'Operator'])->get();
+        $idAdminOperator = $adminOperator->pluck('id')->toArray(); 
 
-        if(auth()->user()->role === 'operator') {
+        $query = User::with(['district', 'village', 'services'])
+            ->where('role', '!=', 'admin')
+            ->whereIn('registration_status', ['Completed', 'Rejected'])
+            ->whereDoesntHave('services', function ($query) use ($idAdminOperator) {
+                $query->whereIn('created_by', $idAdminOperator);
+            });
+
+        if (auth()->user()->role === 'operator') {
             $query->where('district_id', auth()->user()->district_id);
         }
 
         $query = $this->applyFilters($query, $request);
 
-        return DataTables::of($query)
+        return DataTables::eloquent($query)
             ->addIndexColumn()
-            ->addColumn('action', function($row) {
+            ->addColumn('action', function ($row) {
                 $hashedId = $row->getHashedId();
-                $actionBtn = '<div class="btn-group" role="group">';
-                $actionBtn .= '<a target="_blank" href="'.route('admin.manajemen-akun.edit', $hashedId).'" class="btn btn-outline-primary" style="cursor: pointer;"><i class="bi bi-pencil-square fs-5"></i></a>';
-                $actionBtn .= '</div>';
-                return $actionBtn;
-            })   
-            ->addColumn('district_name', function($row) {
+                return '<div class="btn-group" role="group">
+                            <a target="_blank" href="' . route('admin.manajemen-akun.edit', $hashedId) . '" 
+                            class="btn btn-outline-primary" style="cursor: pointer;">
+                            <i class="bi bi-pencil-square fs-5"></i>
+                            </a>
+                        </div>';
+            })
+            ->addColumn('district_name', function ($row) {
                 return $row->district ? $row->district->name : '-';
             })
-            ->addColumn('village_name', function($row) {
+            ->addColumn('village_name', function ($row) {
                 return $row->village ? $row->village->name : '-';
             })
-            ->editColumn('birth_date', function($row) {
+            ->editColumn('birth_date', function ($row) {
                 return $row->birth_date ? getFlatpickrDate($row->birth_date) : '-';
             })
-            ->editColumn('registration_type', function($row) {
+            ->editColumn('registration_type', function ($row) {
                 $instaceName = optional($row->instance)->name ?? '';
                 $html = '<div class="d-flex flex-column justify-content-center align-items-center text-center">';
                 if ($row->registration_type == 'Operator') {
-                    $html .= '<span class="badge bg-danger mb-1">'. strtoupper($row->registration_type) .'</span>';
+                    $html .= '<span class="badge bg-danger mb-1">' . strtoupper($row->registration_type) . '</span>';
                 } elseif (str_contains($row->registration_type, 'Intansi')) {
-                    $html .= '<a data-bs-toggle="modal" data-bs-target="#instanceModal" style="cursor: pointer;" class="badge bg-primary mb-1" data-instance_name="'. $instaceName .'">'. strtoupper($row->registration_type) .'</a>';
+                    $html .= '<a data-bs-toggle="modal" data-bs-target="#instanceModal" style="cursor: pointer;" 
+                            class="badge bg-primary mb-1" data-instance_name="' . $instaceName . '">' . strtoupper($row->registration_type) . '</a>';
                 } elseif ($row->registration_type == 'User') {
-                    $html .= '<span class="badge bg-success mb-1">'. strtoupper($row->registration_type) .'</span>';
+                    $html .= '<span class="badge bg-success mb-1">' . strtoupper($row->registration_type) . '</span>';
                 } else {
                     $html .= '<span class="badge bg-secondary mb-1">-</span>';
                 }
                 $html .= '</div>';
                 return $html;
             })
-            ->editColumn('registration_status', function($row) {
+            ->editColumn('registration_status', function ($row) {
                 $html = '<div class="d-flex flex-column justify-content-center align-items-center text-center">';
                 if ($row->registration_status == 'Process') {
                     $html .= '<span class="badge bg-warning mb-1">Proses Verifikasi</span>';
@@ -442,19 +454,20 @@ class UserController extends Controller
                 $html .= '</div>';
                 return $html;
             })
-            ->filterColumn('district', function($query, $keyword) {
-                $query->whereHas('district', function($q) use ($keyword) {
+            ->filterColumn('district', function ($query, $keyword) {
+                $query->whereHas('district', function ($q) use ($keyword) {
                     $q->where('name', 'like', "%{$keyword}%");
                 });
             })
-            ->filterColumn('village', function($query, $keyword) {
-                $query->whereHas('village', function($q) use ($keyword) {
+            ->filterColumn('village', function ($query, $keyword) {
+                $query->whereHas('village', function ($q) use ($keyword) {
                     $q->where('name', 'like', "%{$keyword}%");
                 });
             })
             ->rawColumns(['action', 'registration_status', 'registration_type'])
             ->make(true);
     }
+
 
     public function getVerificationData(Request $request)
     {
