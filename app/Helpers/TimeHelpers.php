@@ -1,5 +1,9 @@
 <?php
 function getFlatpickrDate($date) {
+    if(empty($date)) {
+        return '-';
+    }
+    
     if (strpos($date, ':') !== false) {
         $datetime = explode(' ', $date);
         $date = explode('-', $datetime[0]);

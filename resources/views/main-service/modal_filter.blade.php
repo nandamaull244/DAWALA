@@ -79,7 +79,6 @@
                         <button class="btn btn-outline-primary type-btn" data-value="Mutasi KK" onclick="selectFilter(this, 'Types', true)">Mutasi KK</button>
                         <button class="btn btn-outline-primary type-btn" data-value="Perekaman KTP" onclick="selectFilter(this, 'Types', true)">Perekaman KTP</button>
                         <button class="btn btn-outline-primary type-btn" data-value="Perubahan data KTP" onclick="selectFilter(this, 'Types', true)">Perubahan data KTP</button>
-                        <button class="btn btn-outline-primary type-btn" data-value="Hilang/rusak" onclick="selectFilter(this, 'Types', true)">Hilang/rusak</button>
                     </div>
                 </div>
 
