@@ -442,8 +442,8 @@ class MainServiceController extends Controller
             $service->service_list_id = $service_list->id;
             $service->service_type = $request->service_type;
             $service->service_category = $request->service_category;
-            $service->latitude = $request->latitude;
-            $service->longitude = $request->longitude;
+            $service->latitude = $request->latitude ?? '-';
+            $service->longitude = $request->longitude ?? '-';
             $service->reason = $request->reason;
             $service->save();
 
