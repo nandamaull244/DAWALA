@@ -234,7 +234,7 @@ class MainServiceController extends Controller
             })            
             ->addColumn('name', function($row) {
                 $html = $row->user->full_name;
-                $html .= '<small class="badge text-primary" style="margin-left: -10px;">Pengaju : ' . $row->createdBy->full_name . '</small>'; 
+                $html .= '<small class="badge text-primary" style="margin-left: -10px;">Pemohon : ' . $row->createdBy->full_name . '</small>'; 
                 return $html;
             })
             ->addColumn('service', function($row) {
