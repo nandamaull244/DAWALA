@@ -207,7 +207,7 @@
     $(document).ready(function(){
         $(".team-carousel").owlCarousel({
             autoplay: true,
-            smartSpeed: 200,
+            smartSpeed: 500,
             margin: 25,
             loop: true,
             center: true,

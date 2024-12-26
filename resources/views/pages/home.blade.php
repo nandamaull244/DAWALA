@@ -254,20 +254,38 @@
                             <div class="dokumentasi-item">
                                 <div class="dokumentasi-img">
                                     <!-- Thumbnail -->
-                                    <a data-bs-toggle="modal" data-bs-target="#videoModal1">
-                                        <img src="{{ asset('assets') }}/videos/thumbnails/perorangan.png" class="video-thumbnail" alt="Video 1" style="cursor: pointer; width: 100%; height: 350px; object-fit: cover;">
-                                    </a>
+                                    <img src="{{ asset('assets') }}/videos/thumbnails/perorangan.png" class="video-thumbnail" alt="Video 1" style="cursor: pointer; width: 100%; height: 350px; object-fit: cover;">
                                 </div>
+                                <div class="dokumentasi-content p-4">
+                                    <h5 class="mb-4" style="color: #198754">Tutorial Daftar Perorangan</h5>
+                                    <a data-bs-toggle="modal" data-bs-target="#videoModal1" class="btn p-0">Lihat Video <i class="fa fa-arrow-right"></i></a>
+                                </div>
+                                
                             </div>
                     
                             <!-- Video 2 -->
                             <div class="dokumentasi-item">
                                 <div class="dokumentasi-img">
                                     <!-- Thumbnail -->
-                                    <a data-bs-toggle="modal" data-bs-target="#videoModal2">
-                                        <img src="{{ asset('assets') }}/videos/thumbnails/kolektif.png" class="video-thumbnail" alt="Video 1" style="cursor: pointer; width: 100%; height: 350px; object-fit: cover;">
-                                    </a>
+                                    <img src="{{ asset('assets') }}/videos/thumbnails/kolektif.png" class="video-thumbnail" alt="Video 2" style="cursor: pointer; width: 100%; height: 350px; object-fit: cover;">
                                 </div>
+                                <div class="dokumentasi-content p-4">
+                                    <h5 class="mb-4" style="color: #198754">Tutorial Daftar Kolektif</h5>
+                                    <a data-bs-toggle="modal" data-bs-target="#videoModal2" class="btn p-0">Lihat Video <i class="fa fa-arrow-right"></i></a>
+                                </div>
+                               
+                            </div>
+                            <!-- Video 3 -->
+                            <div class="dokumentasi-item">
+                                <div class="dokumentasi-img">
+                                    <!-- Thumbnail -->
+                                    <img src="{{ asset('assets') }}/videos/thumbnails/pengajuan.png" class="video-thumbnail" alt="Video 3" style="cursor: pointer; width: 100%; height: 350px; object-fit: cover;">
+                                </div>
+                                <div class="dokumentasi-content p-4">
+                                    <h5 class="mb-4" style="color: #198754">Tutorial Pengajuan</h5>
+                                    <a data-bs-toggle="modal" data-bs-target="#videoModal3" class="btn p-0">Lihat Video <i class="fa fa-arrow-right"></i></a>
+                                </div>
+                               
                             </div>
                         </div>
                     </div>
@@ -304,6 +322,23 @@
             <div class="modal-body">
                 <video id="video2" controls class="w-100">
                     <source src="{{ asset('assets') }}/videos/daftar_kolektif.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Video 3 -->
+<div class="modal fade" id="videoModal3" tabindex="-1" aria-labelledby="videoModalLabel3" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="videoModalLabel3">Tutorial Daftar Pengajuan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <video id="video3" controls class="w-100">
+                    <source src="{{ asset('assets') }}/videos/daftar_pengajuan.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
@@ -617,6 +652,16 @@
 
         $('#videoModal2').on('hidden.bs.modal', function () {
             var video = document.getElementById('video2');
+            video.pause();
+            video.currentTime = 0; // Reset video to start
+        });
+        $('#videoModal3').on('shown.bs.modal', function () {
+            var video = document.getElementById('video3');
+            video.play(); // Play video automatically
+        });
+
+        $('#videoModal3').on('hidden.bs.modal', function () {
+            var video = document.getElementById('video3');
             video.pause();
             video.currentTime = 0; // Reset video to start
         });
